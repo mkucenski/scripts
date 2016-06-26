@@ -1,0 +1,8 @@
+*default host=cvsup13.us.FreeBSD.org
+*default base=/var/db
+*default prefix=/usr
+*default release=cvs tag=.
+*default delete use-rel-suffix
+*default compress
+ports-all
+

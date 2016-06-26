@@ -1,0 +1,4 @@
+#!/bin/sh
+
+gmirror list
+
