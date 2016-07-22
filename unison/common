@@ -1,0 +1,35 @@
+# Unison preferences file
+
+# automatically accept default (nonconflicting) actions
+#auto = true
+
+# batch mode: ask no questions at all
+batch = true
+
+# Since the DATOptic (currently ExFAT) is the "hub" for synchronization, all should use this option
+#fat = true
+perms = 0
+
+# Avoid syncing extraneous Mac OS X stuff
+rsrc = false 
+ignore = Name .FBCIndex
+ignore = Name .FBCLockFolder
+ignore = Name {Cache*,.Trash*,.VolumeIcon.icns,.HSicon,Temporary*,.Temporary*,TheFindByContentFolder}
+ignore = Name {TheVolumeSettingsFolder,.Metadata,.filler,.idsff,.Spotlight,.DS_Store,.CFUserTextEncoding} 
+ignore = Name {._.DS_Store}
+ignore = Name .DS_Store
+
+# Avoid syncing extraneous Windows stuff
+ignore = Name desktop.ini
+
+addprefsto = sync/common
+silent = true
+
+# DATOptic is the "hub" and must always be present
+mountpoint = ./
+
+# Keep backups of overwritten/deleted files
+backupdir = /Volumes/DATOptic/Backups/unison/
+backup = Name *
+
+logfile=/Users/matthew.kucenski/Logs/unison.log
