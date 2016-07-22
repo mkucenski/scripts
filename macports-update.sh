@@ -11,13 +11,13 @@ echo "" >> "$LOG"
 PRE="$TMPDIR/pre-ports.txt"
 POST="$TMPDIR/post-ports.txt"
 
-port-wrapper.sh installed > "$PRE"
+macports-wrapper.sh installed > "$PRE"
 
-port-wrapper.sh -d selfupdate
-port-wrapper.sh fetch outdated
-port-wrapper.sh -ucp upgrade outdated
+macports-wrapper.sh -d selfupdate
+macports-wrapper.sh fetch outdated
+macports-wrapper.sh -ucp upgrade outdated
 
-port-wrapper.sh installed > "$POST"
+macports-wrapper.sh installed > "$POST"
 diff "$PRE" "$POST" | tee -a "$LOG"
 rm "$PRE" "$POST"
 

@@ -1,4 +1,4 @@
 #!/bin/sh
 
-date -j -f "%a %b %d %T %Y" "$1" "+%s"
+date -j -f "%Y%m%d %H:%M:%S %Z" "$1" "+%s"
 
