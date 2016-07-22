@@ -1,11 +1,11 @@
 #!/bin/bash
 
-LOG=~/Logs/make-install.log
+LOG="`echo ~`/Logs/make-wrapper.log"
 
 echo "" >> "$LOG"
 echo "BEGIN: `date \"+%Y%m%d\"`" >> "$LOG"
-
 echo "Working Directory: `pwd`" >> "$LOG"
+echo "Args: $@" >> "$LOG"
 echo "" >> "$LOG"
 
 make "$@" 2>&1 | tee -a "$LOG"
