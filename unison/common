@@ -1,14 +1,13 @@
 # Unison preferences file
 
 # automatically accept default (nonconflicting) actions
-#auto = true
+auto = true
 
 # batch mode: ask no questions at all
-batch = true
+#batch = true
 
-# Since the DATOptic (currently ExFAT) is the "hub" for synchronization, all should use this option
-#fat = true
-perms = 0
+# Since the DATOptic is the "hub" for synchronization, all should use this option
+fat = true
 
 # Avoid syncing extraneous Mac OS X stuff
 rsrc = false 
@@ -22,7 +21,7 @@ ignore = Name .DS_Store
 # Avoid syncing extraneous Windows stuff
 ignore = Name desktop.ini
 
-addprefsto = sync/common
+addprefsto = sync/extra
 silent = true
 
 # DATOptic is the "hub" and must always be present
