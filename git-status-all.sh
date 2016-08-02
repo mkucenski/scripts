@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASEDIR="$1"
+BASEDIR="./"
 
 # Find all .E01 files within BASEDIR and execute <ewfverify> on each. Log all results
 # to <LOGDIR/ewfverify.log> as well as individual results in each image directory.
