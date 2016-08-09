@@ -25,7 +25,7 @@ for IMAGE in `find "$BASEDIR" -type f -iname "*.e01"`; do
 		echo "Executing <ewfverify-all.sh> on <$IMAGEDIR>..."
 		$(dirname "$0")/ewfverify-all.sh "$IMAGEDIR" "$LOGDIR"
 	else
-		echo "Found previous result for <$IMAGE>!"
+		echo "Found previous result ($RESULT) for <$IMAGE>!"
 	fi
 done
 
