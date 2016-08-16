@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOG="`echo ~`/Logs/port-wrapper.log"
+LOG="`echo ~`/Logs/macports-wrapper.log"
 
 echo "" >> "$LOG"
 echo "BEGIN: `date \"+%Y%m%d\"`" >> "$LOG"
