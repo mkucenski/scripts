@@ -1,1 +1,5 @@
-(static|media|assets|platform|srvcs)\.tumblr\.com
+(static|assets|platform|srvcs)\.tumblr\.com
+(level3|akabench|limelight|cloudfront|radartumblr|tumblrreports)\.cedexis\.com
+bench.cedexis-test.com
+init.cedexis-radar.net
+cedexis-7.kxcdn.com
