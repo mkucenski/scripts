@@ -2,8 +2,8 @@
 
 # Run whois records consistently store the results in a specific directory
 
-SITE="$1"
+DOMAIN="$1"
 DEST="$2"
 
-whois "$SITE" | tee -a "$DEST/$SITE-whois.txt"
+whois "$DOMAIN" | tee -a "$DEST/$DOMAIN-whois.txt"
 
