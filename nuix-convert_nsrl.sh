@@ -13,7 +13,7 @@ $(dirname "$0")/convert2ascii.sh "$FILE" > "$TEMP"
 cut -d '"' -f 4 "$TEMP" > "$TEMP2"
 
 # Sort only the unique values and remove the 'MD5' column header line
-sort "$TEMP2" | uniq | sed '/MD5/d' > "$2"
+sort -u "$TEMP2" | sed '/MD5/d' > "$2"
 
 # Delete temp files
 rm "$TEMP"
