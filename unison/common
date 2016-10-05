@@ -3,12 +3,6 @@
 # automatically accept default (nonconflicting) actions
 auto = true
 
-# batch mode: ask no questions at all
-#batch = true
-
-# Since the DATOptic is the "hub" for synchronization, all should use this option
-fat = true
-
 # Avoid syncing extraneous Mac OS X stuff
 rsrc = false 
 ignore = Name .FBCIndex
@@ -22,10 +16,10 @@ ignore = Name .DS_Store
 ignore = Name desktop.ini
 
 addprefsto = sync/extra
-silent = true
-
-# DATOptic is the "hub" and must always be present
+fat = true
 mountpoint = ./
+confirmbigdel = true
+fastcheck = true
 
 # Keep backups of overwritten/deleted files
 backupdir = /Volumes/DATOptic/Backups/unison/
