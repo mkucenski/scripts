@@ -1,7 +1,10 @@
 #!/bin/bash
 
 DEVICE="$1"
-LOG="$2"
+SERIALNUM="$2"
+LOGDIR="$3"
+
+LOG="$3/$SERIALNUM-wipe.log"
 
 PASSES=2
 BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
