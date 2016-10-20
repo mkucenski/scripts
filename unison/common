@@ -20,6 +20,7 @@ fat = true
 mountpoint = ./
 confirmbigdel = true
 fastcheck = true
+contactquietly = true
 
 # Keep backups of overwritten/deleted files
 backupdir = /Volumes/DATOptic/Backups/unison/
