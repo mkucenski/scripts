@@ -13,6 +13,7 @@ SECTOR_SIZE=512
 SIZE=$(expr $SECTORS \* $SECTOR_SIZE)
 BLOCKS=$(expr $SIZE / $BS)
 
+echo
 date "+%Y%m%d" >> "$LOG"
 echo "Verifying device wipe status ($DEVICE)..." | tee -a "$LOG"
 

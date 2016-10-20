@@ -9,6 +9,7 @@ LOG="$3/$SERIALNUM-wipe.log"
 COUNT=1024
 BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
 
+echo
 date "+%Y%m%d" >> "$LOG"
 echo "Wiping device ($DEVICE)..." | tee -a "$LOG"
 

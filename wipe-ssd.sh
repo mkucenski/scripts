@@ -9,6 +9,7 @@ LOG="$3/$SERIALNUM-wipe.log"
 PASSES=2
 BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
 
+echo
 date "+%Y%m%d" >> "$LOG"
 echo "Starting SSD/Flash wipe on device ($DEVICE)..." | tee -a "$LOG"
 
