@@ -18,7 +18,7 @@ macports-wrapper.sh fetch outdated
 macports-wrapper.sh -ucp upgrade outdated
 
 macports-wrapper.sh installed > "$POST"
-diff "$PRE" "$POST" | tee -a "$LOG"
+diff -y "$PRE" "$POST" | tee -a "$LOG"
 rm "$PRE" "$POST"
 
 echo "END: `date \"+%Y%m%d\"`" >> "$LOG"
