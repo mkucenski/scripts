@@ -11,14 +11,14 @@ echo "" >> "$LOG"
 PRE="$TMPDIR/pre-ports.txt"
 POST="$TMPDIR/post-ports.txt"
 
-macports-wrapper.sh installed > "$PRE"
+$(dirname "$0")/macports-wrapper.sh installed > "$PRE"
 
-macports-wrapper.sh -d selfupdate
-macports-wrapper.sh fetch outdated
-macports-wrapper.sh -ucp upgrade outdated
+$(dirname "$0")/macports-wrapper.sh -d selfupdate
+$(dirname "$0")/macports-wrapper.sh fetch outdated
+$(dirname "$0")/macports-wrapper.sh -ucp upgrade outdated
 
-macports-wrapper.sh installed > "$POST"
-diff -y "$PRE" "$POST" | tee -a "$LOG"
+$(dirname "$0")/macports-wrapper.sh installed > "$POST"
+diff --side-by-side --suppress-common-lines "$PRE" "$POST" | tee -a "$LOG"
 rm "$PRE" "$POST"
 
 echo "END: `date \"+%Y%m%d\"`" >> "$LOG"
