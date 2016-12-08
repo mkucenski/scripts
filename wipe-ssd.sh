@@ -18,9 +18,8 @@ for PASS in `seq 1 $PASSES`; do
 	$(dirname "$0")/wipe-disk.sh "$DEVICE" "$LOG"
 done
 
-echo "Verifying entire wiped device ($DEVICE) using (bs=$BS)..." | tee -a "$LOG"
-dd if="$DEVICE" bs=$BS 2>> "$LOG" | xxd -a | tee -a "$LOG"
-
 echo "Completed wiping device ($DEVICE)!"
 date "+%Y%m%d" >> "$LOG"
+
+$(dirname "$0")/wipe-verify-full.sh "$DEVICE" "$SERIALNUM" "$LOGDIR"
 

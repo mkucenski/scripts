@@ -34,6 +34,7 @@ else
 
 fi
 
+echo "Completed wiping device ($DEVICE)!"
 date "+%Y%m%d" >> "$LOG"
 
 $(dirname "$0")/wipe-verify.sh "$DEVICE" "$SERIALNUM" "$LOGDIR"
