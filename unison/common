@@ -22,8 +22,4 @@ confirmbigdel = true
 fastcheck = true
 contactquietly = true
 
-# Keep backups of overwritten/deleted files
-backupdir = /Volumes/DATOptic/Backups/unison/
-backup = Name *
 
-logfile=/Users/matthew.kucenski/Logs/unison.log
