@@ -2,6 +2,7 @@
 
 # automatically accept default (nonconflicting) actions
 auto = true
+batch = true
 
 # Avoid syncing extraneous Mac OS X stuff
 rsrc = false 
