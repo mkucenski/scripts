@@ -7,7 +7,7 @@ DEBUG=0
 LOG="$VMDK.log"
 
 if [ ! -e "$VMDK" ]; then
-	/Applications/VirtualBox.app/Contents/MacOS/VBoxManage convertfromraw "$RAW" "$VMDK" 2>&1 | tee -a "$LOG"
+	/Applications/VirtualBox.app/Contents/MacOS/VBoxManage convertfromraw "$RAW" "$VMDK" --format VMDK --variant Standard 2>&1 | tee -a "$LOG"
 else
 	echo "$0: Destination VMDK already exists!" | tee -a "$LOG"
 fi
