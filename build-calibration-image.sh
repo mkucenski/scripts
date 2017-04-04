@@ -8,7 +8,16 @@ LOGDIR="$3"
 
 LOG="$LOGDIR/$SERIAL-calibration.log"
 
-SECTORS=`diskutil info $DEVICE | grep "Total Size:" | gsed -r 's/.+\(exactly ([[:digit:]]+) 512-Byte-Units\)/\1/'`
+if [ "$UNAME" = "Darwin" ]; then
+	SECTORS=`diskutil info $DEVICE | egrep "(Disk|Total) Size:" | gsed -r 's/.+\(exactly ([[:digit:]]+) 512-Byte-Units\)/\1/'`
+	if [ -z $SECTORS ]; then
+			  echo "ERROR: Unable to read disk size via diskutil!" > /dev/stderr
+			  exit 1
+	fi
+else
+	echo "ERROR: Undefined OS, unable to gather disk size!" > /dev/stderr
+fi
+
 SECTOR_SIZE=512
 SIZE=$(expr $SECTORS \* $SECTOR_SIZE)
 BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
