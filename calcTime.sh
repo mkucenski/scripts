@@ -9,15 +9,13 @@ AWKCMD=awk
 SEDCMD=sed
 
 # MacOSX uses modified names for GNU versions of awk/sed
-if [ "$UNAME" = "Darwin" ];
-then
+if [ "$UNAME" = "Darwin" ]; then
    AWKCMD=gawk
    SEDCMD=gsed
 fi
 
 # FreeBSD uses modified names for GNU versions of awk/sed
-if [ "$UNAME" = "FreeBSD" ];
-then
+if [ "$UNAME" = "FreeBSD" ]; then
    AWKCMD=gawk
    SEDCMD=gsed
 fi
@@ -29,8 +27,7 @@ YEAR=`echo $DATE | $SEDCMD -r "s/$DATEREGEX/\9/"`
 FILE=/dev/stdin
 TZ=UTC0
 
-while getopts "d:hnr:y:z:" OPTION
-do
+while getopts "d:hnr:y:z:" OPTION; do
    case $OPTION in
       d) THRESHOLD="$OPTARG"
          ;;
@@ -48,15 +45,13 @@ do
           echo "       r : time range xxxx-yyyy 24hr (defaults to all times)"
           echo "       y : firewall data year (defaults to current year)"
           echo "       z : timezone (defaults to UTC0) (e.g. EST5EDT)"
-          echo "       file : file to process (defaults to stdin)"
-          exit 1
+          echo "       file : file to process (defaults to stdin)" exit 1
           ;;
    esac
 done
 shift $(($OPTIND - 1))
 
-if [ -n "$1" ]
-then
+if [ -n "$1" ]; then
    FILE="$1"
 fi
 
