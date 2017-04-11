@@ -30,7 +30,7 @@ else
 	fi
 
 	echo "Using dd (/dev/zero)..." | tee -a "$LOG"
-	dd if=/dev/zero of="$DEVICE" bs=$BS 2>&1 | tee -a "$LOG"
+	dd if=/dev/zero of="$DEVICE" bs=$BS tee -a "$LOG"
 
 fi
 
