@@ -91,8 +91,8 @@ function execUnison2() {
 	echo "--- $1 <-> $2 ---"
 	buildprf2 "$1" "$2" "$3"
 	unison $PRF
-	changeFlags "$1"
-	changeFlags "$2"
+	#changeFlags "$1"
+	#changeFlags "$2"
 }
 
 function execRsync() {
