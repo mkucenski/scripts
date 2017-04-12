@@ -11,10 +11,10 @@ if [ "$UNAME" = "Darwin" ]; then
 		echo $SECTORS
 		exit 0
 	else
-		echo "ERROR($(basename "$0")): Unable to read disk size via diskutil!" > /dev/stderr
+		ERROR "Unable to read disk size via diskutil!" "$0"
 	fi
 else
-	echo "ERROR($0): Undefined OS, unable to gather disk size!" > /dev/stderr
+	ERROR "Undefined OS, unable to gather disk size!" "$0"
 fi
 
 exit 1

@@ -10,7 +10,7 @@ if [ $SECTORS -gt 0 ]; then
 	echo $SIZE
 	exit 0
 else
-	echo "ERROR($0): Error getting disk sectors!" > /dev/stderr
+	ERROR "Error getting disk sectors!" "$0"
 fi
 
 exit 1

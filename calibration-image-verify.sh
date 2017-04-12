@@ -4,34 +4,36 @@ DEVICE="$1"
 SERIAL="$2"
 LOGDIR="$3"
 
-LOG="$LOGDIR/$SERIAL-calibration.log"
+. $(dirname "$0")/common-include.sh
+LOGFILE="$LOGDIR/$SERIAL-calibration.log"
+START "$0" "$LOGFILE"
 
 BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
 
-date "+%Y%m%d" | tee -a "$LOG"
-echo "Verifying Calibration Drive ($DEVICE)..." | tee -a "$LOG"
-echo "Device: $DEVICE" | tee -a "$LOG"
-echo "Block Size: $BS" | tee -a "$LOG"
-echo | tee -a "$LOG"
+LOG "Verifying Calibration Drive ($DEVICE)..." "$LOGFILE"
+LOG "Device: $DEVICE" "$LOGFILE"
+LOG "Block Size: $BS" "$LOGFILE"
+LOG "$LOGFILE"
 
-EXPECTED_MD5=$($(dirname "$0")/calibration-image-find-md5.sh "$LOG")
+EXPECTED_MD5=$($(dirname "$0")/calibration-image-find-md5.sh "$LOGFILE")
 if [ -n "$EXPECTED_MD5" ]; then
-	echo "Reading from device ($DEVICE)..." | tee -a "$LOG"
+	LOG "Reading from device ($DEVICE)..." "$LOGFILE"
 	DEVICE_MD5=$($(dirname "$0")/diskmd5.sh "$DEVICE" "$BS")
 	if [ -n "$DEVICE_MD5" ]; then
-		echo "$DEVICE_MD5 - MD5 Reported by Device ($DEVICE)" | tee -a "$LOG"
-		echo "$EXPECTED_MD5 - MD5 expected from pattern generation" | tee -a "$LOG"
+		LOG "$DEVICE_MD5 - MD5 Reported by Device ($DEVICE)" "$LOGFILE"
+		LOG "$EXPECTED_MD5 - MD5 expected from pattern generation" "$LOGFILE"
 		if [ "$DEVICE_MD5" == "$EXPECTED_MD5" ]; then
-			echo "Match!" | tee -a "$LOG"
+			LOG "Match!" "$LOGFILE"
 		fi
-		echo | tee -a "$LOG"
+		END "$0" "$LOGFILE"
 		exit 0
 	else
-		echo "ERROR($(basename "$0")): Unable to read MD5 from device!" | tee -a "$LOG"
+		ERROR "Unable to read MD5 from device!" "$0" "$LOGFILE"
 	fi
 else
-	echo "ERROR($(basename "$0")): Unable to find expected MD5!" | tee -a "$LOG"
+	ERROR "Unable to find expected MD5!" "$0" "$LOGFILE"
 fi
 
+END "$0" "$LOGFILE"
 exit 1
 

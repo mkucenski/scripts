@@ -8,7 +8,7 @@ if [ -n "$DEVICE_MD5" ]; then
 	echo "$DEVICE_MD5"
 	exit 0
 else
-	echo "ERROR($(basename "$0")): Error reading MD5 from device!"
+	ERROR "Error reading MD5 from device!" "$0"
 fi
 
 exit 1

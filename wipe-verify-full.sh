@@ -4,7 +4,9 @@ DEVICE="$1"
 SERIALNUM="$2"
 LOGDIR="$3"
 
-LOG="$3/$SERIALNUM-wipe.log"
+. $(dirname "$0")/common-include.sh
+LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
+START "$0" "$LOGFILE"
 
 COUNT=1024
 BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
@@ -13,11 +15,8 @@ SECTOR_SIZE=512
 SIZE=$(expr $SECTORS \* $SECTOR_SIZE)
 BLOCKS=$(expr $SIZE / $BS)
 
-echo
-date "+%Y%m%d" >> "$LOG"
+LOG "Verifying entire wiped device ($DEVICE) using (bs=$BS)..." "$LOGFILE"
+RESULTS=$(dd if="$DEVICE" bs=$BS | xxd -a)
+LOG "$RESULTS" "$LOGFILE"
 
-echo "Verifying entire wiped device ($DEVICE) using (bs=$BS)..." | tee -a "$LOG"
-dd if="$DEVICE" bs=$BS | xxd -a | tee -a "$LOG"
-
-date "+%Y%m%d" >> "$LOG"
-
+END "$0" "$LOGFILE"

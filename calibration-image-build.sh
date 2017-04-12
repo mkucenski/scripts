@@ -5,15 +5,18 @@ SERIAL="$2"
 LOGDIR="$3"
 TESTMODE="$4"
 
-LOG="$LOGDIR/$SERIAL-calibration.log"
+. $(dirname "$0")/common-include.sh
+LOGFILE="$LOGDIR/$SERIAL-calibration.log"
+START "$0" "$LOGFILE"
   
 if [ -n "$TESTMODE" ]; then
-	echo "WARNING($(basename "$0")): Test mode enabled, results will not be written to / read from disk!" | tee -a "$LOG"
+	WARNING "Test mode enabled, results will not be written to / read from disk!" "$0" "$LOGFILE"
 fi
 
 SECTORS=$($(dirname "$0")/disksectors.sh "$DEVICE")
 if [ $SECTORS -lt 0 ]; then
-	echo "ERROR($(basename "$0")): Unable to read disk sectors!" | tee -a "$LOG"
+	ERROR"Unable to read disk sectors!" "$0" "$LOGFILE"
+	END "$0" "$LOGFILE"
 	exit 1
 fi
 
@@ -24,42 +27,43 @@ COUNT=$(expr $SIZE / $BS)
 PATTERN="The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick br... "
 PATTERN_LEN=$(expr ${#PATTERN} + 1)
 
-date "+%Y%m%d" | tee -a "$LOG"
-echo "Building Calibration Drive ($DEVICE)..." | tee -a "$LOG"
-echo "Device: $DEVICE" | tee -a "$LOG"
-echo "512-byte Sectors: $SECTORS" | tee -a "$LOG"
-echo "Disk Size: $SIZE" | tee -a "$LOG"
-echo "Block Size: $BS" | tee -a "$LOG"
-echo "Block Count: $COUNT" | tee -a "$LOG"
-echo "Pattern: '$PATTERN'"
-echo "Pattern Bytes: $PATTERN_LEN"
-echo | tee -a "$LOG"
+LOG "Building Calibration Drive ($DEVICE)..." "$LOGFILE"
+LOG "Device: $DEVICE" "$LOGFILE"
+LOG "512-byte Sectors: $SECTORS" "$LOGFILE"
+LOG "Disk Size: $SIZE" "$LOGFILE"
+LOG "Block Size: $BS" "$LOGFILE"
+LOG "Block Count: $COUNT" "$LOGFILE"
+LOG "Pattern: '$PATTERN'" "$LOGFILE"
+LOG "Pattern Bytes: $PATTERN_LEN" "$LOGFILE"
+LOG "" "$LOGFILE"
 
-echo "Building expected MD5..." | tee -a "$LOG"
+LOG "Building expected MD5..." "$LOGFILE"
 EXPECTED_MD5=`yes "$PATTERN" | dd ibs=$PATTERN_LEN obs=$BS count=$(expr $SIZE / $PATTERN_LEN) | openssl md5 | tr a-z A-Z | gsed -r 's/\(STDIN\)= //'`
-echo "$EXPECTED_MD5 - MD5 expected from pattern generation" | tee -a "$LOG"
-echo | tee -a "$LOG"
+LOG "$EXPECTED_MD5 - MD5 expected from pattern generation" "$LOGFILE"
+LOG "" "$LOGFILE"
 
 if [ -z "$TESTMODE" ]; then
-	echo "Writing calibration pattern to device ($DEVICE)..." | tee -a "$LOG"
+	LOG "Writing calibration pattern to device ($DEVICE)..." "$LOGFILE"
 	yes $PATTERN | dd bs=$BS of="$DEVICE"
-	echo | tee -a "$LOG"
+	LOG "" "$LOGFILE"
 
-	echo "Reading from device ($DEVICE)..." | tee -a "$LOG"
+	LOG "Reading from device ($DEVICE)..." "$LOGFILE"
 	DEVICE_MD5=$($(dirname "$0")/diskmd5.sh "$DEVICE" "$BS")
 	if [ -n "$DEVICE_MD5" ]; then
-		echo "$DEVICE_MD5 - MD5 read from device ($DEVICE)" | tee -a "$LOG"
-		echo "$EXPECTED_MD5 - MD5 expected from pattern generation" | tee -a "$LOG"
+		LOG "$DEVICE_MD5 - MD5 read from device ($DEVICE)" "$LOGFILE"
+		LOG "$EXPECTED_MD5 - MD5 expected from pattern generation" "$LOGFILE"
 		if [ "$DEVICE_MD5" == "$EXPECTED_MD5" ]; then
-			echo "Match!" | tee -a "$LOG"
+			LOG "Match!" "$LOGFILE"
 		fi
-		echo | tee -a "$LOG"
+		LOG "" "$LOGFILE"
+		END "$0" "$LOGFILE"
 		exit 0
 	else
-		echo "ERROR($(basename "$0")): Unable to read MD5 from device!" | tee -a "$LOG"
+		ERROR "Unable to read MD5 from device!" "$0" "$LOGFILE"
 	fi
 else
-	echo "WARNING($(basename "$0")): Test mode enabled, results not written to / read from disk!" | tee -a "$LOG"
+		WARNING "Test mode enabled, results not written to / read from disk!" "$0" "$LOGFILE"
 fi
 
+END "$0" "$LOGFILE"
 exit 1
