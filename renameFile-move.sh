@@ -8,7 +8,7 @@ FILE=$1
 REPL=$2
 WITH=$3
 
-NEW=`echo "$FILE" | gsed -r "s/$REPL/$WITH/"`
+NEW=`echo "$FILE" | gsed -r "s/$REPL/$WITH/g"`
 echo "$NEW"
 
 if [ "$FILE" != "$NEW" ]
