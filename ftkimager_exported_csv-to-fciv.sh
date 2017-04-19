@@ -13,14 +13,14 @@ if [ -e "$CSV" ]; then
 	$(dirname "$0")/fciv.sh
 
 	while read -r LINE; do
-		REGEX="^.*[AD1].+[[:space:]]+[[:digit:]]+[[:space:]]+.*[[:space:]]+[a-z0-9]{32}[[:space:]]+[a-z0-9]{40}.*$"
-		SED="^.*\[AD1\](.+)[[:space:]]+[[:digit:]]+[[:space:]]+.*[[:space:]]+([a-z0-9]{32})[[:space:]]+([a-z0-9]{40}).*$"
-		FILE=$(echo "$LINE" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\.\1/")
-		MD5=$(echo "$LINE" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\2/")
+		REGEX="^\"[a-z0-9]{32}\",\"[a-z0-9]{40}\",\".*\[AD1\].*\""
+		SED="^\"([a-z0-9]{32})\",\"([a-z0-9]{40})\",\".*\[AD1\](.*)\""
+		FILE=$(echo "$LINE" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\.\3/")
+		MD5=$(echo "$LINE" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\1/")
 
 		if [ -n "$MD5" ]; then
 			if [ "$DOSHA1" != "0" ]; then
-				SHA1=$(echo "$LINE" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\3/")
+				SHA1=$(echo "$LINE" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\2/")
 			else
 				SHA1="0000000000000000000000000000000000000000"
 			fi
