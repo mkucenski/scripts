@@ -1,11 +1,11 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 DEVICE="$1"
 SERIAL="$2"
 LOGDIR="$3"
 TESTMODE="$4"
 
-. $(dirname "$0")/common-include.sh
 LOGFILE="$LOGDIR/$SERIAL-calibration.log"
 START "$0" "$LOGFILE"
   
@@ -38,7 +38,7 @@ LOG "Pattern Bytes: $PATTERN_LEN" "$LOGFILE"
 LOG "" "$LOGFILE"
 
 LOG "Building expected MD5..." "$LOGFILE"
-EXPECTED_MD5=`yes "$PATTERN" | dd ibs=$PATTERN_LEN obs=$BS count=$(expr $SIZE / $PATTERN_LEN) | openssl md5 | tr a-z A-Z | gsed -r 's/\(STDIN\)= //'`
+EXPECTED_MD5=`yes "$PATTERN" | dd ibs=$PATTERN_LEN obs=$BS count=$(expr $SIZE / $PATTERN_LEN) | openssl md5 | tr a-z A-Z | $SEDCMD -r 's/\(STDIN\)= //'`
 LOG "$EXPECTED_MD5 - MD5 expected from pattern generation" "$LOGFILE"
 LOG "" "$LOGFILE"
 

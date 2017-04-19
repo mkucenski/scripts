@@ -1,10 +1,10 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 DEVICE="$1"
 SERIALNUM="$2"
 LOGDIR="$3"
 
-. $(dirname "$0")/common-include.sh
 LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
 START "$0" "$LOGFILE"
 
@@ -24,8 +24,8 @@ else
 
 	if [$OS = "FreeBSD" ]; then
 
-		MODEL=`camcontrol identify "$DEVICE" | grep 'device model' | gsed -r 's/^device model[[:space:]]+(.*)$/\1/'`
-		SERIAL=`camcontrol identify "$DEVICE" | grep 'serial number' | gsed -r 's/^serial number[[:space:]]+(.*)$/\1/'`
+		MODEL=`camcontrol identify "$DEVICE" | grep 'device model' | $SEDCMD -r 's/^device model[[:space:]]+(.*)$/\1/'`
+		SERIAL=`camcontrol identify "$DEVICE" | grep 'serial number' | $SEDCMD -r 's/^serial number[[:space:]]+(.*)$/\1/'`
 		LOG "FreeBSD 'camcontrol' reported model: '$MODEL', serial number: '$SERIAL'..." "$LOGFILE"
 
 	fi

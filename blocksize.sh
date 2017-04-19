@@ -1,9 +1,8 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 # The goal of this script is simply to find the largest blocksize (bs=) that can be used and still cover the entire disk.
 DEVICE="$1"
-
-. $(dirname "$0")/common-include.sh
 
 SECTORS=$($(dirname "$0")/disksectors.sh "$DEVICE")
 if [ $SECTORS -lt 0 ]; then

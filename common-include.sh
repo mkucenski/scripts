@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# On systems where gsed/gawk exist, we assume that is the correct GNU version to use.
+SEDCMD=$(if [ -n "$(which gsed)" ]; then echo "gsed"; else echo "sed"; fi)
+AWKCMD=$(if [ -n "$(which gawk)" ]; then echo "gawk"; else echo "awk"; fi)
+
 function ERROR() {
 	MSG="$1"
 	SRC="$2"

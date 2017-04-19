@@ -1,4 +1,5 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 EWF="$1"
 VMDK="$2"
@@ -9,8 +10,8 @@ LOG="$VMDK.log"
 if [ ! -e "$VMDK" ]; then
 	EWFINFO=$(ewfinfo "$EWF" | tee -a "$LOG")
 
-	BYTES=$(echo "$EWFINFO" | grep "Media size:" | gsed -r 's/^[[:space:]]*Media size:.+\(([[:digit:]]+) bytes\).*$/\1/')
-	EWFMD5=$(echo "$EWFINFO" | grep "MD5:" | gsed -r 's/^[[:space:]]*MD5:[[:space:]]+([[:digit:]a-fA-F]+).*$/\1/')
+	BYTES=$(echo "$EWFINFO" | grep "Media size:" | $SEDCMD -r 's/^[[:space:]]*Media size:.+\(([[:digit:]]+) bytes\).*$/\1/')
+	EWFMD5=$(echo "$EWFINFO" | grep "MD5:" | $SEDCMD -r 's/^[[:space:]]*MD5:[[:space:]]+([[:digit:]a-fA-F]+).*$/\1/')
 	if [ $DEBUG != 0 ]; then
 		echo "$0: DEBUG: ewfinfo returned ($BYTES) bytes" | tee -a "$LOG"
 		echo "$0: DEBUG: ewfinfo returned original MD5: ($EWFMD5)" | tee -a "$LOG"

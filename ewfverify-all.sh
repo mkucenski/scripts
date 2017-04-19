@@ -1,4 +1,5 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 BASEDIR="$1"
 LOGDIR="$2"
@@ -32,7 +33,7 @@ for IMAGE in `find "$BASEDIR" -type f -iname "*.e01"`; do
 	# Output full results to individual log file
 	echo "$RESULT" >> "$LOG"
 
-	VERIFY=$(echo "$RESULT" | egrep "ewfverify: (SUCCESS|FAILURE)" | gsed -r 's/ewfverify: (.+)/\1/')
+	VERIFY=$(echo "$RESULT" | egrep "ewfverify: (SUCCESS|FAILURE)" | $SEDCMD -r 's/ewfverify: (.+)/\1/')
 	if [ $VERIFY == "SUCCESS" ]; then
 		ERR=1
 	elif [ $VERIFY == "FAILURE" ]; then

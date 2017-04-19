@@ -1,4 +1,5 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 # Usage Example: ls * | xargs -L 1 -I {} ./copy-renameFile.sh {} ".kung" ".foo"
 #                (will replace '.kung' in all files with '.foo' and *copy* the
@@ -8,7 +9,7 @@ FILE=$1
 REPL=$2
 WITH=$3
 
-NEW=`echo "$FILE" | gsed -r "s/$REPL/$WITH/g"`
+NEW=$(echo "$FILE" | $SEDCMD -r "s/$REPL/$WITH/g")
 echo "$NEW"
 
 if [ "$FILE" != "$NEW" ]

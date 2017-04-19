@@ -1,10 +1,10 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 DEVICE="$1"
 SERIALNUM="$2"
 LOGDIR="$3"
 
-. $(dirname "$0")/common-include.sh
 LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
 START "$0" "$LOGFILE"
 
