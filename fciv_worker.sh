@@ -1,12 +1,18 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 FILE="$1"
-SHA1="$2"
+DOSHA1="$2"
 
-if [ "$SHA1" != "0" ]; then
-	echo "$FILE" > /dev/stderr
-	echo `openssl dgst -md5 -r "$FILE" | gsed -r 's/(^.+) \*.*/\1/'` `openssl dgst -sha1 -r "$FILE" | gsed -r 's/\*//;s/\//\\\/g'`
+if [ -f "$FILE" ]; then
+	MD5=$(openssl dgst -md5 -r "$FILE" | $SEDCMD -r 's/(^.+) \*.*/\1/')
+	SHA1="0000000000000000000000000000000000000000"
+	if [ "$DOSHA1" != "0" ]; then
+		SHA1=$(openssl dgst -sha1 -r "$FILE" | $SEDCMD -r 's/([^[:space:]]+).*/\1/')
+	fi
+	FILE=$(echo "$FILE" | $SEDCMD -r 's/\/\//\//g; s/\//\\/g')
+	echo "$MD5 $SHA1 $FILE"
 else
-	echo "$FILE" > /dev/stderr
-	echo `openssl dgst -md5 -r "$FILE" | gsed -r 's/(^.+) \*.*/\1/'` `echo "0000000000000000000000000000000000000000 *$FILE" | gsed -r 's/\*//;s/\//\\\/g'`
+	ERROR "Invalid File ($FILE)!" "$0"
 fi
+
