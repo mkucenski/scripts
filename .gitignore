@@ -4,3 +4,4 @@ unison/unison-sync-data.sh
 unison/*.prf
 test.sh
 easylist/
+windows/*.exe
