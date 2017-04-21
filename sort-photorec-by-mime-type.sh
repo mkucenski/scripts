@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# $1 = photorec output directory
+# photorec output directory
+SRC="$1"
+DST="$2"
 
-ls -d "$1"/recup_dir.* | xargs -L 1 -I {} $(dirname "$0")/sort-copy-by-mime-type.sh {} "$1"/sorted
-find "$1"/sorted -type f -name "report.xml" -exec rm {} \;
+ls -d "$SRC"/recup_dir.* | xargs -L 1 -I {} $(dirname "$0")/sort-copy-by-mime-type.sh {} "$DST"
+find "$DST" -type f -name "report.xml" -exec rm {} \;
 

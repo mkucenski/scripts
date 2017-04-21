@@ -13,6 +13,6 @@ exit /b
 echo :robocopy
 pushd %dst%
 mkdir robocopy
-robocopy /R:3 /W:10 /E /J /LOG+:.\robocopy\robocopy.log /TEE %src% %dst%
+robocopy /R:3 /W:10 /E /J /TEE /LOG+:.\robocopy\robocopy.log %src% %dst%
 popd
 exit /b

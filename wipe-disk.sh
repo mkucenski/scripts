@@ -1,40 +1,43 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 DEVICE="$1"
 SERIALNUM="$2"
 LOGDIR="$3"
 
-LOG="$3/$SERIALNUM-wipe.log"
+LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
+START "$0" "$LOGFILE"
 
 COUNT=1024
 BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
 
-echo
-date "+%Y%m%d" >> "$LOG"
-echo "Wiping device ($DEVICE)..." | tee -a "$LOG"
+LOG "Wiping device ($DEVICE)..." "$LOGFILE"
 
 OS=`uname`
 if [ $OS = "Darwin" ]; then
 
-	echo "Using MacOSX (diskutil secureErase)..." | tee -a "$LOG"
-	diskutil secureErase 0 "$DEVICE" 2>&1 | tee -a "$LOG"
+	LOG "Using MacOSX (diskutil secureErase)..." "$LOGFILE"
+	RESULTS=$(diskutil secureErase 0 "$DEVICE" 2>&1)
+	LOG "$RESULTS" "$LOGFILE"
 
 else
 
 	if [$OS = "FreeBSD" ]; then
 
-		MODEL=`camcontrol identify "$DEVICE" | grep 'device model' | gsed -r 's/^device model[[:space:]]+(.*)$/\1/'`
-		SERIAL=`camcontrol identify "$DEVICE" | grep 'serial number' | gsed -r 's/^serial number[[:space:]]+(.*)$/\1/'`
-		echo "FreeBSD 'camcontrol' reported model: '$MODEL', serial number: '$SERIAL'..." | tee -a "$LOG"
+		MODEL=`camcontrol identify "$DEVICE" | grep 'device model' | $SEDCMD -r 's/^device model[[:space:]]+(.*)$/\1/'`
+		SERIAL=`camcontrol identify "$DEVICE" | grep 'serial number' | $SEDCMD -r 's/^serial number[[:space:]]+(.*)$/\1/'`
+		LOG "FreeBSD 'camcontrol' reported model: '$MODEL', serial number: '$SERIAL'..." "$LOGFILE"
 
 	fi
 
-	echo "Using dd (/dev/zero)..." | tee -a "$LOG"
-	dd if=/dev/zero of="$DEVICE" bs=$BS 2>&1 | tee -a "$LOG"
+	LOG "Using dd (/dev/zero)..." "$LOGFILE"
+	RESULTS=$(dd if=/dev/zero of="$DEVICE" bs=$BS)
+	LOG "$RESULT" "$LOGFILE"
 
 fi
 
-date "+%Y%m%d" >> "$LOG"
+LOG "Completed wiping device ($DEVICE)!" "$LOGFILE"
 
 $(dirname "$0")/wipe-verify.sh "$DEVICE" "$SERIALNUM" "$LOGDIR"
 
+END "$0" "$LOGFILE"

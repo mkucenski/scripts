@@ -1,25 +1,30 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 # The goal of this script is simply to find the largest blocksize (bs=) that can be used and still cover the entire disk.
-
 DEVICE="$1"
 
-SECTORS=`diskutil info $DEVICE | egrep "(Disk|Total) Size:" | gsed -r 's/.+\(exactly ([[:digit:]]+) 512-Byte-Units\)/\1/'`
+SECTORS=$($(dirname "$0")/disksectors.sh "$DEVICE")
+if [ $SECTORS -lt 0 ]; then
+	ERROR "Unable to read disk sectors!" "$0"
+	exit 1
+fi
 SECTOR_SIZE=512
 SIZE=$(expr $SECTORS \* $SECTOR_SIZE)
 
-BS=2
-MAXBS=16384
+BS=$SECTOR_SIZE
+MAX=$(expr 1024 \* 64)
 TEST=$BS
-while [ $(expr $SIZE % $TEST) -eq 0 ]; do
-	BS=$TEST
-	TEST=$(expr $TEST \* 2)
+while [ 1 ]; do
+	if [ $TEST -le $MAX ]; then
+		TEST=$(expr $TEST + $SECTOR_SIZE)
+		if [ $(expr $SIZE % $TEST) -eq 0 ]; then
+			BS=$TEST
+		fi
+	else
+		break;
+	fi
 done
-if [ $BS -gt $MAXBS ]; then
-	BS=$MAXBS
-fi
 
-COUNT=$(expr $SIZE / $BS)
-
-echo $BS
+echo $BS | tee /dev/stderr
 

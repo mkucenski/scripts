@@ -3,15 +3,20 @@
 # Quick script to verify whether the first X and last X bytes of a device have been wiped.
 
 DEVICE="$1"
-COUNT="$2"
+BS="$2"
+COUNT="$3"
 
-BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
+echo "Block Size=$BS"
 SIZE=$($(dirname "$0")/disksize.sh "$DEVICE")
-BLOCKS=$(expr $SIZE \/ $BS)
+echo "Disk Size=$SIZE"
+BLOCKS=$(expr $SIZE / $BS)
+echo "Blocks=$BLOCKS"
 
-echo "Reading first $COUNT blocks of ($DEVICE) using (bs=$BS)..."
-dd if="$DEVICE" bs=$BS count=$COUNT 2> /dev/null | xxd -a
+echo "Reading first $COUNT block(s) of ($DEVICE) using (bs=$BS)..."
+dd if="$DEVICE" bs=$BS count=$COUNT | xxd -a
 echo ""
-echo "Reading last $COUNT blocks of ($DEVICE) using (bs=$BS)..."
-dd if="$DEVICE" bs=$BS skip=$(expr $BLOCKS - $COUNT) 2> /dev/null| xxd -a
+
+SKIP=$(expr $BLOCKS - $COUNT)
+echo "Reading last $COUNT block(s) (skipping $(expr $SKIP \* $BS) bytes) of ($DEVICE) using (bs=$BS)..."
+dd if="$DEVICE" bs=$BS skip=$SKIP | xxd -a
 

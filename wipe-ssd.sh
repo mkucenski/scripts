@@ -1,26 +1,25 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 DEVICE="$1"
 SERIALNUM="$2"
 LOGDIR="$3"
 
-LOG="$3/$SERIALNUM-wipe.log"
+LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
+START "$0" "$LOGFILE"
 
 PASSES=2
 BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
 
-echo
-date "+%Y%m%d" >> "$LOG"
-echo "Starting SSD/Flash wipe on device ($DEVICE)..." | tee -a "$LOG"
+LOG "Starting SSD/Flash wipe on device ($DEVICE)..." "$LOGFILE"
 
 for PASS in `seq 1 $PASSES`; do
-	echo "Zero-Pass ($PASS/$PASSES)..." | tee -a "$LOG"
-	$(dirname "$0")/wipe-disk.sh "$DEVICE" "$LOG"
+	LOG "Zero-Pass ($PASS/$PASSES)..." "$LOGFILE"
+	$(dirname "$0")/wipe-disk.sh "$DEVICE" "$LOGFILE"
 done
 
-echo "Verifying entire wiped device ($DEVICE) using (bs=$BS)..." | tee -a "$LOG"
-dd if="$DEVICE" bs=$BS 2>> "$LOG" | xxd -a | tee -a "$LOG"
+LOG "Completed wiping device ($DEVICE)!" "$LOGFILE"
 
-echo "Completed wiping device ($DEVICE)!"
-date "+%Y%m%d" >> "$LOG"
+$(dirname "$0")/wipe-verify-full.sh "$DEVICE" "$SERIALNUM" "$LOGDIR"
 
+END "$0" "$LOGFILE"
