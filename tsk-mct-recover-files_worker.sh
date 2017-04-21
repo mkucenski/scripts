@@ -1,5 +1,6 @@
 #!/bin/bash
 . $(dirname "$0")/common-include.sh
+. $(dirname "$0")/tsk-include.sh
 
 IMAGE="$1"
 OFFSET="$2"
@@ -7,10 +8,8 @@ DEST="$3"
 MCTENTRY="$4"
 
 if [ -n "$MCTENTRY" ]; then
-	REGEX="^[^|]+\|[^|]+\|[^|]+\|r[^|]+\|[^|]+\|[^|]+\|[^|]+\|[^|]+\|[^|]+\|[^|]+\|[^|]+$"
-	SED="^([^|]+)\|([^|]+)\|([^|]+)\|(r[^|]+)\|([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)$"
-	FILE=$(echo "$MCTENTRY" | grep -v "\$FILE_NAME" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\2/")
-	INODE=$(echo "$MCTENTRY" | grep -v "\$FILE_NAME" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\3/" | egrep "[[:digit:]]+-128-[[:digit:]]+" | $SEDCMD -r "s/([[:digit:]]+)-128-[[:digit:]]/\1/")
+	FILE=$(_tsk_mct_file "$MCTENTRY")
+	INODE=$(_tsk_mct_inode "$MCTENTRY")
 	if [ -n "$FILE" ]; then
 		if [ -n "$INODE" ]; then
 			mkdir -p "$DEST/$(dirname "$FILE")"
