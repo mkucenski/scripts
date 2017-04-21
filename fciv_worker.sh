@@ -5,7 +5,7 @@ FILE="$1"
 DOSHA1="$2"
 
 if [ -f "$FILE" ]; then
-	MD5=$(openssl dgst -md5 -r "$FILE" | $SEDCMD -r 's/(^.+) \*.*/\1/')
+	MD5=$(openssl dgst -md5 -r "$FILE" | $SEDCMD -r 's/([^[:space:]]+).*/\1/')
 	SHA1="0000000000000000000000000000000000000000"
 	if [ "$DOSHA1" != "0" ]; then
 		SHA1=$(openssl dgst -sha1 -r "$FILE" | $SEDCMD -r 's/([^[:space:]]+).*/\1/')
