@@ -11,10 +11,11 @@ function DEBUG() {
 
 function USAGE() {
 	if [ $# -ne 0 ]; then
-		echo -n "Usage: $0"
+		echo -n "Usage: $0 "
 		for VAR in "$@"; do
-			echo -n "<$VAR>"
+			echo -n "<$VAR> "
 		done
+		echo; echo
 	fi
 }
 
