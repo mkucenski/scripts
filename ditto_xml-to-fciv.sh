@@ -2,6 +2,9 @@
 . $(dirname "$0")/common-include.sh
 
 XML="$1"
+if [ $# -eq 0 ]; then
+	USAGE "XML" && exit 0
+fi
 
 KEY="1.75"
 TMP=$(mktemp -t $(basename "$0") || exit 1)

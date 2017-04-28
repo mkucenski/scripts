@@ -3,6 +3,9 @@
 
 CSV="$1"
 DOSHA1="$2"
+if [ $# -eq 0 ]; then
+	USAGE "CSV" "DOSHA1" && exit 0
+fi
 
 KEY="1.75"
 TMP=$(mktemp -t $(basename "$0") || exit 1)

@@ -3,6 +3,9 @@
 
 GBYTES="$1"
 MOUNTPOINT="$2"
+if [ $# -eq 0 ]; then
+	USAGE "SIZE (GB)" "MOUNT POINT" && exit 0
+fi
 
 SECTORS=$(expr $GBYTES \* 1024 \* 1024 \* 1024 / 512)
 UNAME=$(uname)

@@ -5,6 +5,9 @@
 IMAGE="$1"
 OFFSET="$2"
 DOSHA1="$3"
+if [ $# -eq 0 ]; then
+	USAGE "IMAGE" "OFFSET" "DOSHA1" && exit 0
+fi
 
 KEY="1.75"
 

@@ -3,6 +3,9 @@
 
 DEVICE="$1"
 BS="$2"
+if [ $# -eq 0 ]; then
+	USAGE "DEVICE" "BLOCK SIZE (optional)" && exit 0
+fi
 
 if [ $# == 1 ]; then
 	BS=$($(dirname "$0")/blocksize.sh "$DEVICE")

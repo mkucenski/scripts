@@ -3,6 +3,9 @@
 
 # Can be device (/dev/disk8) or mountpoint
 IDENTIFIER="$1"
+if [ $# -eq 0 ]; then
+	USAGE "IDENTIFIER (device or mount point)" && exit 0
+fi
 
 UNAME=$(uname)
 if [ "$UNAME" = "Darwin" ]; then

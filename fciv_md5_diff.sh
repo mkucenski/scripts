@@ -3,6 +3,9 @@
 
 FILE1="$1"
 FILE2="$2"
+if [ $# -eq 0 ]; then
+	USAGE "FILE1" "FILE2" && exit 0
+fi
 
 if [ -e "$FILE1" ]; then
 	if [ -e "$FILE2" ]; then

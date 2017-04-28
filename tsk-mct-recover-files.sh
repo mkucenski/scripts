@@ -1,6 +1,11 @@
 #!/bin/bash
 . $(dirname "$0")/common-include.sh
 
+if [ $# -eq 0 ]; then
+	echo "Usage: $0 <IMAGE> <OFFSET> <DEST>"
+	exit
+fi
+
 IMAGE="$1"
 OFFSET="$2"
 DEST="$3"

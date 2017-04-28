@@ -2,6 +2,11 @@
 . $(dirname "$0")/common-include.sh
 . $(dirname "$0")/tsk-include.sh
 
+if [ $# -eq 0 ]; then
+	echo "Usage: $0 <IMAGE> <OFFSET> <DEST> <MCT Entry"
+	exit
+fi
+
 IMAGE="$1"
 OFFSET="$2"
 DEST="$3"

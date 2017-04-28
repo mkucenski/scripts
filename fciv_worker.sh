@@ -3,6 +3,9 @@
 
 FILE="$1"
 DOSHA1="$2"
+if [ $# -eq 0 ]; then
+	USAGE "FILE" "DOSHA1" && exit 0
+fi
 
 if [ -f "$FILE" ]; then
 	MD5=$(openssl dgst -md5 -r "$FILE" | $SEDCMD -r 's/([^[:space:]]+).*/\1/')
