@@ -1,5 +1,14 @@
 #!/bin/bash
 
+function DEBUG() {
+	MSG="$1"
+	SRC="$2"
+	OUTPUT="DEBUG($(basename "$SRC")): $MSG"
+	echo "$OUTPUT" > /dev/stderr
+}
+
+# DEBUG "Included: common-include.sh" "$0"
+
 # On systems where gsed/gawk exist, we assume that is the correct GNU version to use.
 SEDCMD=$(if [ -n "$(which gsed)" ]; then echo "gsed"; else echo "sed"; fi)
 AWKCMD=$(if [ -n "$(which gawk)" ]; then echo "gawk"; else echo "awk"; fi)
@@ -36,13 +45,6 @@ function WARNING() {
 	else
 		echo "$OUTPUT" > /dev/stderr
 	fi
-}
-
-function DEBUG() {
-	MSG="$1"
-	SRC="$2"
-	OUTPUT="DEBUG($(basename "$SRC")): $MSG"
-	echo "$OUTPUT" > /dev/stderr
 }
 
 function START() {
