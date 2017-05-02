@@ -35,3 +35,7 @@ if [ -e "$CSV" ]; then
 else
 	echo "Error! Unable to find file!" > /dev/stderr
 fi
+
+rm "$TMP"
+rm "$TMPCSV"
+
