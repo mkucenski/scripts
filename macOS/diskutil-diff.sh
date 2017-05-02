@@ -1,7 +1,7 @@
 #!/bin/bash
 
-TMP1=$(mktemp)
-TMP2=$(mktemp)
+TMP1=$(mktemp -t $(basename "$0"))
+TMP2=$(mktemp -t $(basename "$0"))
 
 LIST1=$(diskutil list)
 LIST2="$LIST1"
@@ -16,3 +16,7 @@ if [ "$LIST1" != "$LIST2" ]; then
 	echo "$LIST2" > "$TMP2"
 	diff --side-by-side --ignore-all-space --suppress-common-lines "$TMP1" "$TMP2"
 fi
+
+rm "$TMP1"
+rm "$TMP2"
+
