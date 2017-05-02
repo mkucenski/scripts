@@ -5,8 +5,9 @@
 IMAGE="$1"
 OFFSET="$2"
 DOSHA1="$3"
-if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "OFFSET" "DOSHA1" && exit 0
+LOGFILE="$4"
+if [ $# -ne 4 ]; then
+	USAGE "IMAGE" "OFFSET" "DOSHA1" "LOGFILE" && exit 0
 fi
 
 KEY="1.75"
@@ -24,7 +25,7 @@ while read LINE; do
 		INODE=$(_tsk_mct_inode "$LINE")
 		if [ -n "$FILE" ]; then
 			if [ -n "$INODE" ]; then
-				icat -o $OFFSET "$IMAGE" $INODE | $(dirname "$0")/fciv_worker_stdin.sh "$FILE" $DOSHA1 | tee -a "$UNSORTED" > /dev/stderr 
+				icat -o $OFFSET "$IMAGE" $INODE 2> >(tee -a "$LOGFILE" >&2) | $(dirname "$0")/fciv_worker_stdin.sh "$FILE" $DOSHA1 2> >(tee -a "$LOGFILE" >&2) >> "$UNSORTED"
 	 		fi
 		fi
 	else
@@ -34,3 +35,7 @@ done < "$MCT"
 
 INFO "Sorting Based on File Name..."
 sort --key=$KEY "$UNSORTED"
+
+rm "$MCT"
+rm "$UNSORTED"
+
