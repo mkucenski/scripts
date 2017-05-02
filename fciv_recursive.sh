@@ -16,3 +16,6 @@ if [ -e "$DIR" ]; then
 else
 	ERROR "Unable to find ($DIR)!" "$0"
 fi
+
+rm "$TMP"
+
