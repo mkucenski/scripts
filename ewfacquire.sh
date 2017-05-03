@@ -1,11 +1,15 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 DEVICE="$1"
 DEST="$2"
 CASE="$3"
 EXAMINER="$4"
+if [ $# -ne 4 ]; then
+	USAGE "DEVICE" "BASE DEST. NAME" "CASE #" "EXAMINER" && exit 0
+fi
 
-ewfacquire -c deflate:best -C "$CASE" -e "$EXAMINER" -f encase6 -l "$(dirname "$DEST")/ewfaquire.log" -t "$DEST" "$DEVICE"
+ewfacquire -u -c deflate:best -C "$CASE" -e "$EXAMINER" -f encase6 -l "$DEST-ewfacquire.log" -t "$DEST" "$DEVICE"
 
 # ewfacquire 20140608
 # 
