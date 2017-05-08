@@ -16,7 +16,6 @@ MCT=$(mktemp -t $(basename "$0") || exit 1)
 INFO "Building List of All Files Found in Image/Device... ($MCT)"
 fls -o $OFFSET -m "" -F -r "$IMAGE" | $SEDCMD -r 's/^([[:digit:]]+\|)\/?/\1/' > "$MCT"
 
-$(dirname "$0")/fciv.sh 
 UNSORTED=$(mktemp -t $(basename "$0") || exit 1)
 INFO "Extracting and Hashing Each File... ($UNSORTED)"
 while read LINE; do
@@ -34,6 +33,7 @@ while read LINE; do
 done < "$MCT"
 
 INFO "Sorting Based on File Name..."
+$(dirname "$0")/fciv.sh 
 sort --key=$KEY "$UNSORTED"
 
 rm "$MCT"
