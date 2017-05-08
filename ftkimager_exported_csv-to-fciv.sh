@@ -10,15 +10,15 @@ fi
 KEY="1.75"
 TMP=$(mktemp -t $(basename "$0") || exit 1)
 TMPCSV=$(mktemp -t $(basename "$0") || exit 1)
-dos2unix -n "$CSV" "$TMPCSV"
 
 if [ -e "$CSV" ]; then
-	$(dirname "$0")/fciv.sh
+	INFO $(dos2unix -n "$CSV" "$TMPCSV" 2>&1)
 
+	INFO "Parsing individual lines into fciv format ($TMP)..."
 	while read -r LINE; do
-		REGEX="^\"[a-z0-9]{32}\",\"[a-z0-9]{40}\",\".*\[AD1\].*\""
-		SED="^\"([a-z0-9]{32})\",\"([a-z0-9]{40})\",\".*\[AD1\](.*)\""
-		FILE=$(echo "$LINE" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\.\3/")
+		REGEX="^\"[a-z0-9]{32}\",\"[a-z0-9]{40}\",\".*\[.+\]\\\.*\""
+		SED="^\"([a-z0-9]{32})\",\"([a-z0-9]{40})\",\".*\[.+\]\\\(.*)\""
+		FILE=$(echo "$LINE" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\3/")
 		MD5=$(echo "$LINE" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\1/")
 
 		if [ -n "$MD5" ]; then
@@ -27,10 +27,12 @@ if [ -e "$CSV" ]; then
 			else
 				SHA1="0000000000000000000000000000000000000000"
 			fi
-			echo "$MD5 $SHA1 $FILE" | tee -a "$TMP" > /dev/stderr
+			echo "$MD5 $SHA1 $FILE" >> "$TMP"
 		fi
 	done < "$TMPCSV"
 
+	INFO "Sorting based on filename/path ($KEY)..."
+	$(dirname "$0")/fciv.sh
 	sort --key=$KEY "$TMP"
 else
 	echo "Error! Unable to find file!" > /dev/stderr
