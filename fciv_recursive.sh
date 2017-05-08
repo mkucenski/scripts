@@ -1,4 +1,5 @@
 #!/bin/bash
+. $(dirname "$0")/common-include.sh
 
 DIR="$1"
 DOSHA1="$2"
@@ -11,7 +12,7 @@ TMP=$(mktemp -t $(basename "$0") || exit 1)
 
 if [ -e "$DIR" ]; then
 	$(dirname "$0")/fciv.sh 
-	find "$DIR" -type f -exec $(dirname "$0")/fciv_worker.sh {} $DOSHA1 \; | tee -a "$TMP" > /dev/stderr
+	find "$DIR" -type f -exec $(dirname "$0")/fciv_worker.sh {} $DOSHA1 \; >> "$TMP"
 	sort --key=$KEY "$TMP"
 else
 	ERROR "Unable to find ($DIR)!" "$0"
