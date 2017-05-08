@@ -1,10 +1,10 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 DEVICE="$1"
 SERIALNUM="$2"
 LOGDIR="$3"
-if [ $# -eq 0 ]; then
+if [ $# -ne 3 ]; then
 	USAGE "DEVICE" "SERIALNUM" "LOGDIR" && exit 0
 fi
 

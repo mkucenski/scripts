@@ -1,6 +1,6 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
-. $(dirname "$0")/tsk-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
+. ${BASH_SOURCE%/*}/tsk-include.sh
 
 IMAGE="$1"
 OFFSET="$2"

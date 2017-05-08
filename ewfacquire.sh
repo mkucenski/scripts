@@ -1,5 +1,5 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 DEVICE="$1"
 DEST="$2"

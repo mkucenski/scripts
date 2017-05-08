@@ -1,8 +1,11 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 EWF="$1"
 VMDK="$2"
+if [ $# -ne 2 ]; then
+	USAGE "EWF" "VMDK" && exit 0
+fi
 
 DEBUG=0
 LOG="$VMDK.log"

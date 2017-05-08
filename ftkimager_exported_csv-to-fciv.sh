@@ -1,9 +1,9 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 CSV="$1"
 DOSHA1="$2"
-if [ $# -eq 0 ]; then
+if [ $# -ne 2 ]; then
 	USAGE "CSV" "DOSHA1" && exit 0
 fi
 

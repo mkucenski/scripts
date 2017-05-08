@@ -1,9 +1,9 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 FILE1="$1"
 FILE2="$2"
-if [ $# -eq 0 ]; then
+if [ $# -ne 2 ]; then
 	USAGE "FILE1" "FILE2" && exit 0
 fi
 

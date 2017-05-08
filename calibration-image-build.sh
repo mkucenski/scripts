@@ -1,10 +1,13 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 DEVICE="$1"
 SERIAL="$2"
 LOGDIR="$3"
 TESTMODE="$4"
+if [ $# -ne 4 ]; then
+	USAGE "DEVICE" "SERIAL" "LOGDIR" "TESTMODE" && exit 0
+fi
 
 LOGFILE="$LOGDIR/$SERIAL-calibration.log"
 START "$0" "$LOGFILE"

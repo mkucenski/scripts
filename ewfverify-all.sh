@@ -1,8 +1,11 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 BASEDIR="$1"
 LOGDIR="$2"
+if [ $# -ne 2 ]; then
+	USAGE "BASEDIR" "LOGDIR" && exit 0
+fi
 
 # Find all .E01 files within BASEDIR and execute <ewfverify> on each. Log all results
 # to <LOGDIR/ewfverify.log> as well as individual results in each image directory.

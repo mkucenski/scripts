@@ -1,8 +1,8 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 XML="$1"
-if [ $# -eq 0 ]; then
+if [ $# -ne 1 ]; then
 	USAGE "XML" && exit 0
 fi
 

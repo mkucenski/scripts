@@ -1,9 +1,9 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 # Can be device (/dev/disk8) or mountpoint
 IDENTIFIER="$1"
-if [ $# -eq 0 ]; then
+if [ $# -ne 1 ]; then
 	USAGE "IDENTIFIER (device or mount point)" && exit 0
 fi
 

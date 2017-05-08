@@ -1,9 +1,9 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 GBYTES="$1"
 MOUNTPOINT="$2"
-if [ $# -eq 0 ]; then
+if [ $# -ne 2 ]; then
 	USAGE "SIZE (GB)" "MOUNT POINT" && exit 0
 fi
 

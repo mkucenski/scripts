@@ -1,5 +1,5 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 echo "//"
 echo "// Open File Checksum Integrity Verifier version 1.0."

@@ -1,5 +1,5 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 if [ $# -eq 0 ]; then
 	USAGE "FILES..." && exit 0

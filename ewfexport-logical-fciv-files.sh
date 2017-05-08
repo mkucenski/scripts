@@ -1,10 +1,10 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 LOGICAL_IMAGE="$1"
 LOGFILE="$2"
 DOSHA1="$3"
-if [ $# -eq 0 ]; then
+if [ $# -ne 3 ]; then
 	USAGE "LOGICAL_IMAGE" "LOGFILE" "DOSHA1" && exit 0
 fi
 
