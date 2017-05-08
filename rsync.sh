@@ -1,9 +1,12 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
-. $(dirname "$0")/unison/unison-sync-inc.sh
+. ${BASH_SOURCE%/*}/common-include.sh
+. ${BASH_SOURCE%/*}/unison/unison-sync-inc.sh
 
 SRCDIR="$1"
 DSTBASEDIR="$2"
+if [ $# -ne 2 ]; then
+	USAGE "SRCDIR" "DSTBASEDIR" && exit 0
+fi
 
 if [ -e "$SRCDIR" ]; then
 	if [ -e "$DSTBASEDIR" ]; then
