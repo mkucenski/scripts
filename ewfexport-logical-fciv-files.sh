@@ -11,7 +11,7 @@ fi
 TMPDIR=$(mktemp -d -t $(basename "$0") || exit 1)
 
 INFO "Exporting All Logical Files Found in Image... ($TMPDIR)"
-ewfexport -f files -l "$LOGFILE" -t "$TMPDIR/ewfexport" -q -u "$LOGICAL_IMAGE" 2> "$LOGFILE"
+ewfexport -f files -l "$LOGFILE" -t "$TMPDIR/ewfexport" -q -u "$LOGICAL_IMAGE" 2>/dev/null
 
 INFO "Hashing All Logical Files..."
 pushd "$TMPDIR/ewfexport/LogicalEntries"
