@@ -13,9 +13,6 @@ fi
 ERR=-1
 START "$0" "$LOGFILE"
 
-# Store version information for ewfverify
-INFO "$(ewfverify -V | head -n 1)" "$LOGFILE"
-
 FULL_IMAGE_PATH="$(cd $(dirname "$IMAGE"); pwd)/$(basename "$IMAGE")"
 INFO "Image: $FULL_IMAGE_PATH" "$LOGFILE"
 
