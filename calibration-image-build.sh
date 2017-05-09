@@ -30,35 +30,35 @@ COUNT=$(expr $SIZE / $BS)
 PATTERN="The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick br... "
 PATTERN_LEN=$(expr ${#PATTERN} + 1)
 
-LOG "Building Calibration Drive ($DEVICE)..." "$LOGFILE"
-LOG "Device: $DEVICE" "$LOGFILE"
-LOG "512-byte Sectors: $SECTORS" "$LOGFILE"
-LOG "Disk Size: $SIZE" "$LOGFILE"
-LOG "Block Size: $BS" "$LOGFILE"
-LOG "Block Count: $COUNT" "$LOGFILE"
-LOG "Pattern: '$PATTERN'" "$LOGFILE"
-LOG "Pattern Bytes: $PATTERN_LEN" "$LOGFILE"
-LOG "" "$LOGFILE"
+INFO "Building Calibration Drive ($DEVICE)..." "$LOGFILE"
+INFO "Device: $DEVICE" "$LOGFILE"
+INFO "512-byte Sectors: $SECTORS" "$LOGFILE"
+INFO "Disk Size: $SIZE" "$LOGFILE"
+INFO "Block Size: $BS" "$LOGFILE"
+INFO "Block Count: $COUNT" "$LOGFILE"
+INFO "Pattern: '$PATTERN'" "$LOGFILE"
+INFO "Pattern Bytes: $PATTERN_LEN" "$LOGFILE"
+INFO "" "$LOGFILE"
 
-LOG "Building expected MD5..." "$LOGFILE"
+INFO "Building expected MD5..." "$LOGFILE"
 EXPECTED_MD5=`yes "$PATTERN" | dd ibs=$PATTERN_LEN obs=$BS count=$(expr $SIZE / $PATTERN_LEN) | openssl md5 | tr a-z A-Z | $SEDCMD -r 's/\(STDIN\)= //'`
-LOG "$EXPECTED_MD5 - MD5 expected from pattern generation" "$LOGFILE"
-LOG "" "$LOGFILE"
+INFO "$EXPECTED_MD5 - MD5 expected from pattern generation" "$LOGFILE"
+INFO "" "$LOGFILE"
 
 if [ -z "$TESTMODE" ]; then
-	LOG "Writing calibration pattern to device ($DEVICE)..." "$LOGFILE"
+	INFO "Writing calibration pattern to device ($DEVICE)..." "$LOGFILE"
 	yes $PATTERN | dd bs=$BS of="$DEVICE"
-	LOG "" "$LOGFILE"
+	INFO "" "$LOGFILE"
 
-	LOG "Reading from device ($DEVICE)..." "$LOGFILE"
+	INFO "Reading from device ($DEVICE)..." "$LOGFILE"
 	DEVICE_MD5=$($(dirname "$0")/diskmd5.sh "$DEVICE" "$BS")
 	if [ -n "$DEVICE_MD5" ]; then
-		LOG "$DEVICE_MD5 - MD5 read from device ($DEVICE)" "$LOGFILE"
-		LOG "$EXPECTED_MD5 - MD5 expected from pattern generation" "$LOGFILE"
+		INFO "$DEVICE_MD5 - MD5 read from device ($DEVICE)" "$LOGFILE"
+		INFO "$EXPECTED_MD5 - MD5 expected from pattern generation" "$LOGFILE"
 		if [ "$DEVICE_MD5" == "$EXPECTED_MD5" ]; then
-			LOG "Match!" "$LOGFILE"
+			INFO "Match!" "$LOGFILE"
 		fi
-		LOG "" "$LOGFILE"
+		INFO "" "$LOGFILE"
 		END "$0" "$LOGFILE"
 		exit 0
 	else

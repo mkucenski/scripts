@@ -14,13 +14,13 @@ START "$0" "$LOGFILE"
 COUNT=1024
 BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
 
-LOG "Wiping device ($DEVICE)..." "$LOGFILE"
+INFO "Wiping device ($DEVICE)..." "$LOGFILE"
 
-LOG "Using dd (/dev/zero)..." "$LOGFILE"
+INFO "Using dd (/dev/zero)..." "$LOGFILE"
 RESULTS=$(dd if=/dev/zero of="$DEVICE" bs=$BS)
-LOG "$RESULT" "$LOGFILE"
+INFO "$RESULT" "$LOGFILE"
 
-LOG "Completed wiping device ($DEVICE)!" "$LOGFILE"
+INFO "Completed wiping device ($DEVICE)!" "$LOGFILE"
 
 $(dirname "$0")/wipe-verify.sh "$DEVICE" "$SERIALNUM" "$LOGDIR"
 

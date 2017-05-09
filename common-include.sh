@@ -31,36 +31,39 @@ SEDCMD=$(if [ -n "$(which gsed)" ]; then echo "gsed"; else echo "sed"; fi)
 AWKCMD=$(if [ -n "$(which gawk)" ]; then echo "gawk"; else echo "awk"; fi)
 
 function INFO() {
+	# Output message to stdout and LOGFILE (if specified)
+
 	_COMMON_INFO_MSG="$1"
 	_COMMON_INFO_LOGFILE="$2"
+	echo "$_COMMON_INFO_MSG"
 	if [ -n "$_COMMON_INFO_LOGFILE" ]; then
-		echo "$_COMMON_INFO_MSG" | tee -a "$_COMMON_INFO_LOGFILE" > /dev/stderr
-	else
-		echo "$_COMMON_INFO_MSG" > /dev/stderr
+		LOG "$_COMMON_INFO_MSG" "$_COMMON_INFO_LOGFILE"
 	fi
 }
 
 function ERROR() {
+	# Output clear ERROR message to stderr and LOGFILE (if specified)
+
 	_COMMON_ERROR_MSG="$1"
 	_COMMON_ERROR_SRC="$2"
 	_COMMON_ERROR_LOGFILE="$3"
-	_COMMON_ERROR_OUTPUT="ERROR($(basename "$_COMMON_ERROR_SRC")):  $_COMMON_ERROR_MSG"
+	_COMMON_ERROR_OUTPUT="ERROR($(basename "$_COMMON_ERROR_SRC")): $_COMMON_ERROR_MSG"
+	echo "$_COMMON_ERROR_OUTPUT" > /dev/stderr
 	if [ -n "$_COMMON_ERROR_LOGFILE" ]; then
-		echo "$_COMMON_ERROR_OUTPUT" | tee -a "$_COMMON_ERROR_LOGFILE" > /dev/stderr
-	else
-		echo "$_COMMON_ERROR_OUTPUT" > /dev/stderr
+		LOG "$_COMMON_ERROR_OUTPUT" "$_COMMON_ERROR_LOGFILE"
 	fi
 }
 
 function WARNING() {
+	# Output clear WARNING message to stderr and LOGFILE (if specified)
+
 	_COMMON_WARNING_MSG="$1"
 	_COMMON_WARNING_SRC="$2"
 	_COMMON_WARNING_LOGFILE="$3"
 	_COMMON_WARNING_OUTPUT="WARNING($(basename "$_COMMON_WARNING_SRC")): $_COMMON_WARNING_MSG"
+	echo "$_COMMON_WARNING_OUTPUT" > /dev/stderr
 	if [ -n "$_COMMON_WARNING_LOGFILE" ]; then
-		echo "$_COMMON_WARNING_OUTPUT" | tee -a "$_COMMON_WARNING_LOGFILE" > /dev/stderr
-	else
-		echo "$_COMMON_WARNING_OUTPUT" > /dev/stderr
+		LOG "$_COMMON_WARNING_OUTPUT" "$_COMMON_WARNING_LOGFILE"
 	fi
 }
 
@@ -80,20 +83,14 @@ function END() {
 }
 
 function LOG() {
+	# Output message to LOGFILE (no output to stdout/stderr)
+
 	_COMMON_LOG_MSG="$1"
 	_COMMON_LOG_LOGFILE="$2"
-	if [ -n "$_COMMON_LOG_MSG" ]; then
-		if [ -n "$_COMMON_LOG_LOGFILE" ]; then
-			echo "$_COMMON_LOG_MSG" | tee -a "$_COMMON_LOG_LOGFILE"
-		else
-			echo "$_COMMON_LOG_MSG"
-		fi
+	if [ -n "$_COMMON_LOG_LOGFILE" ]; then
+		echo "$_COMMON_LOG_MSG" >> "$_COMMON_LOG_LOGFILE"
 	else
-		if [ -n "$_COMMON_LOG_LOGFILE" ]; then
-			echo | tee -a "$_COMMON_LOG_LOGFILE"
-		else
-			echo
-		fi
+		echo "$_COMMON_LOG_MSG"
 	fi
 }
 

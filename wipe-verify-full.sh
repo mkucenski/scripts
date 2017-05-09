@@ -18,8 +18,8 @@ SECTOR_SIZE=512
 SIZE=$(expr $SECTORS \* $SECTOR_SIZE)
 BLOCKS=$(expr $SIZE / $BS)
 
-LOG "Verifying entire wiped device ($DEVICE) using (bs=$BS)..." "$LOGFILE"
+INFO "Verifying entire wiped device ($DEVICE) using (bs=$BS)..." "$LOGFILE"
 RESULTS=$(dd if="$DEVICE" bs=$BS | xxd -a)
-LOG "$RESULTS" "$LOGFILE"
+INFO "$RESULTS" "$LOGFILE"
 
 END "$0" "$LOGFILE"

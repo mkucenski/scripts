@@ -18,21 +18,21 @@ SECTOR_SIZE=512
 SIZE=$(expr $SECTORS \* $SECTOR_SIZE)
 BLOCKS=$(expr $SIZE / $BS)
 
-LOG "Verifying device wipe status ($DEVICE)..." "$LOGFILE"
-LOG "" "$LOGFILE"
+INFO "Verifying device wipe status ($DEVICE)..." "$LOGFILE"
+INFO "" "$LOGFILE"
  
-LOG "Verifying first $(expr $BS \* $COUNT)-bytes of ($DEVICE) using (bs=$BS)..." "$LOGFILE"
+INFO "Verifying first $(expr $BS \* $COUNT)-bytes of ($DEVICE) using (bs=$BS)..." "$LOGFILE"
 RESULTS=$(dd if="$DEVICE" bs=$BS count=$COUNT | xxd -a)
-LOG "$RESULTS" "$LOGFILE"
-LOG "" "$LOGFILE"
+INFO "$RESULTS" "$LOGFILE"
+INFO "" "$LOGFILE"
  
-LOG "Verifying middle $(expr $BS \* $COUNT)-bytes of ($DEVICE) using (bs=$BS, skip=$(expr $BLOCKS / 2 - $COUNT / 2))..." "$LOGFILE"
+INFO "Verifying middle $(expr $BS \* $COUNT)-bytes of ($DEVICE) using (bs=$BS, skip=$(expr $BLOCKS / 2 - $COUNT / 2))..." "$LOGFILE"
 RESULTS=$(dd if="$DEVICE" bs=$BS skip=$(expr $BLOCKS / 2 - $COUNT / 2) count=$COUNT | xxd -a)
-LOG "$RESULTS" "$LOGFILE"
-LOG "" "$LOGFILE"
+INFO "$RESULTS" "$LOGFILE"
+INFO "" "$LOGFILE"
 
-LOG "Verifying last $(expr $BS \* $COUNT)-bytes of ($DEVICE) using (bs=$BS, skip=$(expr $BLOCKS - $COUNT))..." "$LOGFILE"
+INFO "Verifying last $(expr $BS \* $COUNT)-bytes of ($DEVICE) using (bs=$BS, skip=$(expr $BLOCKS - $COUNT))..." "$LOGFILE"
 RESULTS=$(dd if="$DEVICE" bs=$BS skip=$(expr $BLOCKS - $COUNT) count=$COUNT | xxd -a)
-LOG "$RESULTS" "$LOGFILE"
+INFO "$RESULTS" "$LOGFILE"
 
 END "$0" "$LOGFILE"
