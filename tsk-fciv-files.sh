@@ -24,7 +24,7 @@ while read LINE; do
 		INODE=$(_tsk_mct_inode "$LINE")
 		if [ -n "$FILE" ]; then
 			if [ -n "$INODE" ]; then
-				icat -o $OFFSET "$IMAGE" $INODE 2> >(tee -a "$LOGFILE" >&2) | $(dirname "$0")/fciv_worker_stdin.sh "$FILE" $DOSHA1 2> >(tee -a "$LOGFILE" >&2) >> "$UNSORTED"
+				icat -o $OFFSET "$IMAGE" $INODE 2> >(tee -a "$LOGFILE" >&2) | ${BASH_SOURCE%/*}/fciv_worker_stdin.sh "$FILE" $DOSHA1 2> >(tee -a "$LOGFILE" >&2) >> "$UNSORTED"
 	 		fi
 		fi
 	else
@@ -33,7 +33,7 @@ while read LINE; do
 done < "$MCT"
 
 INFO "Sorting Based on File Name..."
-$(dirname "$0")/fciv.sh 
+${BASH_SOURCE%/*}/fciv.sh 
 sort --key=$KEY "$UNSORTED"
 
 rm "$MCT"

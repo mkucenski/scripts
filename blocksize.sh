@@ -7,7 +7,7 @@ if [ $# -ne 1 ]; then
 	USAGE "DEVICE" && exit 0
 fi
 
-SECTORS=$($(dirname "$0")/disksectors.sh "$DEVICE")
+SECTORS=$(${BASH_SOURCE%/*}/disksectors.sh "$DEVICE")
 if [ $SECTORS -lt 0 ]; then
 	ERROR "Unable to read disk sectors!" "$0"
 	exit 1

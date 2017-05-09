@@ -21,11 +21,11 @@ if [ "$UNAME" = "Darwin" ]; then
 				echo "$RAMDEVICE"
 			else
 				ERROR "Unable to mount $RAMDEVICE ($RV)!" "$0"
-				$(dirname "$0")/rmramdisk.sh "$RAMDEVICE"
+				${BASH_SOURCE%/*}/rmramdisk.sh "$RAMDEVICE"
 			fi
 		else
 			ERROR "Unable to HFS format $RAMDEVICE ($RV)!" "$0"
-			$(dirname "$0")/rmramdisk.sh "$RAMDEVICE"
+			${BASH_SOURCE%/*}/rmramdisk.sh "$RAMDEVICE"
 		fi
 	else
 		ERROR "Unable to create RAM device via <hdiutil attach>!" "$0"

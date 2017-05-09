@@ -1,25 +1,34 @@
 #!/bin/bash
 . ${BASH_SOURCE%/*}/common-include.sh
 
-LOGICAL_IMAGE="$1"
-LOGFILE="$2"
-DOSHA1="$3"
+IMAGE="$1"
+DEVICE="$2"
+LOGFILE="$3"
 if [ $# -ne 3 ]; then
-	USAGE "LOGICAL_IMAGE" "LOGFILE" "DOSHA1" && exit 0
+	USAGE "IMAGE" "DEVICE" "LOGFILE" && exit 0
 fi
 
-TMPDIR=$(mktemp -d -t $(basename "$0") || exit 1)
+START "$0" "$LOGFILE"
 
-INFO "Exporting All Logical Files Found in Image... ($TMPDIR)"
-ewfexport -f files -l "$LOGFILE" -t "$TMPDIR/ewfexport" -q -u "$LOGICAL_IMAGE" 2>/dev/null
+INFO "Locating Original Hash Value..."
+ORIGINAL_HASH=$(ewfinfo "$IMAGE" | grep "MD5:" | $SEDCMD -r 's/.*MD5:[[:space:]]+(.+)/\1/')
+LOG "Original MD5: $ORIGINAL_HASH" "$LOGFILE"
 
-INFO "Hashing All Logical Files..."
-pushd "$TMPDIR/ewfexport/LogicalEntries"
-${BASH_SOURCE%/*}/fciv_recursive.sh ./ "$DOSHA1"
-popd "$TMPDIR"
+INFO "Exporting raw data to device ($DEVICE)..."
+BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
+ewfexport -l "$LOGFILE" -q -u -t - "$IMAGE" | dd of="$DEVICE" bs=$BS 2> >(tee -a "$LOGFILE" >&2)
 
-INFO "Deleting Temp. Directory..."
-rm -R "$TMPDIR"
+INFO "Hashing Target Device..."
+EXPORTED_HASH=$(${BASH_SOURCE%/*}/diskmd5.sh "$DEVICE")
+LOG "Exported MD5: $EXPORTED_HASH" "$LOGFILE"
+
+if [ "$ORIGINAL_HASH" == "$EXPORTED_HASH" ]; then
+	LOG "SUCCESS! Hash Match!" "$LOGFILE"
+else
+	ERROR "Hash Mismatch!" "$0" "$LOGFILE"
+fi
+
+END "$0" "$LOGFILE"
 
 # ewfexport 20140608
 # 

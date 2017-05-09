@@ -12,7 +12,7 @@ LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
 START "$0" "$LOGFILE"
 
 COUNT=1024
-BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
+BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
 
 INFO "Wiping device ($DEVICE)..." "$LOGFILE"
 
@@ -41,6 +41,6 @@ fi
 
 INFO "Completed wiping device ($DEVICE)!" "$LOGFILE"
 
-$(dirname "$0")/wipe-verify.sh "$DEVICE" "$SERIALNUM" "$LOGDIR"
+${BASH_SOURCE%/*}/wipe-verify.sh "$DEVICE" "$SERIALNUM" "$LOGDIR"
 
 END "$0" "$LOGFILE"

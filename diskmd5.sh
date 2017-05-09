@@ -8,7 +8,7 @@ if [ $# -ne 2 ]; then
 fi
 
 if [ $# == 1 ]; then
-	BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
+	BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
 fi
 
 DEVICE_MD5=`dd bs=$BS if="$DEVICE" | openssl md5 | tr a-z A-Z | $SEDCMD -r 's/\(STDIN\)= //'`
