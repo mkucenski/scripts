@@ -16,7 +16,7 @@ if [ -n "$TESTMODE" ]; then
 	WARNING "Test mode enabled, results will not be written to / read from disk!" "$0" "$LOGFILE"
 fi
 
-SECTORS=$($(dirname "$0")/disksectors.sh "$DEVICE")
+SECTORS=$(${BASH_SOURCE%/*}/disksectors.sh "$DEVICE")
 if [ $SECTORS -lt 0 ]; then
 	ERROR"Unable to read disk sectors!" "$0" "$LOGFILE"
 	END "$0" "$LOGFILE"
@@ -25,7 +25,7 @@ fi
 
 SECTOR_SIZE=512
 SIZE=$(expr $SECTORS \* $SECTOR_SIZE)
-BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
+BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
 COUNT=$(expr $SIZE / $BS)
 PATTERN="The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick br... "
 PATTERN_LEN=$(expr ${#PATTERN} + 1)
@@ -51,7 +51,7 @@ if [ -z "$TESTMODE" ]; then
 	LOG "" "$LOGFILE"
 
 	LOG "Reading from device ($DEVICE)..." "$LOGFILE"
-	DEVICE_MD5=$($(dirname "$0")/diskmd5.sh "$DEVICE" "$BS")
+	DEVICE_MD5=$(${BASH_SOURCE%/*}/diskmd5.sh "$DEVICE" "$BS")
 	if [ -n "$DEVICE_MD5" ]; then
 		LOG "$DEVICE_MD5 - MD5 read from device ($DEVICE)" "$LOGFILE"
 		LOG "$EXPECTED_MD5 - MD5 expected from pattern generation" "$LOGFILE"

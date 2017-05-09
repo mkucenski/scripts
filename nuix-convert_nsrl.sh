@@ -7,7 +7,7 @@ TEMP=$(mktemp -t $(basename "$0") || exit 1)
 TEMP2=$(mktemp -t $(basename "$0") || exit 1)
 
 # Get rid of unicode characters that cause problems
-$(dirname "$0")/convert2ascii.sh "$FILE" > "$TEMP"
+${BASH_SOURCE%/*}/convert2ascii.sh "$FILE" > "$TEMP"
 
 # Trim out only the MD5 hash value
 cut -d '"' -f 4 "$TEMP" > "$TEMP2"

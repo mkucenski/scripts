@@ -32,7 +32,7 @@ if [ -e "$CSV" ]; then
 	done < "$TMPCSV"
 
 	INFO "Sorting based on filename/path ($KEY)..."
-	$(dirname "$0")/fciv.sh
+	${BASH_SOURCE%/*}/fciv.sh
 	sort --key=$KEY "$TMP"
 else
 	echo "Error! Unable to find file!" > /dev/stderr

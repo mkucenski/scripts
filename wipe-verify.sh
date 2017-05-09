@@ -12,8 +12,8 @@ LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
 START "$0" "$LOGFILE"
 
 COUNT=1024
-BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
-SECTORS=$($(dirname "$0")/disksectors.sh "$DEVICE")
+BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
+SECTORS=$(${BASH_SOURCE%/*}/disksectors.sh "$DEVICE")
 SECTOR_SIZE=512
 SIZE=$(expr $SECTORS \* $SECTOR_SIZE)
 BLOCKS=$(expr $SIZE / $BS)

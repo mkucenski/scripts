@@ -6,7 +6,7 @@ if [ $# -eq 0 ]; then
 fi
 
 SIZE=-1
-SECTORS=$($(dirname "$0")/disksectors.sh "$DEVICE")
+SECTORS=$(${BASH_SOURCE%/*}/disksectors.sh "$DEVICE")
 if [ $SECTORS -gt 0 ]; then
 	SECTOR_SIZE=512
 	SIZE=$(expr $SECTORS \* $SECTOR_SIZE)

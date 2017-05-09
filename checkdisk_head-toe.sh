@@ -7,7 +7,7 @@ BS="$2"
 COUNT="$3"
 
 echo "Block Size=$BS"
-SIZE=$($(dirname "$0")/disksize.sh "$DEVICE")
+SIZE=$(${BASH_SOURCE%/*}/disksize.sh "$DEVICE")
 echo "Disk Size=$SIZE"
 BLOCKS=$(expr $SIZE / $BS)
 echo "Blocks=$BLOCKS"

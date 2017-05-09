@@ -15,7 +15,7 @@ ewfexport -f files -l "$LOGFILE" -t "$TMPDIR/ewfexport" -q -u "$LOGICAL_IMAGE" 2
 
 INFO "Hashing All Logical Files..."
 pushd "$TMPDIR/ewfexport/LogicalEntries"
-$(dirname "$0")/fciv_recursive.sh ./ "$DOSHA1"
+${BASH_SOURCE%/*}/fciv_recursive.sh ./ "$DOSHA1"
 popd "$TMPDIR"
 
 INFO "Deleting Temp. Directory..."
