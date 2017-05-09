@@ -50,13 +50,8 @@ if [ -z "$TESTMODE" ]; then
 	yes $PATTERN | dd bs=$BS of="$DEVICE"
 	INFO "" "$LOGFILE"
 
-<<<<<<< HEAD
 	INFO "Reading from device ($DEVICE)..." "$LOGFILE"
-	DEVICE_MD5=$($(dirname "$0")/diskmd5.sh "$DEVICE" "$BS")
-=======
-	LOG "Reading from device ($DEVICE)..." "$LOGFILE"
 	DEVICE_MD5=$(${BASH_SOURCE%/*}/diskmd5.sh "$DEVICE" "$BS")
->>>>>>> fb6ba51526ac4bf01710eb1ebfc0daa0a88f6063
 	if [ -n "$DEVICE_MD5" ]; then
 		INFO "$DEVICE_MD5 - MD5 read from device ($DEVICE)" "$LOGFILE"
 		INFO "$EXPECTED_MD5 - MD5 expected from pattern generation" "$LOGFILE"
