@@ -2,8 +2,18 @@
 
 DEBUG=0
 
-PRF=sync/$(basename $(mktemp -t $(basename "$0"))).prf
-PRFDIR=~/.unison
+PRF=$(basename $(mktemp -t $(basename "$0"))).prf
+PRFDIR=~/.unison/sync
+
+function setup() {
+	if [ ! -e "$PRFDIR" ]; then
+		mkdir -p "$PRFDIR"
+	fi
+
+	if [ ! -e "$PRFDIR/common" ]; then
+		cp -n $(dirname "$0")/common "$PRFDIR/"
+	fi
+}
 
 function buildprf() {
 	ROOT1="$1"
@@ -29,6 +39,7 @@ function buildprf2() {
 	ROOT1="$1"
 	ROOT2="$2"
 
+	mkdir -p "$PRFDIR"
 	echo "include sync/common" > "$PRFDIR/$PRF"
 	echo "label = \"$ROOT1 <-> $ROOT2\"" >> "$PRFDIR/$PRF"
 	echo "root = $ROOT1/" >> "$PRFDIR/$PRF"
@@ -79,8 +90,9 @@ function execUnison() {
 	echo ""
 	echo "--- $1 <-> $2 - $3 ---"
 	if ( createDirs "$1/$3" "$2/$3" ); then
+		setup
 		buildprf "$1" "$2" "$3" "$4"
-		unison $PRF
+		unison "$(basename "$PRFDIR")/$PRF"
 		changeFlags "$1/$3"
 		changeFlags "$2/$3"
 	fi
@@ -89,8 +101,9 @@ function execUnison() {
 function execUnison2() {
 	echo ""
 	echo "--- $1 <-> $2 ---"
+	setup
 	buildprf2 "$1" "$2" "$3"
-	unison $PRF
+	unison "$(basename "$PRFDIR")/$PRF"
 	#changeFlags "$1"
 	#changeFlags "$2"
 }
