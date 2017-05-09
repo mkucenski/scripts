@@ -6,11 +6,11 @@ LOGFILE="$2"
 if [ -z "$LOGFILE" ]; then
 	LOGFILE="$(basename "$IMAGE")-ewfverify.log"
 fi
-if [ $# -ne 1 ]; then
+if [ $# -lt 1 ]; then
 	USAGE "IMAGE" "LOGFILE (optional - defaults to \$IMAGE-ewfverify.log)" && exit 0
 fi
 
-ERR=0
+ERR=-1
 START "$0" "$LOGFILE"
 
 # Store version information for ewfverify
@@ -29,7 +29,7 @@ INFO "$RESULT" "$LOGFILE"
 VERIFY=$(echo "$RESULT" | egrep "ewfverify: (SUCCESS|FAILURE)" | $SEDCMD -r 's/ewfverify: (.+)/\1/')
 if [ "$VERIFY" == "SUCCESS" ]; then
 	INFO "Successfully Verified!" "$LOGFILE"
-	ERR=1
+	ERR=0
 elif [ "$VERIFY" == "FAILURE" ]; then
 	ERROR "Failure Verifying Image!" "$0" "$LOGFILE"
 else
