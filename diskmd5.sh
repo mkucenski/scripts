@@ -1,8 +1,11 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 DEVICE="$1"
 BS="$2"
+if [ $# -ne 2 ]; then
+	USAGE "DEVICE" "BLOCK SIZE (optional)" && exit 0
+fi
 
 if [ $# == 1 ]; then
 	BS=$($(dirname "$0")/blocksize.sh "$DEVICE")

@@ -1,21 +1,24 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 CSV="$1"
 DOSHA1="$2"
+if [ $# -ne 2 ]; then
+	USAGE "CSV" "DOSHA1" && exit 0
+fi
 
 KEY="1.75"
 TMP=$(mktemp -t $(basename "$0") || exit 1)
 TMPCSV=$(mktemp -t $(basename "$0") || exit 1)
-dos2unix -n "$CSV" "$TMPCSV"
 
 if [ -e "$CSV" ]; then
-	$(dirname "$0")/fciv.sh
+	INFO "$(dos2unix -n "$CSV" "$TMPCSV" 2>&1)"
 
+	INFO "Parsing individual lines into fciv format ($TMP)..."
 	while read -r LINE; do
-		REGEX="^.*[AD1].+[[:space:]]+[[:digit:]]+[[:space:]]+.*[[:space:]]+[a-z0-9]{32}[[:space:]]+[a-z0-9]{40}.*$"
-		SED="^.*\[AD1\](.+)[[:space:]]+[[:digit:]]+[[:space:]]+.*[[:space:]]+([a-z0-9]{32})[[:space:]]+([a-z0-9]{40}).*$"
-		FILE=$(echo "$LINE" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\.\1/")
+		REGEX="^.*[.+].+[[:space:]]+[[:digit:]]+[[:space:]]+.*[[:space:]]+[a-z0-9]{32}[[:space:]]+[a-z0-9]{40}.*$"
+		SED="^.*\[.+\]\\\\(.+)[[:space:]]+[[:digit:]]+[[:space:]]+.*[[:space:]]+([a-z0-9]{32})[[:space:]]+([a-z0-9]{40}).*$"
+		FILE=$(echo "$LINE" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\1/")
 		MD5=$(echo "$LINE" | egrep "$REGEX" | $SEDCMD -r "s/$SED/\2/")
 
 		if [ -n "$MD5" ]; then
@@ -24,11 +27,17 @@ if [ -e "$CSV" ]; then
 			else
 				SHA1="0000000000000000000000000000000000000000"
 			fi
-			echo "$MD5 $SHA1 $FILE" | tee -a "$TMP" > /dev/stderr
+			echo "$MD5 $SHA1 $FILE" >> "$TMP"
 		fi
 	done < "$TMPCSV"
 
+	INFO "Sorting based on filename/path ($KEY)..."
+	$(dirname "$0")/fciv.sh
 	sort --key=$KEY "$TMP"
 else
-	echo "Error! Unable to find file!" > /dev/stderr
+	ERROR "Unable to find file!" "$0"
 fi
+
+rm "$TMP"
+rm "$TMPCSV"
+

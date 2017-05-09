@@ -13,13 +13,15 @@ START "$0" "$LOGFILE"
 
 COUNT=1024
 BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
-SECTORS=$($(dirname "$0")/disksectors.sh "$DEVICE")
-SECTOR_SIZE=512
-SIZE=$(expr $SECTORS \* $SECTOR_SIZE)
-BLOCKS=$(expr $SIZE / $BS)
 
-LOG "Verifying entire wiped device ($DEVICE) using (bs=$BS)..." "$LOGFILE"
-RESULTS=$(dd if="$DEVICE" bs=$BS | xxd -a)
-LOG "$RESULTS" "$LOGFILE"
+LOG "Wiping device ($DEVICE)..." "$LOGFILE"
+
+LOG "Using dd (/dev/zero)..." "$LOGFILE"
+RESULTS=$(dd if=/dev/zero of="$DEVICE" bs=$BS)
+LOG "$RESULT" "$LOGFILE"
+
+LOG "Completed wiping device ($DEVICE)!" "$LOGFILE"
+
+$(dirname "$0")/wipe-verify.sh "$DEVICE" "$SERIALNUM" "$LOGDIR"
 
 END "$0" "$LOGFILE"

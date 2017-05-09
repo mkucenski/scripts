@@ -1,11 +1,15 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
-. $(dirname "$0")/tsk-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
+. ${BASH_SOURCE%/*}/tsk-include.sh
 
 IMAGE="$1"
 OFFSET="$2"
 DEST="$3"
 MCTENTRY="$4"
+LOGFILE="$5"
+if [ $# -ne 5 ]; then
+	USAGE "IMAGE" "OFFSET" "DEST" "MCTENTRY" "LOGFILE" && exit 0
+fi
 
 if [ -n "$MCTENTRY" ]; then
 	FILE=$(_tsk_mct_file "$MCTENTRY")
@@ -13,7 +17,7 @@ if [ -n "$MCTENTRY" ]; then
 	if [ -n "$FILE" ]; then
 		if [ -n "$INODE" ]; then
 			mkdir -p "$DEST/$(dirname "$FILE")"
-			icat -o $OFFSET "$IMAGE" $INODE > "$DEST/$FILE"
+			icat -o $OFFSET "$IMAGE" $INODE 2> >(tee -a "$LOGFILE" >2&) > "$DEST/$FILE"
 			echo "$FILE"
 		fi
 	fi

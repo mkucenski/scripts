@@ -1,4 +1,6 @@
 #!/bin/bash
+. ${BASH_SOURCE%/*}/../common-include.sh
+# DEBUG "Included: unison-sync-inc.sh" "$0"
 
 DEBUG=0
 

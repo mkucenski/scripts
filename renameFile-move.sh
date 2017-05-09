@@ -1,13 +1,14 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
-
-# Usage Example: ls * | xargs -L 1 -I {} ./move-renameFile.sh {} ".kung" ".foo"
-#                (will replace '.kung' in all files with '.foo' and *move* the
-#                 old file to the new name)
+. ${BASH_SOURCE%/*}/common-include.sh
 
 FILE=$1
 REPL=$2
 WITH=$3
+if [ $# -ne 3 ]; then
+	USAGE "FILE" "REPLACE" "WITH"
+	USAGE_EXAMPLE "ls * | xargs -L 1 -I {} $(basename "$0") {} \".kung\" \".foo\" (will replace '.kung' in all files with '.foo' and *move* the old file to the new name)"
+	exit 0
+fi
 
 NEW=$(echo "$FILE" | $SEDCMD -r "s/$REPL/$WITH/g")
 echo "$NEW"

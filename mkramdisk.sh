@@ -1,8 +1,11 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 GBYTES="$1"
 MOUNTPOINT="$2"
+if [ $# -ne 2 ]; then
+	USAGE "SIZE (GB)" "MOUNT POINT" && exit 0
+fi
 
 SECTORS=$(expr $GBYTES \* 1024 \* 1024 \* 1024 / 512)
 UNAME=$(uname)

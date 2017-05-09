@@ -1,8 +1,11 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 FILE="$1"
 DOSHA1="$2"
+if [ $# -ne 2 ]; then
+	USAGE "FILE" "DOSHA1" && exit 0
+fi
 
 if [ -f "$FILE" ]; then
 	MD5=$(openssl dgst -md5 -r "$FILE" | $SEDCMD -r 's/([^[:space:]]+).*/\1/')

@@ -1,8 +1,11 @@
 #!/bin/bash
-. $(dirname "$0")/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh
 
 EWF="$1"
 RAW="$2"
+if [ $# -ne 2 ]; then
+	USAGE "EWF" "RAW" && exit 0
+fi
 
 DEBUG=0
 LOG="$RAW.log"
