@@ -10,11 +10,8 @@ if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "LOGFILE (optional - defaults to \$IMAGE-ewfverify.log)" && exit 0
 fi
 
-ERR=0
+ERR=-1
 START "$0" "$LOGFILE"
-
-# Store version information for ewfverify
-INFO "$(ewfverify -V | head -n 1)" "$LOGFILE"
 
 FULL_IMAGE_PATH="$(cd $(dirname "$IMAGE"); pwd)/$(basename "$IMAGE")"
 INFO "Image: $FULL_IMAGE_PATH" "$LOGFILE"
@@ -29,7 +26,7 @@ INFO "$RESULT" "$LOGFILE"
 VERIFY=$(echo "$RESULT" | egrep "ewfverify: (SUCCESS|FAILURE)" | $SEDCMD -r 's/ewfverify: (.+)/\1/')
 if [ "$VERIFY" == "SUCCESS" ]; then
 	INFO "Successfully Verified!" "$LOGFILE"
-	ERR=1
+	ERR=0
 elif [ "$VERIFY" == "FAILURE" ]; then
 	ERROR "Failure Verifying Image!" "$0" "$LOGFILE"
 else
