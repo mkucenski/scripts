@@ -19,7 +19,7 @@ BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
 ewfexport -l "$LOGFILE" -q -u -t - "$IMAGE" | dd of="$DEVICE" bs=$BS 2> >(tee -a "$LOGFILE" >&2)
 
 INFO "Hashing Target Device..."
-DEVICE_HASH=$(${BASH_SOURCE%/*}/diskmd5.sh "$DEVICE")
+DEVICE_HASH=$(${BASH_SOURCE%/*}/diskmd5.sh "$DEVICE" | tr A-F a-f)
 INFO "Device MD5: $DEVICE_HASH" "$LOGFILE"
 
 if [ "$ORIGINAL_HASH" == "$DEVICE_HASH" ]; then
