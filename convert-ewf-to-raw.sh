@@ -3,7 +3,7 @@
 
 EWF="$1"
 RAW="$2"
-if [ $# -ne 2 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "EWF" "RAW" && exit 0
 fi
 

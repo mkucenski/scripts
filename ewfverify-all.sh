@@ -4,8 +4,8 @@
 # Find all .E01 files within BASEDIR and execute <ewfverify> on each.
 
 BASEDIR="$1"
-LOGFILE="$2"
-if [ $# -lt 1 ]; then
+LOGDIR="$2"
+if [ $# -eq 0 ]; then
 	USAGE "BASEDIR" "LOGFILE (optional)" && exit 0
 fi
 

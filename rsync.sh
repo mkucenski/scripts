@@ -4,7 +4,7 @@
 
 SRCDIR="$1"
 DSTBASEDIR="$2"
-if [ $# -ne 2 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "SRCDIR" "DSTBASEDIR" && exit 0
 fi
 

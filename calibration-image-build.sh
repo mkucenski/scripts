@@ -5,7 +5,7 @@ DEVICE="$1"
 SERIAL="$2"
 LOGDIR="$3"
 TESTMODE="$4"
-if [ $# -ne 4 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "DEVICE" "SERIAL" "LOGDIR" "TESTMODE" && exit 0
 fi
 

@@ -3,7 +3,7 @@
 
 # Description: This script returns the device sector count.
 DEVICE="$1"
-if [ $# -ne 1 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "DEVICE" && exit 0
 fi
 

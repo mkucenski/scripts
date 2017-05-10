@@ -2,7 +2,7 @@
 . ${BASH_SOURCE%/*}/common-include.sh
 
 LOGFILE="$1"
-if [ $# -ne 1 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "LOGFILE" && exit 0
 fi
 

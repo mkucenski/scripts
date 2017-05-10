@@ -7,7 +7,7 @@ OFFSET="$2"
 DEST="$3"
 MCTENTRY="$4"
 LOGFILE="$5"
-if [ $# -ne 5 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "OFFSET" "DEST" "MCTENTRY" "LOGFILE" && exit 0
 fi
 

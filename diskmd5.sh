@@ -3,7 +3,7 @@
 
 DEVICE="$1"
 BS="$2"
-if [ $# -ne 2 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "DEVICE" "BLOCK SIZE (optional)" && exit 0
 fi
 
