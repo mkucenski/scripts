@@ -6,7 +6,7 @@ IMAGE="$1"
 OFFSET="$2"
 DOSHA1="$3"
 LOGFILE="$4"
-if [ $# -ne 4 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "OFFSET" "DOSHA1" "LOGFILE" && exit 0
 fi
 

@@ -3,7 +3,7 @@
 
 EWF="$1"
 VMDK="$2"
-if [ $# -ne 2 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "EWF" "VMDK" && exit 0
 fi
 

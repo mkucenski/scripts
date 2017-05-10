@@ -4,7 +4,7 @@
 
 SRC="$1"
 DST="$2"
-if [ $# -ne 2 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "SRC" "DST" && exit 0
 fi
 

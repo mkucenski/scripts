@@ -3,7 +3,7 @@
 
 FILE1="$1"
 FILE2="$2"
-if [ $# -ne 2 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "FILE1" "FILE2" && exit 0
 fi
 

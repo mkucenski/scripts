@@ -4,7 +4,7 @@
 IMAGE="$1"
 DEVICE="$2"
 LOGFILE="$3"
-if [ $# -ne 3 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "DEVICE" "LOGFILE" && exit 0
 fi
 
@@ -12,20 +12,20 @@ START "$0" "$LOGFILE"
 
 INFO "Locating Original Hash Value..."
 ORIGINAL_HASH=$(ewfinfo "$IMAGE" | grep "MD5:" | $SEDCMD -r 's/.*MD5:[[:space:]]+(.+)/\1/')
-LOG "Original MD5: $ORIGINAL_HASH" "$LOGFILE"
+INFO "Original MD5: $ORIGINAL_HASH" "$LOGFILE"
 
 INFO "Exporting raw data to device ($DEVICE)..."
 BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
 ewfexport -l "$LOGFILE" -q -u -t - "$IMAGE" | dd of="$DEVICE" bs=$BS 2> >(tee -a "$LOGFILE" >&2)
 
 INFO "Hashing Target Device..."
-EXPORTED_HASH=$(${BASH_SOURCE%/*}/diskmd5.sh "$DEVICE")
-LOG "Exported MD5: $EXPORTED_HASH" "$LOGFILE"
+DEVICE_HASH=$(${BASH_SOURCE%/*}/diskmd5.sh "$DEVICE")
+INFO "Device MD5: $DEVICE_HASH" "$LOGFILE"
 
-if [ "$ORIGINAL_HASH" == "$EXPORTED_HASH" ]; then
-	LOG "SUCCESS! Hash Match!" "$LOGFILE"
+if [ "$ORIGINAL_HASH" == "$DEVICE_HASH" ]; then
+	INFO "SUCCESS! Hash Match!" "$LOGFILE"
 else
-	ERROR "Hash Mismatch!" "$0" "$LOGFILE"
+	ERROR "FAILURE! Hash Mismatch!" "$0" "$LOGFILE"
 fi
 
 END "$0" "$LOGFILE"

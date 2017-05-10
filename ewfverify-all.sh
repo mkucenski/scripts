@@ -3,7 +3,7 @@
 
 BASEDIR="$1"
 LOGDIR="$2"
-if [ $# -ne 2 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "BASEDIR" "LOGDIR" && exit 0
 fi
 

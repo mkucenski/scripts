@@ -2,7 +2,7 @@
 . ${BASH_SOURCE%/*}/common-include.sh
 
 FILE="$1"
-if [ $# -ne 1 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "FILE" && exit 0
 fi
 

@@ -3,7 +3,7 @@
 
 # Can be device (/dev/disk8) or mountpoint
 IDENTIFIER="$1"
-if [ $# -ne 1 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "IDENTIFIER (device or mount point)" && exit 0
 fi
 

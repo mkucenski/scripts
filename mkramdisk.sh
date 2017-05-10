@@ -3,7 +3,7 @@
 
 GBYTES="$1"
 MOUNTPOINT="$2"
-if [ $# -ne 2 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "SIZE (GB)" "MOUNT POINT" && exit 0
 fi
 

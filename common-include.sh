@@ -16,6 +16,8 @@ function USAGE() {
 			echo -n "<$_COMMON_USAGE_VAR> " > /dev/stderr
 		done
 		echo > /dev/stderr; echo > /dev/stderr
+	else
+		echo "Usage information unavailable!" > /dev/stderr
 	fi
 }
 

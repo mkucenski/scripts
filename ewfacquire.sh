@@ -5,7 +5,7 @@ DEVICE="$1"
 DEST="$2"
 CASE="$3"
 EXAMINER="$4"
-if [ $# -ne 4 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "DEVICE" "BASE DEST. NAME" "CASE #" "EXAMINER" && exit 0
 fi
 

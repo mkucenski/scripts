@@ -4,7 +4,7 @@
 FILE=$1
 REPL=$2
 WITH=$3
-if [ $# -ne 3 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "FILE" "REPLACE" "WITH"
 	USAGE_EXAMPLE "ls * | xargs -L 1 -I {} $(basename "$0") {} \".kung\" \".foo\" (will replace '.kung' in all files with '.foo' and *move* the old file to the new name)"
 	exit 0

@@ -6,7 +6,7 @@ LOGFILE="$2"
 if [ -z "$LOGFILE" ]; then
 	LOGFILE="$(basename "$IMAGE")-ewfverify.log"
 fi
-if [ $# -ne 1 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "LOGFILE (optional - defaults to \$IMAGE-ewfverify.log)" && exit 0
 fi
 

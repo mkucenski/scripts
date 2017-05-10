@@ -3,7 +3,7 @@
 
 FILE="$1"
 DOSHA1="$2"
-if [ $# -ne 2 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "FILE" "DOSHA1" && exit 0
 fi
 

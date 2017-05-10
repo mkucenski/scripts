@@ -4,7 +4,7 @@
 LOGICAL_IMAGE="$1"
 LOGFILE="$2"
 DOSHA1="$3"
-if [ $# -ne 3 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "LOGICAL_IMAGE" "LOGFILE" "DOSHA1" && exit 0
 fi
 

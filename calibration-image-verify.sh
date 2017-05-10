@@ -4,7 +4,7 @@
 DEVICE="$1"
 SERIAL="$2"
 LOGDIR="$3"
-if [ $# -ne 3 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "DEVICE" "SERIAL" "LOGDIR" && exit 0
 fi
 
