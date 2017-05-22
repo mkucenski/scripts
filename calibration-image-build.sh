@@ -41,13 +41,13 @@ INFO "Pattern Bytes: $PATTERN_LEN" "$LOGFILE"
 INFO "" "$LOGFILE"
 
 INFO "Building expected MD5..." "$LOGFILE"
-EXPECTED_MD5=`yes "$PATTERN" | dd ibs=$PATTERN_LEN obs=$BS count=$(expr $SIZE / $PATTERN_LEN) | openssl md5 | tr a-z A-Z | $SEDCMD -r 's/\(STDIN\)= //'`
+EXPECTED_MD5=$(yes "$PATTERN" | dd ibs=$PATTERN_LEN obs=$BS count=$(expr $SIZE / $PATTERN_LEN) | openssl md5 | tr a-z A-Z | $SEDCMD -r 's/\(STDIN\)= //')
 INFO "$EXPECTED_MD5 - MD5 expected from pattern generation" "$LOGFILE"
 INFO "" "$LOGFILE"
 
 if [ -z "$TESTMODE" ]; then
 	INFO "Writing calibration pattern to device ($DEVICE)..." "$LOGFILE"
-	yes $PATTERN | dd bs=$BS of="$DEVICE"
+	yes "$PATTERN" | dd bs=$BS of="$DEVICE"
 	INFO "" "$LOGFILE"
 
 	INFO "Reading from device ($DEVICE)..." "$LOGFILE"
