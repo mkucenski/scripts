@@ -1,9 +1,16 @@
 #!/bin/bash
+. ${BASH_SOURCE%/*}/common-include.sh
 
-FILENAME=`basename "$1"`
+FILE="$1"
+if [ $# -eq 0 ]; then
+	USAGE "FILE" && exit 0
+fi
 
-gstrings -f -t x "$1" > "$TMPDIR/$FILENAME.txt"
-gstrings -f -t x -e l "$1" >> "$TMPDIR/$FILENAME.txt"
-gsort -n "$TMPDIR/$FILENAME.txt"
-rm "$TMPDIR/$FILENAME.txt"
+TMP=$(mktemp -t $(basename "$0") || exit 1)
+
+gstrings -f -t x "$FILE" > "$TMP"
+gstrings -f -t x -e l "$FILE" >> "$TMP"
+gsort -n "$TMP"
+
+rm "$TMP"
 
