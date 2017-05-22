@@ -6,8 +6,10 @@ SERIAL="$2"
 LOGDIR="$3"
 TESTMODE="$4"
 if [ $# -eq 0 ]; then
-	USAGE "DEVICE" "SERIAL" "LOGDIR" "TESTMODE" && exit 0
+	USAGE "DEVICE" "SERIAL" "LOGDIR" "TESTMODE" && exit $COMMON_ERROR
 fi
+
+RV=$COMMON_SUCCESS
 
 LOGFILE="$LOGDIR/$SERIAL-calibration.log"
 START "$0" "$LOGFILE"
@@ -20,7 +22,7 @@ SECTORS=$(${BASH_SOURCE%/*}/disksectors.sh "$DEVICE")
 if [ $SECTORS -lt 0 ]; then
 	ERROR"Unable to read disk sectors!" "$0" "$LOGFILE"
 	END "$0" "$LOGFILE"
-	exit 1
+	exit $COMMON_ERROR
 fi
 
 SECTOR_SIZE=512
@@ -58,15 +60,15 @@ if [ -z "$TESTMODE" ]; then
 		if [ "$DEVICE_MD5" == "$EXPECTED_MD5" ]; then
 			INFO "Match!" "$LOGFILE"
 		fi
-		INFO "" "$LOGFILE"
-		END "$0" "$LOGFILE"
-		exit 0
 	else
 		ERROR "Unable to read MD5 from device!" "$0" "$LOGFILE"
+		RV=$COMMON_ERROR
 	fi
 else
-		WARNING "Test mode enabled, results not written to / read from disk!" "$0" "$LOGFILE"
+	WARNING "Test mode enabled, results not written to / read from disk!" "$0" "$LOGFILE"
 fi
 
 END "$0" "$LOGFILE"
-exit 1
+
+exit $RV
+

@@ -5,8 +5,10 @@ DEVICE="$1"
 SERIALNUM="$2"
 LOGDIR="$3"
 if [ $# -eq 0 ]; then
-	USAGE "DEVICE" "SERIALNUM" "LOGDIR" && exit 0
+	USAGE "DEVICE" "SERIALNUM" "LOGDIR" && exit $COMMON_ERROR
 fi
+
+RV=$COMMON_SUCCESS
 
 LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
 START "$0" "$LOGFILE"
@@ -21,6 +23,7 @@ if [ $OS = "Darwin" ]; then
 
 	INFO "Using MacOSX (diskutil secureErase)..." "$LOGFILE"
 	RESULTS=$(diskutil secureErase 0 "$DEVICE" 2>&1)
+	RV=$?
 	INFO "$RESULTS" "$LOGFILE"
 
 else
@@ -35,6 +38,7 @@ else
 
 	INFO "Using dd (/dev/zero)..." "$LOGFILE"
 	RESULTS=$(dd if=/dev/zero of="$DEVICE" bs=$BS)
+	RV=$?
 	INFO "$RESULT" "$LOGFILE"
 
 fi
@@ -42,5 +46,9 @@ fi
 INFO "Completed wiping device ($DEVICE)!" "$LOGFILE"
 
 ${BASH_SOURCE%/*}/wipe-verify.sh "$DEVICE" "$SERIALNUM" "$LOGDIR"
+RV=$?
 
 END "$0" "$LOGFILE"
+
+exit $RV
+

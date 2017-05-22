@@ -1,10 +1,18 @@
 #!/bin/bash
 
+COMMON_SUCCESS=0
+COMMON_ERROR=1
+COMMON_UNKNOWN_ERROR=255
+
 function DEBUG() {
 	_COMMON_DEBUG_MSG="$1"
 	_COMMON_DEBUG_SRC="$2"
+	_COMMON_DEBUG_LOG="$3"
 	_COMMON_DEBUG_OUTPUT="DEBUG($(basename "$_COMMON_DEBUG_SRC")): $_COMMON_DEBUG_MSG"
 	echo "$_COMMON_DEBUG_OUTPUT" > /dev/stderr
+	if [ -n "$_COMMON_DEBUG_LOG" ]; then
+		LOG "$_COMMON_DEBUG_OUTPUT" "$_COMMON_DEBUG_LOG"
+	fi
 }
 
 # DEBUG "Included: common-include.sh" "$0"
@@ -47,64 +55,64 @@ function CHECK_ROOT() {
 }
 
 function INFO() {
-	# Output message to stdout and LOGFILE (if specified)
+	# Output message to stdout and LOG (if specified)
 
 	_COMMON_INFO_MSG="$1"
-	_COMMON_INFO_LOGFILE="$2"
+	_COMMON_INFO_LOG="$2"
 	echo "$_COMMON_INFO_MSG"
-	if [ -n "$_COMMON_INFO_LOGFILE" ]; then
-		LOG "$_COMMON_INFO_MSG" "$_COMMON_INFO_LOGFILE"
+	if [ -n "$_COMMON_INFO_LOG" ]; then
+		LOG "$_COMMON_INFO_MSG" "$_COMMON_INFO_LOG"
 	fi
 }
 
 function ERROR() {
-	# Output clear ERROR message to stderr and LOGFILE (if specified)
+	# Output clear ERROR message to stderr and LOG (if specified)
 
 	_COMMON_ERROR_MSG="$1"
 	_COMMON_ERROR_SRC="$2"
-	_COMMON_ERROR_LOGFILE="$3"
+	_COMMON_ERROR_LOG="$3"
 	_COMMON_ERROR_OUTPUT="ERROR($(basename "$_COMMON_ERROR_SRC")): $_COMMON_ERROR_MSG"
 	echo "$_COMMON_ERROR_OUTPUT" > /dev/stderr
-	if [ -n "$_COMMON_ERROR_LOGFILE" ]; then
-		LOG "$_COMMON_ERROR_OUTPUT" "$_COMMON_ERROR_LOGFILE"
+	if [ -n "$_COMMON_ERROR_LOG" ]; then
+		LOG "$_COMMON_ERROR_OUTPUT" "$_COMMON_ERROR_LOG"
 	fi
 }
 
 function WARNING() {
-	# Output clear WARNING message to stderr and LOGFILE (if specified)
+	# Output clear WARNING message to stderr and LOG (if specified)
 
 	_COMMON_WARNING_MSG="$1"
 	_COMMON_WARNING_SRC="$2"
-	_COMMON_WARNING_LOGFILE="$3"
+	_COMMON_WARNING_LOG="$3"
 	_COMMON_WARNING_OUTPUT="WARNING($(basename "$_COMMON_WARNING_SRC")): $_COMMON_WARNING_MSG"
 	echo "$_COMMON_WARNING_OUTPUT" > /dev/stderr
-	if [ -n "$_COMMON_WARNING_LOGFILE" ]; then
-		LOG "$_COMMON_WARNING_OUTPUT" "$_COMMON_WARNING_LOGFILE"
+	if [ -n "$_COMMON_WARNING_LOG" ]; then
+		LOG "$_COMMON_WARNING_OUTPUT" "$_COMMON_WARNING_LOG"
 	fi
 }
 
 function START() {
 	_COMMON_START_SRC="$1"
-	_COMMON_START_LOGFILE="$2"
+	_COMMON_START_LOG="$2"
 	_COMMON_START_OUTPUT="START($(basename "$_COMMON_START_SRC")): $(date "+%Y%m%d %H:%M:%S")"
-	LOG "$_COMMON_START_OUTPUT" "$_COMMON_START_LOGFILE"
+	LOG "$_COMMON_START_OUTPUT" "$_COMMON_START_LOG"
 }
 
 function END() {
 	_COMMON_END_SRC="$1"
-	_COMMON_END_LOGFILE="$2"
+	_COMMON_END_LOG="$2"
 	_COMMON_END_OUTPUT="END($(basename "$_COMMON_END_SRC")): $(date "+%Y%m%d %H:%M:%S")"
-	LOG "$_COMMON_END_OUTPUT" "$_COMMON_END_LOGFILE"
-	LOG "" "$_COMMON_END_LOGFILE"
+	LOG "$_COMMON_END_OUTPUT" "$_COMMON_END_LOG"
+	LOG "" "$_COMMON_END_LOG"
 }
 
 function LOG() {
-	# Output message to LOGFILE (no output to stdout/stderr)
+	# Output message to LOG (no output to stdout/stderr)
 
 	_COMMON_LOG_MSG="$1"
-	_COMMON_LOG_LOGFILE="$2"
-	if [ -n "$_COMMON_LOG_LOGFILE" ]; then
-		echo "$_COMMON_LOG_MSG" >> "$_COMMON_LOG_LOGFILE"
+	_COMMON_LOG_LOG="$2"
+	if [ -n "$_COMMON_LOG_LOG" ]; then
+		echo "$_COMMON_LOG_MSG" >> "$_COMMON_LOG_LOG"
 	else
 		echo "$_COMMON_LOG_MSG"
 	fi

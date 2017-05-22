@@ -5,10 +5,11 @@ LOGICAL_IMAGE="$1"
 LOGFILE="$2"
 DOSHA1="$3"
 if [ $# -eq 0 ]; then
-	USAGE "LOGICAL_IMAGE" "LOGFILE" "DOSHA1" && exit 0
+	USAGE "LOGICAL_IMAGE" "LOGFILE" "DOSHA1" && exit $COMMON_ERROR
 fi
 
-TMPDIR=$(mktemp -d -t $(basename "$0") || exit 1)
+RV=$COMMON_SUCCESS
+TMPDIR=$(mktemp -d -t $(basename "$0") || exit $COMMON_ERROR)
 
 INFO "Exporting All Logical Files Found in Image... ($TMPDIR)"
 ewfexport -f files -l "$LOGFILE" -t "$TMPDIR/ewfexport" -q -u "$LOGICAL_IMAGE" 2>/dev/null
@@ -16,10 +17,13 @@ ewfexport -f files -l "$LOGFILE" -t "$TMPDIR/ewfexport" -q -u "$LOGICAL_IMAGE" 2
 INFO "Hashing All Logical Files..."
 pushd "$TMPDIR/ewfexport/LogicalEntries"
 ${BASH_SOURCE%/*}/fciv_recursive.sh ./ "$DOSHA1"
+RV=$?
 popd "$TMPDIR"
 
 INFO "Deleting Temp. Directory..."
 rm -R "$TMPDIR"
+
+exit $RV
 
 # ewfexport 20140608
 # 

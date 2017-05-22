@@ -3,11 +3,13 @@
 
 XML="$1"
 if [ $# -eq 0 ]; then
-	USAGE "XML" && exit 0
+	USAGE "XML" && exit $COMMON_ERROR
 fi
 
+RV=$COMMON_SUCCESS
+
 KEY="1.75"
-TMP=$(mktemp -t $(basename "$0") || exit 1)
+TMP=$(mktemp -t $(basename "$0") || exit $COMMON_ERROR)
 
 if [ -e "$XML" ]; then
 	${BASH_SOURCE%/*}/fciv.sh
@@ -15,7 +17,10 @@ if [ -e "$XML" ]; then
 	sort --key=$KEY "$TMP"
 else
 	ERROR "Unable to find Ditto XML file ($XML)!" "$0"
+	RV=$COMMON_ERROR
 fi
 
 rm "$TMP"
+
+exit $RV
 

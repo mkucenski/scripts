@@ -4,12 +4,14 @@
 CSV="$1"
 DOSHA1="$2"
 if [ $# -eq 0 ]; then
-	USAGE "CSV" "DOSHA1" && exit 0
+	USAGE "CSV" "DOSHA1" && exit $COMMON_ERROR
 fi
 
+RV=$COMMON_SUCCESS
+
 KEY="1.75"
-TMP=$(mktemp -t $(basename "$0") || exit 1)
-TMPCSV=$(mktemp -t $(basename "$0") || exit 1)
+TMP=$(mktemp -t $(basename "$0") || exit $COMMON_ERROR)
+TMPCSV=$(mktemp -t $(basename "$0") || exit $COMMON_ERROR)
 
 if [ -e "$CSV" ]; then
 	INFO $(dos2unix -n "$CSV" "$TMPCSV" 2>&1)
@@ -35,9 +37,12 @@ if [ -e "$CSV" ]; then
 	${BASH_SOURCE%/*}/fciv.sh
 	sort --key=$KEY "$TMP"
 else
-	echo "Error! Unable to find file!" > /dev/stderr
+	ERROR "Unable to find file!" "$0"
+	RV=$COMMON_ERROR
 fi
 
 rm "$TMP"
 rm "$TMPCSV"
+
+exit $RV
 

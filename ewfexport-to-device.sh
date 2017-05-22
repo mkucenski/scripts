@@ -5,7 +5,7 @@ IMAGE="$1"
 DEVICE="$2"
 LOGFILE="$3"
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "DEVICE" "LOGFILE" && exit 0
+	USAGE "IMAGE" "DEVICE" "LOGFILE" && exit $COMMON_ERROR
 fi
 
 START "$0" "$LOGFILE"

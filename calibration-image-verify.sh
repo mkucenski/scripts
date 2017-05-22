@@ -5,8 +5,10 @@ DEVICE="$1"
 SERIAL="$2"
 LOGDIR="$3"
 if [ $# -eq 0 ]; then
-	USAGE "DEVICE" "SERIAL" "LOGDIR" && exit 0
+	USAGE "DEVICE" "SERIAL" "LOGDIR" && exit $COMMON_ERROR
 fi
+
+RV=$COMMON_SUCCESS
 
 LOGFILE="$LOGDIR/$SERIAL-calibration.log"
 START "$0" "$LOGFILE"
@@ -28,15 +30,16 @@ if [ -n "$EXPECTED_MD5" ]; then
 		if [ "$DEVICE_MD5" == "$EXPECTED_MD5" ]; then
 			INFO "Match!" "$LOGFILE"
 		fi
-		END "$0" "$LOGFILE"
-		exit 0
 	else
 		ERROR "Unable to read MD5 from device!" "$0" "$LOGFILE"
+		RV=$COMMON_ERROR
 	fi
 else
 	ERROR "Unable to find expected MD5!" "$0" "$LOGFILE"
+	RV=$COMMON_ERROR
 fi
 
 END "$0" "$LOGFILE"
-exit 1
+
+exit $RV
 

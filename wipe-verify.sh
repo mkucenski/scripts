@@ -5,8 +5,10 @@ DEVICE="$1"
 SERIALNUM="$2"
 LOGDIR="$3"
 if [ $# -eq 0 ]; then
-	USAGE "DEVICE" "SERIALNUM" "LOGDIR" && exit 0
+	USAGE "DEVICE" "SERIALNUM" "LOGDIR" && exit $COMMON_ERROR
 fi
+
+RV=$COMMON_SUCCESS
 
 LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
 START "$0" "$LOGFILE"
@@ -36,3 +38,6 @@ RESULTS=$(dd if="$DEVICE" bs=$BS skip=$(expr $BLOCKS - $COUNT) count=$COUNT | xx
 INFO "$RESULTS" "$LOGFILE"
 
 END "$0" "$LOGFILE"
+
+exit $RV
+

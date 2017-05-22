@@ -5,7 +5,7 @@ IMAGE="$1"
 OFFSET="$2"
 COUNT="$3"
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "OFFSET" "COUNT (512-byte sectors)" && exit 0
+	USAGE "IMAGE" "OFFSET" "COUNT (512-byte sectors)" && exit $COMMON_ERROR
 fi
 
 ewfexport -q -u -t - -o "$OFFSET" "$IMAGE" | dd bs=512 count="$COUNT"

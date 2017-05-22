@@ -4,8 +4,10 @@
 GBYTES="$1"
 MOUNTPOINT="$2"
 if [ $# -eq 0 ]; then
-	USAGE "SIZE (GB)" "MOUNT POINT" && exit 0
+	USAGE "SIZE (GB)" "MOUNT POINT" && exit $COMMON_ERROR
 fi
+
+RV=$COMMON_SUCCESS
 
 SECTORS=$(expr $GBYTES \* 1024 \* 1024 \* 1024 / 512)
 UNAME=$(uname)
@@ -21,15 +23,22 @@ if [ "$UNAME" = "Darwin" ]; then
 				echo "$RAMDEVICE"
 			else
 				ERROR "Unable to mount $RAMDEVICE ($RV)!" "$0"
+				RV=$COMMON_ERROR
 				${BASH_SOURCE%/*}/rmramdisk.sh "$RAMDEVICE"
 			fi
 		else
 			ERROR "Unable to HFS format $RAMDEVICE ($RV)!" "$0"
+			RV=$COMMON_ERROR
 			${BASH_SOURCE%/*}/rmramdisk.sh "$RAMDEVICE"
 		fi
 	else
 		ERROR "Unable to create RAM device via <hdiutil attach>!" "$0"
+		RV=$COMMON_ERROR
 	fi
 else
 	ERROR "Undefined OS, unable to create ram disk!" "$0"
+	RV=$COMMON_ERROR
 fi
+
+exit $RV
+

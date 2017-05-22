@@ -3,14 +3,18 @@
 
 FILE="$1"
 if [ $# -eq 0 ]; then
-	USAGE "FILE" && exit 0
+	USAGE "FILE" && exit $COMMON_ERROR
 fi
 
-TMP=$(mktemp -t $(basename "$0") || exit 1)
+RV=$COMMON_SUCCESS
+
+TMP=$(mktemp -t $(basename "$0") || exit $COMMON_ERROR)
 
 gstrings -f -t x "$FILE" > "$TMP"
 gstrings -f -t x -e l "$FILE" >> "$TMP"
 gsort -n "$TMP"
 
 rm "$TMP"
+
+exit $RV
 

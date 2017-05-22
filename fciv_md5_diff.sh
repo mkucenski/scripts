@@ -4,8 +4,10 @@
 FILE1="$1"
 FILE2="$2"
 if [ $# -eq 0 ]; then
-	USAGE "FILE1" "FILE2" && exit 0
+	USAGE "FILE1" "FILE2" && exit $COMMON_ERROR
 fi
+
+RV=$COMMON_SUCCESS
 
 if [ -e "$FILE1" ]; then
 	if [ -e "$FILE2" ]; then
@@ -36,7 +38,12 @@ if [ -e "$FILE1" ]; then
 		rm "$UNIQ_HASHES"
 	else
 		ERROR "Invalid second file ($FILE2)!" "$0"
+		RV=$COMMON_ERROR
 	fi
 else
 	ERROR "Invalid first file ($FILE1)!" "$0"
+	RV=$COMMON_ERROR
 fi
+
+exit $RV
+
