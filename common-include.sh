@@ -32,6 +32,20 @@ function USAGE_EXAMPLE() {
 SEDCMD=$(if [ -n "$(which gsed)" ]; then echo "gsed"; else echo "sed"; fi)
 AWKCMD=$(if [ -n "$(which gawk)" ]; then echo "gawk"; else echo "awk"; fi)
 
+function STRIP_EXTENSION() {
+	_COMMON_FILENAME="$1"
+	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/\...?.?$//'
+}
+
+function CHECK_ROOT() {
+	USER=$(whoami)
+	if [ "$USER" = root ]; then
+		echo "true"
+	else
+		echo "false"
+	fi
+}
+
 function INFO() {
 	# Output message to stdout and LOGFILE (if specified)
 
