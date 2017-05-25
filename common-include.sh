@@ -38,6 +38,21 @@ function USAGE_EXAMPLE() {
 SEDCMD=$(if [ -n "$(which gsed)" ]; then echo "gsed"; else echo "sed"; fi)
 AWKCMD=$(if [ -n "$(which gawk)" ]; then echo "gawk"; else echo "awk"; fi)
 
+function MKTEMP() {
+	mktemp -t "$(basename "$1")" || return $COMMON_ERROR
+	return $COMMON_SUCCESS
+}
+
+function MKTEMPDIR() {
+	mktemp -d -t "$(basename "$1")" || return $COMMON_ERROR
+	return $COMMON_SUCCESS
+}
+
+function MKTEMPUNIQ() {
+	mktemp "$1.XXXXXX" || return $COMMON_ERROR
+	return $COMMON_SUCCESS
+}	
+
 function STRIP_EXTENSION() {
 	_COMMON_FILENAME="$1"
 	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/\...?.?$//'
@@ -102,6 +117,10 @@ function END() {
 	_COMMON_END_OUTPUT="END($(basename "$_COMMON_END_SRC")): $(date "+%Y%m%d %H:%M:%S")"
 	LOG "$_COMMON_END_OUTPUT" "$_COMMON_END_LOG"
 	LOG "" "$_COMMON_END_LOG"
+}
+
+function DATETIME() {
+	date "+%Y%m%d %H:%M:%S"
 }
 
 function LOG() {
