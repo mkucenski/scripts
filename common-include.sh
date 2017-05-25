@@ -2,7 +2,7 @@
 
 COMMON_SUCCESS=0
 COMMON_ERROR=1
-COMMON_UNKNOWN_ERROR=255
+COMMON_UNKNOWN=255
 
 function DEBUG() {
 	_COMMON_DEBUG_MSG="$1"
@@ -14,8 +14,6 @@ function DEBUG() {
 		LOG "$_COMMON_DEBUG_OUTPUT" "$_COMMON_DEBUG_LOG"
 	fi
 }
-
-# DEBUG "Included: common-include.sh" "$0"
 
 function USAGE() {
 	if [ $# -ne 0 ]; then

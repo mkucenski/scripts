@@ -35,7 +35,7 @@ elif [ "$VERIFY" == "FAILURE" ]; then
 	RV=$COMMON_ERROR
 else
 	ERROR "Unknown Error!" "$0" "$LOGFILE"
-	RV=$COMMON_UNKNOWN_ERROR
+	RV=$COMMON_UNKNOWN
 fi
 
 END "$0" "$LOGFILE"
