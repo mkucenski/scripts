@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 
 pushd /usr/ports/"$1"
 if make extract; then
