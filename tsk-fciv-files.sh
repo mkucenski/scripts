@@ -1,6 +1,6 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
-. ${BASH_SOURCE%/*}/tsk-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. ${BASH_SOURCE%/*}/tsk-include.sh || exit 1
 
 IMAGE="$1"
 OFFSET="$2"
@@ -14,12 +14,12 @@ RV=$COMMON_SUCCESS
 
 KEY="1.75"
 
-MCT=$(mktemp -t $(basename "$0") || exit $COMMON_ERROR)
+MCT=$(MKTEMP "$0" || exit $COMMON_ERROR)
 INFO "Building List of All Files Found in Image/Device... ($MCT)"
 fls -o $OFFSET -m "" -F -r "$IMAGE" | $SEDCMD -r 's/^([[:digit:]]+\|)\/?/\1/' > "$MCT"
 RV=$((RV+$?))
 
-UNSORTED=$(mktemp -t $(basename "$0") || exit $COMMON_ERROR)
+UNSORTED=$(MKTEMP "$0" || exit $COMMON_ERROR)
 INFO "Extracting and Hashing Each File... ($UNSORTED)"
 while read LINE; do
 	if [ -n "$LINE" ]; then
