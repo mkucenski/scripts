@@ -1,6 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/../common-include.sh
-# DEBUG "Included: unison-sync-inc.sh" "$0"
+. ${BASH_SOURCE%/*}/../common-include.sh || exit 1
 
 DEBUG=0
 
@@ -24,7 +23,8 @@ function buildprf() {
 	BACKUPDIR="$4"
 
 	echo "include sync/common" > "$PRFDIR/$PRF"
-	echo "label = \"$ROOT1 <-> $ROOT2 - $DIR\"" >> "$PRFDIR/$PRF"
+	LABEL="$ROOT1 <-> $ROOT2 - $DIR"
+	echo "label = \"$LABEL\"" >> "$PRFDIR/$PRF"
 	echo "root = $ROOT1/$DIR/" >> "$PRFDIR/$PRF"
 	echo "root = $ROOT2/$DIR/" >> "$PRFDIR/$PRF"
 
