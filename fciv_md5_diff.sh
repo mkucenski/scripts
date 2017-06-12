@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
 FILE1="$1"
 FILE2="$2"
@@ -11,8 +11,8 @@ RV=$COMMON_SUCCESS
 
 if [ -e "$FILE1" ]; then
 	if [ -e "$FILE2" ]; then
-		TMP1=$(mktemp -t $(basename "$0"))
-		TMP2=$(mktemp -t $(basename "$0"))
+		TMP1=$(MKTEMP "$0" || exit $COMMON_ERROR)
+		TMP2=$(MKTEMP "$0" || exit $COMMON_ERROR)
 
 		INFO "Isolating MD5 values..."
 		HEADER1="//"
@@ -23,7 +23,7 @@ if [ -e "$FILE1" ]; then
 		$SEDCMD -r 's/$HEADER1//; s/$HEADER2//; s/$HEADER3//; s/$HEADER4//; s/[[:space:]]+.+//' "$FILE2" | sort -u > "$TMP2"
 
 		INFO "Comparing and sorting for unique/different MD5 values..."
-		UNIQ_HASHES=$(mktemp -t $(basename "$0"))
+		UNIQ_HASHES=$(MKTEMP "$0" || exit $COMMON_ERROR)
 		diff -wi --suppress-common-lines "$TMP1" "$TMP2" | egrep "(<|>)" | gsed -r 's/[<>][[:space:]]+//g' | sort -u > "$UNIQ_HASHES"
 
 		INFO "Searching original files for unique/different MD5 values..."
