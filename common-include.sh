@@ -17,7 +17,7 @@ function DEBUG() {
 
 function USAGE() {
 	if [ $# -ne 0 ]; then
-		echo -n "Usage: $0 " > /dev/stderr
+		echo -n "Usage: $(basename "$0") " > /dev/stderr
 		for _COMMON_USAGE_VAR in "$@"; do
 			echo -n "<$_COMMON_USAGE_VAR> " > /dev/stderr
 		done
@@ -37,6 +37,12 @@ function USAGE_EXAMPLE() {
 # On systems where gsed/gawk exist, we assume that is the correct GNU version to use.
 SEDCMD=$(if [ -n "$(which gsed)" ]; then echo "gsed"; else echo "sed"; fi)
 AWKCMD=$(if [ -n "$(which gawk)" ]; then echo "gawk"; else echo "awk"; fi)
+
+function FULL_PATH() {
+	# Return the full/absolute path for a file
+	FILE="$1"
+	echo "$(cd $(dirname "$FILE"); pwd)/$(basename "$FILE")"
+}
 
 function MKTEMP() {
 	mktemp -t "$(basename "$1")" || return $COMMON_ERROR
@@ -64,6 +70,17 @@ function CHECK_ROOT() {
 		echo "true"
 	else
 		echo "false"
+	fi
+}
+
+function INFO_ERR() {
+	# Output message to stderr nd LOG (if specified)
+
+	_COMMON_INFO_MSG="$1"
+	_COMMON_INFO_LOG="$2"
+	echo "$_COMMON_INFO_MSG" > /dev/stderr
+	if [ -n "$_COMMON_INFO_LOG" ]; then
+		LOG "$_COMMON_INFO_MSG" "$_COMMON_INFO_LOG"
 	fi
 }
 
