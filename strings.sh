@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
 FILE="$1"
 if [ $# -eq 0 ]; then
@@ -8,7 +8,7 @@ fi
 
 RV=$COMMON_SUCCESS
 
-TMP=$(mktemp -t $(basename "$0") || exit $COMMON_ERROR)
+TMP=$(MKTEMP "$0" || exit $COMMON_ERROR)
 
 gstrings -f -t x "$FILE" > "$TMP"
 gstrings -f -t x -e l "$FILE" >> "$TMP"
