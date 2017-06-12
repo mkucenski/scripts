@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
 CSV="$1"
 DOSHA1="$2"
@@ -10,8 +10,8 @@ fi
 RV=$COMMON_SUCCESS
 
 KEY="1.75"
-TMP=$(mktemp -t $(basename "$0") || exit $COMMON_ERROR)
-TMPCSV=$(mktemp -t $(basename "$0") || exit $COMMON_ERROR)
+TMP=$(MKTEMP "$0" || exit $COMMON_ERROR)
+TMPCSV=$(MKTEMP "$0" || exit $COMMON_ERROR)
 
 if [ -e "$CSV" ]; then
 	INFO $(dos2unix -n "$CSV" "$TMPCSV" 2>&1)
