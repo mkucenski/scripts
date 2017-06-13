@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
 XML="$1"
 if [ $# -eq 0 ]; then
@@ -9,7 +9,7 @@ fi
 RV=$COMMON_SUCCESS
 
 KEY="1.75"
-TMP=$(mktemp -t $(basename "$0") || exit $COMMON_ERROR)
+TMP=$(MKTEMP "$0" || exit $COMMON_ERROR)
 
 if [ -e "$XML" ]; then
 	${BASH_SOURCE%/*}/fciv.sh
