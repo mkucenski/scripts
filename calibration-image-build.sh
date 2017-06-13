@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
 DEVICE="$1"
 SERIAL="$2"
