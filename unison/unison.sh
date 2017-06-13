@@ -2,21 +2,21 @@
 . ${BASH_SOURCE%/*}/common-include.sh || exit 1
 . ${BASH_SOURCE%/*}/unison/unison-sync-inc.sh || exit 1
 
-SRCDIR="$1"
-DSTBASEDIR="$2"
+SRC="$1"
+DST="$2"
 if [ $# -eq 0 ]; then
-	USAGE "SRCDIR" "DSTBASEDIR" && exit $COMMON_ERROR
+	USAGE "SRC" "DST" && exit $COMMON_ERROR
 fi
 
 RV=$COMMON_SUCCESS
 
-if [ -e "$SRCDIR" ]; then
-	if [ -e "$DSTBASEDIR" ]; then
-		INFO "--- $SRCDIR -> $DSTBASEDIR ---"
-		RESULT=$(execRsync2 "$SRCDIR" "$DSTBASEDIR")
+if [ -e "$SRC" ]; then
+	if [ -e "$DST" ]; then
+		INFO "--- $SRC -> $DST ---"
+		RESULT=$(execUnison2 "$SRC" "$DST")
 		if [ $? -ne 0 ]; then
 			ERROR "$RESULT ($?)" "$0"
-			RV=$COMMON_ERROR
+			RV=$?
 		else
 			INFO "Success!"
 		fi
