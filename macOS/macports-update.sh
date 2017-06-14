@@ -1,19 +1,19 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/../common-include.sh || exit 0
+. ${BASH_SOURCE%/*}/../common-include.sh || exit 1
 
 if [ $(CHECK_ROOT) != true ]; then
-	ERROR "MacPorts *MUST* be run as 'root'!" && exit 0
+	ERROR "MacPorts *MUST* be run as 'root'!" && exit $COMMON_ERROR
 fi
 
 LOGFILE="`echo ~`/Logs/macports-update.log"
 
-ERR=-1
-START "$0" "$LOGFILE"
+RV=$COMMON_SUCCESS
 
+START "$0" "$LOGFILE"
 LOG "Args: $@" "$LOGFILE"
 
-PRE=$(mktemp)
-POST=$(mktemp)
+PRE=$(MKTEMP "$0" || exit $COMMON_ERROR)
+POST=$(MKTEMP "$0" || exit $COMMON_ERROR)
 
 ${BASH_SOURCE%/*}/macports-wrapper.sh installed > "$PRE"
 
@@ -26,5 +26,6 @@ INFO $(diff --side-by-side --suppress-common-lines "$PRE" "$POST") "$LOGFILE"
 rm "$PRE" "$POST"
 
 END "$0" "$LOGFILE"
-exit $ERR
+
+exit $RV
 
