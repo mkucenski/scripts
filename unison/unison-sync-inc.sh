@@ -3,12 +3,41 @@
 
 DEBUG=0
 
-PRF=$(basename $(mktemp -t $(basename "$0"))).prf
 PRFDIR=~/.unison/sync
+BACKUP=".unison-backup"
+LOGFILE="unison-sync.log"
+
+function createDir() {
+	ERR=0
+	if [ ! -e "$1" ]; then
+		mkdir -p "$1"
+		ERR=$(expr $ERR + $?)
+	fi
+	return $ERR
+}
+
+function createDirs() {
+	ERR=0
+	createDir "$1"
+	ERR=$(expr $ERR + $?)
+	createDir "$2"
+	ERR=$(expr $ERR + $?)
+	return $ERR
+}
+
+function normalizeDir() {
+	# rsync in particular operates differently depending on whether the source has a trailing '/';
+	# this function normalizes directory names w/o the trailing '/'
+	DIR=$(dirname "$1")/$(basename "$1")
+	if [ $DEBUG != 0 ]; then
+		echo "normalizeDir: $1 -> $DIR" > /dev/stderr
+	fi
+	echo "$DIR"
+}
 
 function setup() {
 	if [ ! -e "$PRFDIR" ]; then
-		mkdir -p "$PRFDIR"
+		createDir "$PRFDIR"
 	fi
 
 	if [ ! -e "$PRFDIR/common" ]; then
@@ -20,20 +49,23 @@ function buildprf() {
 	ROOT1="$1"
 	ROOT2="$2"
 	DIR="$3"
-	BACKUPDIR="$4"
 
-	echo "include sync/common" > "$PRFDIR/$PRF"
+	PRF="$(mktemp "unison-XXXXXX").prf"
+
 	LABEL="$ROOT1 <-> $ROOT2 - $DIR"
+	echo "include sync/common" > "$PRFDIR/$PRF"
 	echo "label = \"$LABEL\"" >> "$PRFDIR/$PRF"
 	echo "root = $ROOT1/$DIR/" >> "$PRFDIR/$PRF"
 	echo "root = $ROOT2/$DIR/" >> "$PRFDIR/$PRF"
 
-	echo "" >> "$PRFDIR/$PRF"
+	BACKUPDIR="$ROOT1/$DIR/$BACKUP"
+	createDir "$BACKUPDIR"
+	echo >> "$PRFDIR/$PRF"
 	echo "backupdir = $BACKUPDIR" >> "$PRFDIR/$PRF"
 	echo "backup = Name *" >> "$PRFDIR/$PRF"
+	echo "logfile = $BACKUPDIR/$LOGFILE" >> "$PRFDIR/$PRF"
 
-	echo "" >> "$PRFDIR/$PRF"
-	echo "logfile = $BACKUPDIR/unison-sync.log" >> "$PRFDIR/$PRF"
+	echo "$PRF"
 }
 
 
@@ -41,33 +73,22 @@ function buildprf2() {
 	ROOT1="$1"
 	ROOT2="$2"
 
+	PRF="$(mktemp "unison-XXXXXX").prf"
+
 	mkdir -p "$PRFDIR"
 	echo "include sync/common" > "$PRFDIR/$PRF"
 	echo "label = \"$ROOT1 <-> $ROOT2\"" >> "$PRFDIR/$PRF"
 	echo "root = $ROOT1/" >> "$PRFDIR/$PRF"
 	echo "root = $ROOT2/" >> "$PRFDIR/$PRF"
-}
 
-function createDirs() {
-	if [ $DEBUG != 0 ]; then
-		echo "createDirs($1)" > /dev/stderr
-	fi
+	BACKUPDIR="$ROOT1/$BACKUP"
+	createDir "$BACKUPDIR"
+	echo >> "$PRFDIR/$PRF"
+	echo "backupdir = $BACKUPDIR" >> "$PRFDIR/$PRF"
+	echo "backup = Name *" >> "$PRFDIR/$PRF"
+	echo "logfile = $BACKUPDIR/$LOGFILE" >> "$PRFDIR/$PRF"
 
-	ERR=0
-	if [ ! -e "$1" ]; then
-		mkdir -p "$1"
-		ERR=$(expr $ERR + $?)
-	fi
-	if [ ! -e "$2" ]; then
-		mkdir -p "$2"
-		ERR=$(expr $ERR + $?)
-	fi
-
-	if [ $DEBUG != 0 ]; then
-		echo "createDirs($ERR)" > /dev/stderr
-	fi
-
-	return $ERR
+	echo "$PRF"
 }
 
 function changeFlags() {
@@ -89,25 +110,34 @@ function changeFlags() {
 }
 
 function execUnison() {
-	echo ""
-	echo "--- $1 <-> $2 - $3 ---"
-	if ( createDirs "$1/$3" "$2/$3" ); then
+	SRC="$1"
+	DST="$2"
+	DIR="$3"
+
+	echo "--- $SRC <-> $DST - $DIR ---"
+	if ( createDirs "$SRC/$DIR" "$DST/$DIR" ); then
 		setup
-		buildprf "$1" "$2" "$3" "$4"
+		PRF=$(buildprf "$SRC" "$DST" "$DIR")
 		unison "$(basename "$PRFDIR")/$PRF"
-		changeFlags "$1/$3"
-		changeFlags "$2/$3"
+		changeFlags "$SRC/$DIR"
+		changeFlags "$DST/$DIR"
+		rm "$PRFDIR/$PRF"
 	fi
+	echo
 }
 
 function execUnison2() {
-	echo ""
-	echo "--- $1 <-> $2 ---"
+	SRC="$1"
+	DST="$2"
+
+	echo "--- $SRC <-> $DST ---"
 	setup
-	buildprf2 "$1" "$2" "$3"
+	PRF=$(buildprf2 "$SRC" "$DST")
 	unison "$(basename "$PRFDIR")/$PRF"
-	#changeFlags "$1"
-	#changeFlags "$2"
+	changeFlags "$SRC"
+	changeFlags "$DST"
+	rm "$PRFDIR/$PRF"
+	echo
 }
 
 function execRsync() {
@@ -116,21 +146,10 @@ function execRsync() {
 	SRCSUBDIR="$3"
 
 	ERR=0
-	echo ""
 	echo "--- $SRCDIR -> $DSTBASEDIR - $SRCSUBDIR ---"
-	if ( createDirs "$SRCDIR/$SRCSUBDIR" "$DSTBASEDIR/$SRCSUBDIR" ); then
-		RESULT=$(execRsync2 "$SRCDIR/$SRCSUBDIR" "$DSTBASEDIR")
-		ERR=$(expr $ERR + $?)
-		if [ $DEBUG != 0 ]; then
-			echo "execRsync: $RESULT ($ERR)" > /dev/stderr
-		fi
-		echo ""
-	else
-		ERR=$(expr $ERR + $?)
-		if [ $DEBUG != 0 ]; then
-			echo "execRsync: $ERR" > /dev/stderr
-		fi
-	fi	
+	RESULT=$(execRsync2 "$SRCDIR/$SRCSUBDIR" "$DSTBASEDIR")
+	ERR=$(expr $ERR + $?)
+	echo
 	return $ERR
 }
 
@@ -141,19 +160,6 @@ function execRsync2() {
 	ERR=0
 	RESULT=$(rsync -av --fileflags "$SRCDIR" "$DSTBASEDIR/")
 	ERR=$(expr $ERR + $?)
-	if [ $DEBUG != 0 ]; then
-		echo "execRsync2: $RESULT ($ERR)" > /dev/stderr
-	fi
 	return $ERR
-}
-
-function normalizeDir() {
-	# rsync in particular operates differently depending on whether the source has a trailing '/';
-	# this function normalizes directory names w/o the trailing '/'
-	DIR=$(dirname "$1")/$(basename "$1")
-	if [ $DEBUG != 0 ]; then
-		echo "normalizeDir: $1 -> $DIR" > /dev/stderr
-	fi
-	echo "$DIR"
 }
 
