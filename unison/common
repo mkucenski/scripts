@@ -25,7 +25,7 @@ mountpoint = ./
 confirmbigdel = true
 fastcheck = true
 contactquietly = true
-silent = true
+# silent = true
 
 # allow the synchronization of symbolic links (true/false/default)
 links = true
