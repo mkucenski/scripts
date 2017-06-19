@@ -3,16 +3,9 @@
 VMDIR=$1
 REPL=$2
 WITH=$3
-
-#IFS=$'\n'; for FILE in $(ls "$VMDIR"); do
-#	echo "$FILE"
-#	NEW=$(echo "$FILE" | sed -r "s/$REPL/$WITH/")
-#	if [ "$FILE" != "$NEW" ]; then
-#		if [ "$FILE" != "$REPL.vmx"]; then
-#			mv "$FILE" "$NEW"
-#		fi
-#	fi
-#done
+if [ $# -eq 0 ]; then
+	echo "Usage: $(basename "$0") <VMDIR> <REPL> <WITH>" && exit 0
+fi
 
 if [ -e "$VMDIR/$REPL.vmx" ]; then
 	cat "$VMDIR/$REPL.vmx" | sed -r "s/displayName = \"$REPL\"/displayName = \"$WITH\"/;s/annotation = \".*\"/annotation = \"$WITH\"/" > "$VMDIR/$WITH.vmx"
