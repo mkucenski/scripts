@@ -11,7 +11,7 @@ FCIV="$(dirname "$0")/fciv_esxi.sh"
 ARCHIVE="$DESTDIR/$(basename "$VMDIR") ($DATE).tar.bz2"
 
 echo "Executing MD5 on all VM files..."
-"$FCIV" "$VMDIR/*" | tee "$VMDIR/fciv.md5"
+"$FCIV" "$VMDIR"/* | tee "$VMDIR/fciv.md5"
 
 echo "Archiving all VM files..."
 tar cjvf "$ARCHIVE" "$VMDIR"
