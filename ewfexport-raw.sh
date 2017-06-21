@@ -1,13 +1,14 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
 IMAGE="$1"
 OFFSET="$2"
+COUNT="$3"
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "OFFSET" && exit 0
+	USAGE "IMAGE" "OFFSET" "COUNT (512-byte sectors)" && exit $COMMON_ERROR
 fi
 
-ewfexport -q -u -t - -o "$OFFSET" "$IMAGE"
+ewfexport -q -u -t - -o "$OFFSET" "$IMAGE" | dd bs=512 count="$COUNT"
 
 # ewfexport 20140608
 # 

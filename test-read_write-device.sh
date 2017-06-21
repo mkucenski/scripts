@@ -1,4 +1,5 @@
 #!/bin/bash
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
 # Arguments
 DEVICE="$1"
@@ -11,7 +12,7 @@ while [ $I -lt 12 ]; do
 	I=$(expr $I + 1)
 done
 SIZE=$(expr $MAX \* 10)
-FILE=$(mktemp)
+FILE=$(MKTEMP "$0")
 echo "Device=$DEVICE, Max BS=$MAX, Sample Size=$SIZE, File=$FILE"
 
 # Test Read

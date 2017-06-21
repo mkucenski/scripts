@@ -1,9 +1,20 @@
 #!/bin/bash
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
-FILENAME=`basename "$1"`
+FILE="$1"
+if [ $# -eq 0 ]; then
+	USAGE "FILE" && exit $COMMON_ERROR
+fi
 
-gstrings -f -t x "$1" > "$TMPDIR/$FILENAME.txt"
-gstrings -f -t x -e l "$1" >> "$TMPDIR/$FILENAME.txt"
-gsort -n "$TMPDIR/$FILENAME.txt"
-rm "$TMPDIR/$FILENAME.txt"
+RV=$COMMON_SUCCESS
+
+TMP=$(MKTEMP "$0" || exit $COMMON_ERROR)
+
+gstrings -f -t x "$FILE" > "$TMP"
+gstrings -f -t x -e l "$FILE" >> "$TMP"
+gsort -n "$TMP"
+
+rm "$TMP"
+
+exit $RV
 

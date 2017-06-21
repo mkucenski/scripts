@@ -1,6 +1,6 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
-. ${BASH_SOURCE%/*}/unison/unison-sync-inc.sh
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. ${BASH_SOURCE%/*}/unison/unison-sync-inc.sh || exit 1
 
 SRC="$1"
 DST="$2"

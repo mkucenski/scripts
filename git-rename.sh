@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. ${BASH_SOURCE%/*}/common-include.sh
 
 FILE=$1
 REPL=$2
@@ -17,7 +17,7 @@ echo "$NEW"
 
 if [ "$FILE" != "$NEW" ]; then
 	echo "Moving:" "$FILE" "$NEW"
-	mv "$FILE" "$NEW"
+	git mv "$FILE" "$NEW"
 	RV=$?
 fi
 

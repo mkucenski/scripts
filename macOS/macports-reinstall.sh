@@ -1,24 +1,27 @@
-#!/bin/sh
+#!/bin/bash
+. ${BASH_SOURCE%/*}/../common-include.sh || exit 0
 
-LOG="`echo ~`/Logs/macports-reinstall.log"
+if [ $(CHECK_ROOT) != true ]; then
+	ERROR "MacPorts *MUST* be run as 'root'!" && exit 0
+fi
 
-echo "" >> "$LOG"
-echo "BEGIN: `date \"+%Y%m%d\"`" >> "$LOG"
-echo "Working Directory: `pwd`" >> "$LOG"
-echo "Args: $@" >> "$LOG"
-echo "" >> "$LOG"
-BS=$($(dirname "$0")/blocksize.sh "$DEVICE")
+LOGFILE="`echo ~`/Logs/macports-reinstall.log"
+
+ERR=-1
+START "$0" "$LOGFILE"
+
+LOG "Args: $@" "$LOGFILE"
 
 # Save the list of installed ports:
 INSTALLED=$(mktemp -t $(basename "$0")-installed)
-$(dirname "$0")/macports-wrapper.sh -qv installed > "$INSTALLED"
+${BASH_SOURCE%/*}/macports-wrapper.sh -qv installed > "$INSTALLED"
 
 # (optional) Save the list of requested ports:
 REQUESTED=$(mktemp -t $(basename "$0")-requested)
-$(dirname "$0")/macports-wrapper.sh echo requested | cut -d ' ' -f 1 > "$REQUESTED"
+${BASH_SOURCE%/*}/macports-wrapper.sh echo requested | cut -d ' ' -f 1 > "$REQUESTED"
 
 # Uninstall all installed ports:
-$(dirname "$0")/macports-wrapper.sh -f uninstall installed
+${BASH_SOURCE%/*}/macports-wrapper.sh -f uninstall installed
 
 # Clean any partially-completed builds:
 rm -rf /opt/local/var/macports/build/*
@@ -37,10 +40,11 @@ port unsetrequested installed
 xargs port setrequested < "$REQUESTED"
 
 POST=$(mktemp -t $(basename "$0")-post)
-$(dirname "$0")/macports-wrapper.sh -qv installed > "$POST"
-diff --side-by-side --suppress-common-lines "$INSTALLED" "$POST" | tee -a "$LOG"
+${BASH_SOURCE%/*}/macports-wrapper.sh -qv installed > "$POST"
+INFO $(diff --side-by-side --suppress-common-lines "$INSTALLED" "$POST") "$LOGFILE"
 
 rm "$INSTALLED" "$REQUESTED" "$SCRIPT" "$POST"
 
-echo "END: `date \"+%Y%m%d\"`" >> "$LOG"
+END "$0" "$LOGFILE"
+exit $ERR
 

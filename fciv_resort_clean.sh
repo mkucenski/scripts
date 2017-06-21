@@ -1,16 +1,18 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
 FILE="$1"
 if [ $# -eq 0 ]; then
-	USAGE "FILE" && exit 0
+	USAGE "FILE" && exit $COMMON_ERROR
 fi
 
+RV=$COMMON_SUCCESS
+
 KEY="1.75"
-TMP=$(mktemp -t $(basename "$0") || exit 1)
+TMP=$(MKTEMP "$0" || exit $COMMON_ERROR)
 
 if [ -e "$FILE" ]; then
-	BACKUP=$(mktemp "$(dirname "$FILE")/$(basename "$FILE").XXXXXX")
+	BACKUP=$(MKTEMPUNIQ "$FILE" || exit $COMMON_ERROR)
 	INFO "Making backup copy of original file... ($BACKUP)"
 	cp "$FILE" "$BACKUP"
 
@@ -19,9 +21,12 @@ if [ -e "$FILE" ]; then
 	mv "$TMP" "$FILE"
 else
 	ERROR "Unable to find ($FILE)!" "$0"
+	RV=$COMMON_ERROR
 fi
 
 if [ -e "$TMP" ]; then
 	rm "$TMP"
 fi
+
+exit $RV
 

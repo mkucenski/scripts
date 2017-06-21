@@ -1,23 +1,56 @@
 #!/bin/bash
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
 # Wrapper to consistently run photorec for carving files
 
-IMAGE="$1"
-DEST="$2"
-
-LOG="$DEST/photorec_wrapper.log"
+IMAGE="$(FULL_PATH "$1")"
+DEST="$(FULL_PATH "$2")"
+LOGFILE="$DEST/photorec.log"
+if [ $# -eq 0 ]; then
+	USAGE "IMAGE" "DEST" && exit $COMMON_ERROR
+fi
 
 if [ ! -e "$DEST" ]; then
 	mkdir -p "$DEST"
 fi
 
-echo "BEGIN: `date \"+%Y%m%d\"`" >> "$LOG"
-echo "CMD: '$0 $@'" >> "$LOG"
-cat "$0" | gsed -r 's/^/>>   /' >> "$LOG"
+RV=$COMMON_SUCCESS
+START "$0" "$LOGFILE"
 
-photorec /version >> "$LOG" 2>> "$LOG"
-photorec /log /d "$DEST" "$IMAGE" 2>> "$LOG"
-mv photorec.* "$DEST/" 2>&1 >> "$LOG"
+pushd "$DEST"
 
-echo "END: `date \"+%Y%m%d\"`" >> "$LOG"
+INFO "Starting photorec..." "$LOGFILE"
+photorec /version >> "$LOGFILE" 2>> "$LOGFILE"
+photorec /log /d "$DEST/" "$IMAGE" 2>> "$LOGFILE"
+mkdir ./recup_dirs
+mv recup_dir.* recup_dirs/
 
+INFO "Starting hashing on all files..." "$LOGFILE"
+${BASH_SOURCE%/*}/fciv_recursive.sh ./ 0 > "$(basename "$DEST").md5"
+
+popd
+
+INFO "Archiving and hashing all files..." "$LOGFILE"
+TAR="$(basename "$DEST").tgz"
+tar czvf "$TAR" "$DEST"
+TAR_MD5=$(openssl md5 "$TAR")
+echo "$TAR_MD5" > "$TAR.md5"
+INFO "$TAR_MD5" "$LOGFILE"
+
+END "$0" "$LOGFILE"
+exit $RV
+
+# PhotoRec 6.14, Data Recovery Utility, July 2013
+# Christophe GRENIER <grenier@cgsecurity.org>
+# http://www.cgsecurity.org
+# 
+# Usage: photorec [/log] [/debug] [/d recup_dir] [file.dd|file.e01|device]
+#        photorec /version
+# 
+# /log          : create a photorec.log file
+# /debug        : add debug information
+# 
+# PhotoRec searches various file formats (JPEG, Office...), it stores them
+# in recup_dir directory.
+# 
+# If you have problems with PhotoRec or bug reports, please contact me.

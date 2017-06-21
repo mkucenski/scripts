@@ -1,25 +1,30 @@
-#!/bin/sh
+#!/bin/bash
+. ${BASH_SOURCE%/*}/../common-include.sh || exit 0
 
-LOG="`echo ~`/Logs/macports-update.log"
+if [ $(CHECK_ROOT) != true ]; then
+	ERROR "MacPorts *MUST* be run as 'root'!" && exit 0
+fi
 
-echo "" >> "$LOG"
-echo "BEGIN: `date \"+%Y%m%d\"`" >> "$LOG"
-echo "Working Directory: `pwd`" >> "$LOG"
-echo "Args: $@" >> "$LOG"
-echo "" >> "$LOG"
+LOGFILE="`echo ~`/Logs/macports-update.log"
 
-PRE="$TMPDIR/pre-ports.txt"
-POST="$TMPDIR/post-ports.txt"
+ERR=-1
+START "$0" "$LOGFILE"
 
-$(dirname "$0")/macports-wrapper.sh installed > "$PRE"
+LOG "Args: $@" "$LOGFILE"
 
-$(dirname "$0")/macports-wrapper.sh -d selfupdate
-$(dirname "$0")/macports-wrapper.sh fetch outdated
-$(dirname "$0")/macports-wrapper.sh -ucp upgrade outdated
+PRE=$(mktemp)
+POST=$(mktemp)
 
-$(dirname "$0")/macports-wrapper.sh installed > "$POST"
-diff --side-by-side --suppress-common-lines "$PRE" "$POST" | tee -a "$LOG"
+${BASH_SOURCE%/*}/macports-wrapper.sh installed > "$PRE"
+
+INFO "$(${BASH_SOURCE%/*}/macports-wrapper.sh -d selfupdate)" "$LOGFILE"
+INFO "$(${BASH_SOURCE%/*}/macports-wrapper.sh fetch outdated)" "$LOGFILE"
+INFO "$(${BASH_SOURCE%/*}/macports-wrapper.sh -ucp upgrade outdated)" "$LOGFILE"
+
+${BASH_SOURCE%/*}/macports-wrapper.sh installed > "$POST"
+INFO $(diff --side-by-side --suppress-common-lines "$PRE" "$POST") "$LOGFILE"
 rm "$PRE" "$POST"
 
-echo "END: `date \"+%Y%m%d\"`" >> "$LOG"
+END "$0" "$LOGFILE"
+exit $ERR
 
