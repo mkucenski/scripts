@@ -1,20 +1,25 @@
 #!/bin/bash
 . ${BASH_SOURCE%/*}/common-include.sh || exit 1
-
-FILE="$1"
-if [ $# -eq 0 ]; then
-	USAGE "FILE" && exit $COMMON_ERROR
-fi
+ENABLE_DEBUG=0
+IFS=$(echo -en "\n\b")
 
 RV=$COMMON_SUCCESS
 
-TMP=$(MKTEMP "$0" || exit $COMMON_ERROR)
-
-gstrings -f -t x "$FILE" > "$TMP"
-gstrings -f -t x -e l "$FILE" >> "$TMP"
-gsort -n "$TMP"
-
-rm "$TMP"
+INFO "Extracting strings for:"
+for arg in "$@"; do
+	if [ -e "$arg" ]; then
+		OUTPUT="$(STRIP_EXTENSION "$arg")-strings.txt"
+		if [ -e "$OUTPUT" ]; then
+			ERROR "Output file <$OUTPUT> already exists!"
+		else
+			INFO "$arg -> $OUTPUT"
+			${BASH_SOURCE%/*}/strings_worker.sh "$arg" > "$OUTPUT"
+			RV=$((RV+$?))
+		fi
+	else
+		ERROR "File <$arg> does not exist!"
+	fi
+done
 
 exit $RV
 
