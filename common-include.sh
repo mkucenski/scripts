@@ -1,6 +1,5 @@
 #!/bin/bash
 ENABLE_DEBUG=0
-
 IFS=$(echo -en "\n\b")
 
 COMMON_SUCCESS=0
