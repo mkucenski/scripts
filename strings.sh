@@ -8,7 +8,7 @@ RV=$COMMON_SUCCESS
 INFO "Extracting strings for:"
 for arg in "$@"; do
 	if [ -e "$arg" ]; then
-		OUTPUT="$(STRIP_EXTENSION "$arg")-strings.txt"
+		OUTPUT="$arg-strings.txt"
 		if [ -e "$OUTPUT" ]; then
 			ERROR "Output file <$OUTPUT> already exists!"
 		else
