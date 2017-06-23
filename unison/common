@@ -13,6 +13,9 @@ ignore = Name {TheVolumeSettingsFolder,.Metadata,.filler,.idsff,.Spotlight,.DS_S
 ignore = Name {._.DS_Store}
 ignore = Name .DS_Store
 
+# Avoid syncing unison backup records
+ignore = Name .unison-backup
+
 # Avoid syncing extraneous Windows stuff
 ignore = Name desktop.ini
 
@@ -22,6 +25,7 @@ mountpoint = ./
 confirmbigdel = true
 fastcheck = true
 contactquietly = true
+# silent = true
 
 # allow the synchronization of symbolic links (true/false/default)
 links = true

@@ -1,10 +1,35 @@
 #!/bin/bash
+. ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
 # Run whois records with the given server and consistently store the results in a specific directory
 
 SITE="$1"
 SERVER="$2"
-DEST="$3"
+DESTDIR="$3"
+if [ $# -eq 0 ]; then
+	USAGE "SITE" "WHOIS-SERVER" "DESTDIR" && exit $COMMON_ERROR
+fi
 
-whois -h "$SERVER" "$SITE" | tee -a "$DEST/$SITE-whois.txt"
+RV=$COMMON_SUCCESS
+
+DEST="$DESTDIR/$SITE-whois.txt"
+if [ ! -e "$DEST" ]; then
+	touch "$DEST"
+fi
+
+if [ -e "$DEST" ]; then
+	START "$0" "$DEST"
+	INFO "$SITE -> $DEST"
+	LOG "Whois Query for: $SITE" "$DEST"
+
+	whois -h "$SERVER" "$SITE" >> "$DEST"
+	RV=$?
+
+	END "$0" "$DEST"
+else
+	ERROR "Unable to create destination file!" "$0"
+	RV=$COMMON_ERROR
+fi
+
+exit $RV
 
