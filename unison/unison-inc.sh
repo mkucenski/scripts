@@ -1,9 +1,7 @@
 #!/bin/bash
 . ${BASH_SOURCE%/*}/../common-include.sh || exit 1
 
-DEBUG=0
-
-PRFDIR=~/.unison/sync
+PRFDIR="$HOME/.unison/sync"
 BACKUP=".unison-backup"
 LOGFILE="unison-sync.log"
 
@@ -29,9 +27,6 @@ function normalizeDir() {
 	# rsync in particular operates differently depending on whether the source has a trailing '/';
 	# this function normalizes directory names w/o the trailing '/'
 	DIR=$(dirname "$1")/$(basename "$1")
-	if [ $DEBUG != 0 ]; then
-		echo "normalizeDir: $1 -> $DIR" > /dev/stderr
-	fi
 	echo "$DIR"
 }
 
@@ -50,20 +45,19 @@ function buildprf() {
 	ROOT2="$2"
 	DIR="$3"
 
-	PRF="$(mktemp "unison-XXXXXX").prf"
-
+	PRF="$(mktemp "$PRFDIR/unison-XXXXXX")"
 	LABEL="$ROOT1 <-> $ROOT2 - $DIR"
-	echo "include sync/common" > "$PRFDIR/$PRF"
-	echo "label = \"$LABEL\"" >> "$PRFDIR/$PRF"
-	echo "root = $ROOT1/$DIR/" >> "$PRFDIR/$PRF"
-	echo "root = $ROOT2/$DIR/" >> "$PRFDIR/$PRF"
+	echo "include sync/common" > "$PRF"
+	echo "label = \"$LABEL\"" >> "$PRF"
+	echo "root = $ROOT1/$DIR/" >> "$PRF"
+	echo "root = $ROOT2/$DIR/" >> "$PRF"
 
 	BACKUPDIR="$ROOT1/$DIR/$BACKUP"
 	createDir "$BACKUPDIR"
-	echo >> "$PRFDIR/$PRF"
-	echo "backupdir = $BACKUPDIR" >> "$PRFDIR/$PRF"
-	echo "backup = Name *" >> "$PRFDIR/$PRF"
-	echo "logfile = $BACKUPDIR/$LOGFILE" >> "$PRFDIR/$PRF"
+	echo >> "$PRF"
+	echo "backupdir = $BACKUPDIR" >> "$PRF"
+	echo "backup = Name *" >> "$PRF"
+	echo "logfile = $BACKUPDIR/$LOGFILE" >> "$PRF"
 
 	echo "$PRF"
 }
@@ -73,38 +67,37 @@ function buildprf2() {
 	ROOT1="$1"
 	ROOT2="$2"
 
-	PRF="$(mktemp "unison-XXXXXX").prf"
+	PRF="$(mktemp "$PRFDIR/unison-XXXXXX")"
 
-	mkdir -p "$PRFDIR"
-	echo "include sync/common" > "$PRFDIR/$PRF"
-	echo "label = \"$ROOT1 <-> $ROOT2\"" >> "$PRFDIR/$PRF"
-	echo "root = $ROOT1/" >> "$PRFDIR/$PRF"
-	echo "root = $ROOT2/" >> "$PRFDIR/$PRF"
+	echo "include sync/common" > "$PRF"
+	echo "label = \"$ROOT1 <-> $ROOT2\"" >> "$PRF"
+	echo "root = $ROOT1/" >> "$PRF"
+	echo "root = $ROOT2/" >> "$PRF"
 
 	BACKUPDIR="$ROOT1/$BACKUP"
 	createDir "$BACKUPDIR"
-	echo >> "$PRFDIR/$PRF"
-	echo "backupdir = $BACKUPDIR" >> "$PRFDIR/$PRF"
-	echo "backup = Name *" >> "$PRFDIR/$PRF"
-	echo "logfile = $BACKUPDIR/$LOGFILE" >> "$PRFDIR/$PRF"
+	echo >> "$PRF"
+	echo "backupdir = $BACKUPDIR" >> "$PRF"
+	echo "backup = Name *" >> "$PRF"
+	echo "logfile = $BACKUPDIR/$LOGFILE" >> "$PRF"
 
 	echo "$PRF"
 }
 
+function getlogfile() {
+	PRF="$1"
+	UNILOG="$(grep "logfile = " "$PRF" | $SEDCMD -r 's/logfile = (.*)/\1/')"
+	echo "$UNILOG"
+}
+
 function changeFlags() {
-	if [ $DEBUG != 0 ]; then
-		echo "changeFlags($1)" > /dev/stderr
-	fi
+	INFO "changeFlags($1)"
 
 	ERR=0
 	# Synchronization to an SMB share seems to result in files on the share getting marked as 'hidden'
 	# Use this function to get rid of that flag
 	chflags -R nohidden "$1"
 	ERR=$(expr $ERR + $?)
-
-	if [ $DEBUG != 0 ]; then
-		echo "changeFlags($ERR)" > /dev/stderr
-	fi
 
 	return $ERR
 }
@@ -114,30 +107,42 @@ function execUnison() {
 	DST="$2"
 	DIR="$3"
 
-	echo "--- $SRC <-> $DST - $DIR ---"
+	BANNER="--- $SRC <-> $DST - $DIR ---"
+	INFO "$BANNER"
 	if ( createDirs "$SRC/$DIR" "$DST/$DIR" ); then
 		setup
 		PRF=$(buildprf "$SRC" "$DST" "$DIR")
-		unison "$(basename "$PRFDIR")/$PRF"
-		changeFlags "$SRC/$DIR"
-		changeFlags "$DST/$DIR"
-		rm "$PRFDIR/$PRF"
+		UNILOG="$(getlogfile "$PRF")"
+		START "$0" "$UNILOG"
+		LOG "$BANNER" "$UNILOG"
+		PRFBASE="$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
+		unison "$PRFBASE"
+		# changeFlags "$SRC/$DIR"
+		# changeFlags "$DST/$DIR"
+		rm "$PRF"
+		END "$0" "$UNILOG"
 	fi
-	echo
+	INFO
 }
 
 function execUnison2() {
 	SRC="$1"
 	DST="$2"
 
-	echo "--- $SRC <-> $DST ---"
+	BANNER="--- $SRC <-> $DST ---"
+	INFO "$BANNER"
 	setup
 	PRF=$(buildprf2 "$SRC" "$DST")
-	unison "$(basename "$PRFDIR")/$PRF"
-	changeFlags "$SRC"
-	changeFlags "$DST"
-	rm "$PRFDIR/$PRF"
-	echo
+	UNILOG="$(getlogfile "$PRF")"
+	START "$0" "$UNILOG"
+	LOG "$BANNER" "$UNILOG"
+	PRFBASE="$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
+	unison "$PRFBASE"
+	# changeFlags "$SRC"
+	# changeFlags "$DST"
+	rm "$PRF"
+	END "$0" "$UNILOG"
+	INFO
 }
 
 function execRsync() {
@@ -146,10 +151,10 @@ function execRsync() {
 	SRCSUBDIR="$3"
 
 	ERR=0
-	echo "--- $SRCDIR -> $DSTBASEDIR - $SRCSUBDIR ---"
+	INFO "--- $SRCDIR -> $DSTBASEDIR - $SRCSUBDIR ---"
 	RESULT=$(execRsync2 "$SRCDIR/$SRCSUBDIR" "$DSTBASEDIR")
 	ERR=$(expr $ERR + $?)
-	echo
+	INFO	
 	return $ERR
 }
 
