@@ -1,6 +1,8 @@
 #!/bin/bash
 ENABLE_DEBUG=0
 
+IFS=$(echo -en "\n\b")
+
 COMMON_SUCCESS=0
 COMMON_ERROR=1
 COMMON_UNKNOWN=255
@@ -150,8 +152,12 @@ function LOG() {
 	_COMMON_LOG_LOG="$2"
 	if [ -n "$_COMMON_LOG_LOG" ]; then
 		echo "$_COMMON_LOG_MSG" >> "$_COMMON_LOG_LOG"
-	else
-		echo "$_COMMON_LOG_MSG"
 	fi
+}
+
+function ECHO_ARGS() {
+	for X in $@; do
+		echo -n "<$X> "
+	done
 }
 
