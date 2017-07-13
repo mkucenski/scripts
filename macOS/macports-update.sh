@@ -15,13 +15,13 @@ LOG "Args: $@" "$LOGFILE"
 PRE=$(MKTEMP "$0" || exit $COMMON_ERROR)
 POST=$(MKTEMP "$0" || exit $COMMON_ERROR)
 
-${BASH_SOURCE%/*}/macports-wrapper.sh installed > "$PRE"
+port installed > "$PRE"
 
-INFO "$(${BASH_SOURCE%/*}/macports-wrapper.sh -d selfupdate)" "$LOGFILE"
-INFO "$(${BASH_SOURCE%/*}/macports-wrapper.sh fetch outdated)" "$LOGFILE"
-INFO "$(${BASH_SOURCE%/*}/macports-wrapper.sh -ucp upgrade outdated)" "$LOGFILE"
+port -d selfupdate | tee -a "$LOGFILE"
+port fetch outdated | tee -a "$LOGFILE"
+port -ucp upgrade outdated | tee -a "$LOGFILE"
 
-${BASH_SOURCE%/*}/macports-wrapper.sh installed > "$POST"
+port installed > "$POST"
 INFO $(diff --side-by-side --suppress-common-lines "$PRE" "$POST") "$LOGFILE"
 rm "$PRE" "$POST"
 
