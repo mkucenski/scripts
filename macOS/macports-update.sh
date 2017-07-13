@@ -22,7 +22,7 @@ port fetch outdated | tee -a "$LOGFILE"
 port -ucp upgrade outdated | tee -a "$LOGFILE"
 
 port installed > "$POST"
-INFO $(diff --side-by-side --suppress-common-lines "$PRE" "$POST") "$LOGFILE"
+diff --side-by-side --suppress-common-lines "$PRE" "$POST" | tee -a "$LOGFILE"
 rm "$PRE" "$POST"
 
 END "$0" "$LOGFILE"
