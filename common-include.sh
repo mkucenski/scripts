@@ -65,7 +65,7 @@ function MKTEMPUNIQ() {
 
 function STRIP_EXTENSION() {
 	_COMMON_FILENAME="$1"
-	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/\...?.?$//'
+	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/\...?.?.?$//'
 }
 
 function CHECK_ROOT() {
