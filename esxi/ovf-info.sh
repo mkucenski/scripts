@@ -3,7 +3,7 @@
 
 SERVER="$1"
 USER="$2"
-VM=$(${BASH_SOURCE%/*}/../urlEncode.py "$3")
+VM=$(${BASH_SOURCE%/*}/../python/urlEncode.py "$3")
 if [ $# -eq 0 ]; then
 	USAGE "SERVER" "USER" "VM" && exit $COMMON_ERROR
 fi
