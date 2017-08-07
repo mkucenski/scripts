@@ -19,6 +19,9 @@ ignore = Name .unison-backup
 # Avoid syncing extraneous Windows stuff
 ignore = Name desktop.ini
 
+# Avoid syncing git files
+ignore = Name .git
+
 addprefsto = sync/extra
 fat = true
 mountpoint = ./

@@ -5,4 +5,6 @@ unison/*.prf
 test.sh
 easylist/
 windows/fciv.exe
+windows/fciv
+windows/unison
 windows/sysinternals

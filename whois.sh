@@ -21,7 +21,7 @@ if [ -e "$DEST" ]; then
 	INFO "$SITE -> $DEST"
 	LOG "Whois Query for: $SITE" "$DEST"
 
-	whois "$SITE" >> "$DEST"
+	whois "$SITE" | egrep -v "^$" | egrep -v "^#" >> "$DEST"
 	RV=$?
 
 	END "$0" "$DEST"
