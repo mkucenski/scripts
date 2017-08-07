@@ -42,10 +42,26 @@ function USAGE_EXAMPLE() {
 SEDCMD=$(if [ -n "$(which gsed)" ]; then echo "gsed"; else echo "sed"; fi)
 AWKCMD=$(if [ -n "$(which gawk)" ]; then echo "gawk"; else echo "awk"; fi)
 
+function SUDO_USER() {
+	who am i | $SEDCMD -r 's/([^[:space:]]+).*/\1/'
+}
+
 function FULL_PATH() {
 	# Return the full/absolute path for a file
 	FILE="$1"
 	echo "$(cd $(dirname "$FILE"); pwd)/$(basename "$FILE")"
+}
+
+function LOG_SCRIPT_BASE64() {
+	# Base64 encode text file (or script) to retain in log files
+	_COMMON_LOG_SCRIPT_BASE64_FILE="$1"
+	_COMMON_LOG_SCRIPT_BASE64_LOG="$2"
+	if [ -e "$_COMMON_LOG_SCRIPT_BASE64_FILE" ]; then
+		_COMMON_LOG_SCRIPT_BASE64="$(base64 "$_COMMON_LOG_SCRIPT_BASE64_FILE")"
+		LOG "BASE64($(basename "$_COMMON_LOG_SCRIPT_BASE64_FILE")): $_COMMON_LOG_SCRIPT_BASE64" "$_COMMON_LOG_SCRIPT_BASE64_LOG"
+	else
+		ERROR "File does not exist!" "$0" "$_COMMON_LOG_SCRIPT_BASE64_LOG"
+	fi
 }
 
 function MKTEMP() {
@@ -65,7 +81,7 @@ function MKTEMPUNIQ() {
 
 function STRIP_EXTENSION() {
 	_COMMON_FILENAME="$1"
-	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/\...?.?$//'
+	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/\...?.?.?$//'
 }
 
 function CHECK_ROOT() {
@@ -128,8 +144,14 @@ function WARNING() {
 function START() {
 	_COMMON_START_SRC="$1"
 	_COMMON_START_LOG="$2"
-	_COMMON_START_OUTPUT="START($(basename "$_COMMON_START_SRC")): $(date "+%Y%m%d %H:%M:%S")"
+	_COMMON_START_ARGS="$(echo "$3" | tr "\n" ";")"
+	_COMMON_START_SCRIPT="$(basename "$_COMMON_START_SRC")"
+	_COMMON_START_OUTPUT="START($_COMMON_START_SCRIPT): $(date "+%Y%m%d %H:%M:%S")"
 	LOG "$_COMMON_START_OUTPUT" "$_COMMON_START_LOG"
+	if [ -n "$_COMMON_START_ARGS" ]; then
+		LOG "ARGS($_COMMON_START_SCRIPT): '$_COMMON_START_ARGS'" "$_COMMON_START_LOG"
+	fi
+	LOG_SCRIPT_BASE64 "$_COMMON_START_SRC" "$_COMMON_START_LOG"
 }
 
 function END() {

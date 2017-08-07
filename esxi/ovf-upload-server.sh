@@ -1,19 +1,22 @@
 #!/bin/bash
 . ${BASH_SOURCE%/*}/../common-include.sh || exit 1
 
-SERVER="$1"
+DEST_SERVER="$1"
 USER="$2"
-VM=$(${BASH_SOURCE%/*}/../python/urlEncode.py "$3")
+DATASTORE="$3"
+OVF="$4"
 if [ $# -eq 0 ]; then
-	USAGE "SERVER" "USER" "VM" && exit $COMMON_ERROR
+	USAGE "DEST_SERVER" "USER" "DATASTORE" "OVF" && exit $COMMON_ERROR
 fi
 
 RV=$COMMON_SUCCESS
 
-URL="vi://$USER@$SERVER/$VM"
-INFO "URL=$URL"
+DEST_URL="vi://$USER@$DEST_SERVER"
+INFO "OVF=$OVF"
+INFO "DATASTORE=$DATASTORE"
+INFO "DEST_URL=$DEST_URL"
 
-ovftool "$URL"
+ovftool --datastore="$DATASTORE" "$OVF" "$DEST_URL"
 
 exit $RV
 

@@ -4,16 +4,19 @@
 SERVER="$1"
 USER="$2"
 VM=$(${BASH_SOURCE%/*}/../python/urlEncode.py "$3")
+DEST_SERVER="$4"
 if [ $# -eq 0 ]; then
-	USAGE "SERVER" "USER" "VM" && exit $COMMON_ERROR
+	USAGE "SERVER" "USER" "VM" "DEST_SERVER" && exit $COMMON_ERROR
 fi
 
 RV=$COMMON_SUCCESS
 
 URL="vi://$USER@$SERVER/$VM"
+DEST_URL="vi://$USER@$DEST_SERVER"
 INFO "URL=$URL"
+INFO "DEST_URL=$DEST_URL"
 
-ovftool "$URL"
+ovftool "$URL" "$DEST_URL"
 
 exit $RV
 

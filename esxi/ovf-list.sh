@@ -4,7 +4,7 @@
 SERVER="$1"
 USER="$2"
 if [ $# -eq 0 ]; then
-	USAGE "SERVER" "USER (root)" && exit $COMMON_ERROR
+	USAGE "SERVER" "USER" && exit $COMMON_ERROR
 fi
 
 RV=$COMMON_SUCCESS
