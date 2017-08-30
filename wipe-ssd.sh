@@ -11,7 +11,7 @@ fi
 RV=$COMMON_SUCCESS
 
 LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 
 PASSES=2
 BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
@@ -20,7 +20,7 @@ INFO "Starting SSD/Flash wipe on device ($DEVICE)..." "$LOGFILE"
 
 for PASS in `seq 1 $PASSES`; do
 	INFO "Zero-Pass ($PASS/$PASSES)..." "$LOGFILE"
-	${BASH_SOURCE%/*}/wipe-disk.sh "$DEVICE" "$LOGFILE"
+	${BASH_SOURCE%/*}/wipe-disk_worker.sh "$DEVICE" "$LOGFILE"
 	RV=$((RV+$?))
 done
 

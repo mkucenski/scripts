@@ -11,42 +11,23 @@ fi
 RV=$COMMON_SUCCESS
 
 LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
+
+DISKINFO="$(${BASH_SOURCE%/*}/diskinfo.sh "$DEVICE")"
+INFO "$DISKINFO" "$LOGFILE"
 
 COUNT=1024
 BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
 
 INFO "Wiping device ($DEVICE)..." "$LOGFILE"
 
-OS=`uname`
-if [ $OS = "Darwin" ]; then
-
-	INFO "Using MacOSX (diskutil secureErase)..." "$LOGFILE"
-	RESULTS=$(diskutil secureErase 0 "$DEVICE" 2>&1)
-	RV=$?
-	INFO "$RESULTS" "$LOGFILE"
-
-else
-
-	if [$OS = "FreeBSD" ]; then
-
-		MODEL=`camcontrol identify "$DEVICE" | grep 'device model' | $SEDCMD -r 's/^device model[[:space:]]+(.*)$/\1/'`
-		SERIAL=`camcontrol identify "$DEVICE" | grep 'serial number' | $SEDCMD -r 's/^serial number[[:space:]]+(.*)$/\1/'`
-		INFO "FreeBSD 'camcontrol' reported model: '$MODEL', serial number: '$SERIAL'..." "$LOGFILE"
-
-	fi
-
-	INFO "Using dd (/dev/zero)..." "$LOGFILE"
-	RESULTS=$(dd if=/dev/zero of="$DEVICE" bs=$BS)
-	RV=$?
-	INFO "$RESULT" "$LOGFILE"
-
-fi
+${BASH_SOURCE%/*}/wipe-disk_worker.sh "$DEVICE" "$LOGFILE"
+RV=$((RV+$?))
 
 INFO "Completed wiping device ($DEVICE)!" "$LOGFILE"
 
 ${BASH_SOURCE%/*}/wipe-verify.sh "$DEVICE" "$SERIALNUM" "$LOGDIR"
-RV=$?
+RV=$((RV+$?))
 
 END "$0" "$LOGFILE"
 

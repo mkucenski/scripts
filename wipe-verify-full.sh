@@ -11,7 +11,7 @@ fi
 RV=$COMMON_SUCCESS
 
 LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 
 COUNT=1024
 BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
