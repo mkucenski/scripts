@@ -10,7 +10,7 @@ if [ $# -eq 0 ]; then
 fi
 
 RV=$COMMON_SUCCESS
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 
 ls -d "$SOURCE"/recup_dir.* | xargs -L 1 -I {} ${BASH_SOURCE%/*}/sort-copy-by-mime-type.sh {} "$DEST"
 find "$DEST" -type f -name "report.xml" -exec rm {} \;

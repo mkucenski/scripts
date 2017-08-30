@@ -9,13 +9,13 @@ INFO "Extracting strings for:"
 for arg in "$@"; do
 	if [ -e "$arg" ]; then
 		OUTPUT="$arg-strings.txt"
-		if [ -e "$OUTPUT" ]; then
-			ERROR "Output file <$OUTPUT> already exists!"
-		else
+		# if [ -e "$OUTPUT" ]; then
+		# 	ERROR "Output file <$OUTPUT> already exists!"
+		# else
 			INFO "$arg -> $OUTPUT"
 			${BASH_SOURCE%/*}/strings_worker.sh "$arg" > "$OUTPUT"
 			RV=$((RV+$?))
-		fi
+		# fi
 	else
 		ERROR "File <$arg> does not exist!"
 	fi

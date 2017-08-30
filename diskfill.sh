@@ -18,7 +18,7 @@ INFO ""
 
 INFO "Writing pattern to device ($DEVICE)..."
 yes "$PATTERN" | dd bs=$BS of="$DEVICE"
-RV=$?
+RV=$((RV+$?))
 
 exit $RV
 

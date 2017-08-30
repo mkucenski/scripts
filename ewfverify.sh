@@ -8,7 +8,7 @@ LOGFILE="$2"
 if [ -z "$LOGFILE" ]; then
 	LOGFILE="$(STRIP_EXTENSION "$IMAGE")-ewfverify.log"
 fi
-if [ $# -eq 0 ]; then
+if [ $# -ne 1 ]; then
 	USAGE "IMAGE" "LOGFILE (optional - defaults to \$IMAGE-ewfverify.log)" && exit $COMMON_ERROR
 fi
 
@@ -18,7 +18,7 @@ if [ $? -ne 0 ]; then
 fi
 
 RV=$COMMON_SUCCESS
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 
 FULL_IMAGE_PATH="$(cd "$(dirname "$IMAGE")"; pwd)/$(basename "$IMAGE")"
 INFO "Executing ewfinfo ($IMAGE)..."

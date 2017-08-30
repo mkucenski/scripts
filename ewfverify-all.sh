@@ -10,7 +10,7 @@ if [ $# -eq 0 ]; then
 fi
 
 RV=$COMMON_SUCCESS
-START "$0" "$ALL_LOGFILE"
+START "$0" "$ALL_LOGFILE" "$*"
 
 # Adjust field separators for for loop to support whitespace in filenames
 IFS=$(echo -en "\n\b")

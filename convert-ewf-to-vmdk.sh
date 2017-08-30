@@ -24,7 +24,7 @@ if [ ! -e "$VMDK" ]; then
 
 	if [ $BYTES -gt 0 ]; then
 		ewfexport -u -o 0 -B $BYTES -f raw -t - "$EWF" | /Applications/VirtualBox.app/Contents/MacOS/VBoxManage convertfromraw stdin "$VMDK" $BYTES --format VMDK --variant Standard 2>&1 | tee -a "$LOG"
-		RV=$?
+		RV=$((RV+$?))
 		INFO "EWF-Stored MD5:				$EWFMD5" "$LOG"
 	else
 		ERROR "ewfinfo unable to retrieve bytes value!" "$0" "$LOG"

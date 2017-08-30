@@ -20,7 +20,7 @@ if [ ! -e "$DEST" ]; then
 fi
 
 RV=$COMMON_SUCCESS
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 
 pushd "$DEST"
 

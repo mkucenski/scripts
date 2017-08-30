@@ -14,7 +14,7 @@ if [ $# -eq 0 ]; then
 fi
 
 RV=$COMMON_SUCCESS
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 
 LOG "$CMD -o $OFFSET \"$IMAGE\" $INODE" "$LOGFILE"
 "$CMD" $(if [ -n "$OPTS" ]; then echo "$OPTS"; fi) -o $OFFSET "$IMAGE" $INODE | tee -a "$LOGFILE"

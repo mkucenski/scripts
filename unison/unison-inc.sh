@@ -113,7 +113,7 @@ function execUnison() {
 		setup
 		PRF=$(buildprf "$SRC" "$DST" "$DIR")
 		UNILOG="$(getlogfile "$PRF")"
-		START "$0" "$UNILOG"
+		START "$0" "$UNILOG" "$*"
 		LOG "$BANNER" "$UNILOG"
 		PRFBASE="$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
 		unison "$PRFBASE"
@@ -134,7 +134,7 @@ function execUnison2() {
 	setup
 	PRF=$(buildprf2 "$SRC" "$DST")
 	UNILOG="$(getlogfile "$PRF")"
-	START "$0" "$UNILOG"
+	START "$0" "$UNILOG" "$*"
 	LOG "$BANNER" "$UNILOG"
 	PRFBASE="$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
 	unison "$PRFBASE"

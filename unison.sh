@@ -16,7 +16,7 @@ if [ -e "$SRC" ]; then
 		RESULT=$(execUnison2 "$SRC" "$DST")
 		if [ $? -ne 0 ]; then
 			ERROR "$RESULT ($?)" "$0"
-			RV=$?
+			RV=$((RV+$?))
 		else
 			INFO "Success!"
 		fi

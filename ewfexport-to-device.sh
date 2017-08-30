@@ -8,7 +8,7 @@ if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "DEVICE" "LOGFILE" && exit $COMMON_ERROR
 fi
 
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 
 INFO "Locating Original Hash Value..."
 ORIGINAL_HASH=$(ewfinfo "$IMAGE" | grep "MD5:" | $SEDCMD -r 's/.*MD5:[[:space:]]+(.+)/\1/')

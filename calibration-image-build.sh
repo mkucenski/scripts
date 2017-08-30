@@ -12,7 +12,7 @@ fi
 RV=$COMMON_SUCCESS
 
 LOGFILE="$LOGDIR/$SERIAL-calibration.log"
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
   
 if [ -n "$TESTMODE" ]; then
 	WARNING "Test mode enabled, results will not be written to / read from disk!" "$0" "$LOGFILE"

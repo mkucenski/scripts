@@ -18,12 +18,12 @@ if [ ! -e "$DEST" ]; then
 fi
 
 if [ -e "$DEST" ]; then
-	START "$0" "$DEST"
+	START "$0" "$DEST" "$*"
 	INFO "$SITE -> $DEST"
 	LOG "Whois Query for: $SITE" "$DEST"
 
 	whois -h "$SERVER" "$SITE" >> "$DEST"
-	RV=$?
+	RV=$((RV+$?))
 
 	END "$0" "$DEST"
 else

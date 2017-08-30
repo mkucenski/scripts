@@ -11,7 +11,7 @@ fi
 RV=$COMMON_SUCCESS
 
 LOGFILE="$LOGDIR/$SERIAL-calibration.log"
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 
 BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
 

@@ -24,7 +24,7 @@ if [ ! -e "$RAW" ]; then
 
 	if [ $BYTES -gt 0 ]; then
 		ewfexport -u -o 0 -B $BYTES -f raw -t "$RAW" "$EWF" | tee -a "$LOG"
-		RV=$?
+		RV=$((RV+$?))
 		INFO "EWF-Stored MD5:				$EWFMD5" "$LOG"
 	else
 		ERROR "ewfinfo unable to retrieve bytes value!" "$0" "$LOG"

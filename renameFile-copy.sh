@@ -18,7 +18,7 @@ echo "$NEW"
 if [ "$FILE" != "$NEW" ]; then
 	echo "Copying:" "$FILE" "$NEW"
 	cp "$FILE" "$NEW"
-	RV=$?
+	RV=$((RV+$?))
 fi
 
 exit $RV

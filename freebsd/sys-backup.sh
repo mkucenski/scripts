@@ -10,7 +10,7 @@ RV=$COMMON_SUCCESS
 if [ -d "$DESTDIR" ]; then
 	DEST="$DESTDIR/$(hostname -s) $(DATETIME).bz2"
 	dump -L0af - / | bzip2 -c > "$DEST"
-	RV=$?
+	RV=$((RV+$?))
 else
 	ERROR "Invalid Destination Directory!" "$0"
 fi

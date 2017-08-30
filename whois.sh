@@ -22,7 +22,7 @@ if [ -e "$DEST" ]; then
 	LOG "Whois Query for: $SITE" "$DEST"
 
 	whois "$SITE" | egrep -v "^$" | egrep -v "^#" >> "$DEST"
-	RV=$?
+	RV=$((RV+$?))
 
 	ORG="$(grep -i "OrgName" "$DEST" | $SEDCMD -r 's/OrgName:[[:space:]]+(.+)/\1/')"
 	if [ -n "$ORG" ]; then
@@ -38,7 +38,7 @@ if [ -e "$DEST" ]; then
 		LOG "" "$DEST"
 		LOG "Whois Query ($SERVER) for: $SITE" "$DEST"
 		whois -h "$SERVER" "$SITE" | egrep -v "^$" | egrep -v "^#" >> "$DEST"
-		RV=$?
+		RV=$((RV+$?))
 	fi
 
 	END "$0" "$DEST"

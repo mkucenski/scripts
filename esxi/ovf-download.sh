@@ -11,6 +11,10 @@ fi
 
 RV=$COMMON_SUCCESS
 
+if [ ! -e "$DEST" ]; then
+	mkdir -p "$DEST"
+fi
+
 ovftool "vi://$USER@$SERVER/$VM" "$DEST"
 
 exit $RV

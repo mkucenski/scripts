@@ -3,7 +3,7 @@
 
 LOGFILE="$HOME/Logs/macports-wrapper.log"
 ERR=-1
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 LOG "Args: $(ECHO_ARGS $@)" "$LOGFILE"
 port "$@" | tee -a "$LOGFILE"
 END "$0" "$LOGFILE"

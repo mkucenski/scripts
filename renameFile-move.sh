@@ -18,7 +18,7 @@ echo "$NEW"
 if [ "$FILE" != "$NEW" ]; then
 	echo "Moving:" "$FILE" "$NEW"
 	mv "$FILE" "$NEW"
-	RV=$?
+	RV=$((RV+$?))
 fi
 
 exit $RV

@@ -9,7 +9,7 @@ RV=$COMMON_SUCCESS
 
 LOGFILE="`echo ~`/Logs/macports-reinstall.log"
 
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 LOG "Args: $@" "$LOGFILE"
 
 # Save the list of installed ports:

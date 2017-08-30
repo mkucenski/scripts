@@ -18,7 +18,7 @@ echo "$NEW"
 if [ "$FILE" != "$NEW" ]; then
 	echo "Moving:" "$FILE" "$NEW"
 	git mv "$FILE" "$NEW"
-	RV=$?
+	RV=$((RV+$?))
 fi
 
 exit $RV

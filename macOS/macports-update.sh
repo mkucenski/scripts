@@ -9,7 +9,7 @@ LOGFILE="`echo ~`/Logs/macports-update.log"
 
 RV=$COMMON_SUCCESS
 
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 LOG "Args: $@" "$LOGFILE"
 
 PRE=$(MKTEMP "$0" || exit $COMMON_ERROR)
