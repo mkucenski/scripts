@@ -13,6 +13,7 @@ RV=$COMMON_SUCCESS
 
 DEST="$DESTDIR/$SITE-whois.txt"
 if [ ! -e "$DEST" ]; then
+	mkdir -p "$DESTDIR"
 	touch "$DEST"
 fi
 
