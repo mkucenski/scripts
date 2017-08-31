@@ -11,7 +11,7 @@ echo "//"
 echo "		MD5				SHA-1"
 echo "-------------------------------------------------------------------------"
 for arg in "$@"; do
-	${BASH_SOURCE%/*}/fciv_worker.sh "$arg" 0
+	${BASH_SOURCE%/*}/fciv_worker.sh "$arg" 1
 	RV=$((RV+$?))
 done
 
