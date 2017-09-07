@@ -14,9 +14,9 @@ TMP=$(MKTEMP "$0" || exit $COMMON_ERROR)
 TMPCSV=$(MKTEMP "$0" || exit $COMMON_ERROR)
 
 if [ -e "$CSV" ]; then
-	INFO "$(dos2unix -n "$CSV" "$TMPCSV" 2>&1)"
+	INFO_ERR "$(dos2unix -n "$CSV" "$TMPCSV" 2>&1)"
 
-	INFO "Parsing individual lines into fciv format ($TMP)..."
+	INFO_ERR "Parsing individual lines into fciv format ($TMP)..."
 	while read -r LINE; do
 		REGEX="^.*[.+].+[[:space:]]+[[:digit:]]+[[:space:]]+.*[[:space:]]+[a-z0-9]{32}[[:space:]]+[a-z0-9]{40}.*$"
 		SED="^.*\[.+\]\\\\(.+)[[:space:]]+[[:digit:]]+[[:space:]]+.*[[:space:]]+([a-z0-9]{32})[[:space:]]+([a-z0-9]{40}).*$"
@@ -33,7 +33,7 @@ if [ -e "$CSV" ]; then
 		fi
 	done < "$TMPCSV"
 
-	INFO "Sorting based on filename/path ($KEY)..."
+	INFO_ERR "Sorting based on filename/path ($KEY)..."
 	${BASH_SOURCE%/*}/fciv.sh
 	sort --key=$KEY "$TMP"
 else
