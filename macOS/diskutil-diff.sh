@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. ${BASH_SOURCE%/*}/../common-include.sh || exit 1
 
 TMP1=$(MKTEMP "$0" || exit $COMMON_ERROR)
 TMP2=$(MKTEMP "$0" || exit $COMMON_ERROR)
