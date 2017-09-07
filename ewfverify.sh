@@ -8,7 +8,7 @@ LOGFILE="$2"
 if [ -z "$LOGFILE" ]; then
 	LOGFILE="$(STRIP_EXTENSION "$IMAGE")-ewfverify.log"
 fi
-if [ $# -ne 1 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "LOGFILE (optional - defaults to \$IMAGE-ewfverify.log)" && exit $COMMON_ERROR
 fi
 
