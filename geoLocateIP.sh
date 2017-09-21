@@ -1,22 +1,29 @@
 #!/bin/bash
 . ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
-# Takes a list of IP addresses (one per line) on stdin and outputs the geographical location
-# Uses software and databases found here: http://www.maxmind.com/app/ip-location
+# Takes a list of IP addresses (one per line) on stdin or via a text file argument.
+# Uses software and databases found here: http://www.maxmind.com/app/ip-location.
 
-IP="$1"
-if [ $# -eq 0 ]; then
-	USAGE "IP" && exit $COMMON_ERROR
-fi
+DBDIR="/opt/local/share/GeoIP"
 
 RV=$COMMON_SUCCESS
 
-while `read IP`; do 
-	Country=`geoiplookup $IP | gsed -r 's/^GeoIP Country Edition: (.+)/\1/'`
-	City=`geoiplookup -f /usr/local/share/GeoIP/GeoLiteCity.dat $IP | gsed -r 's/GeoIP City Edition, Rev .: .., ([^,]+), ([^,]+), ([^,]+),.*/\1, \2, \3/'`
-	echo "$IP		$Country, $City"
-done
+while read IP; do 
+	COUNTRY="$(geoiplookup -f "$DBDIR/GeoLiteCountry.dat" $IP | $SEDCMD -r 's/^GeoIP Country Edition: (.+)/\1/; s/, /,/g')"
+	CITY="$(geoiplookup -f "$DBDIR/GeoLiteCity.dat" $IP | gsed -r 's/GeoIP City Edition, Rev .: .., ([^,]+), ([^,]+), ([^,]+),.*/\1, \2, \3/; s/, /,/g')"
 
-END "$0" "$LOGFILE"
+	echo -n "$IP,"
+	if [ -z "$(echo "$COUNTRY" | grep "IP Address not found")" ]; then
+		echo -n "$COUNTRY,"
+	else
+		echo -n "UNK,UNK,"
+	fi
+	if [ -z "$(echo "$CITY" | grep "IP Address not found")" ]; then
+		echo "$CITY"
+	else
+		echo "UNK,UNK,UNK"
+	fi
+done < "${1:-/dev/stdin}"
+
 exit $RV
 
