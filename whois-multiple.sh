@@ -5,8 +5,11 @@
 
 IP_FILE="$1"
 DESTDIR="$2"
-if [ $# -eq 0 ]; then
+if [ $# -ge 1 ]; then
 	USAGE "IP_FILE" "DESTDIR" && exit $COMMON_ERROR
+fi
+if [ -z "$DESTDIR" ]; then
+	DESTDIR="./"
 fi
 
 RV=$COMMON_SUCCESS

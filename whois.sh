@@ -8,6 +8,9 @@ DESTDIR="$2"
 if [ $# -eq 0 ]; then
 	USAGE "SITE" "DESTDIR" && exit $COMMON_ERROR
 fi
+if [ -z "$DESTDIR" ]; then
+	DESTDIR="./"
+fi
 
 RV=$COMMON_SUCCESS
 

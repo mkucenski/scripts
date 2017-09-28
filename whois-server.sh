@@ -9,6 +9,9 @@ DESTDIR="$3"
 if [ $# -eq 0 ]; then
 	USAGE "SITE" "SERVER" "DESTDIR" && exit $COMMON_ERROR
 fi
+if [ -z "$DESTDIR" ]; then
+	DESTDIR="./"
+fi
 
 RV=$COMMON_SUCCESS
 
