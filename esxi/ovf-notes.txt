@@ -1,0 +1,7 @@
+https://niktips.wordpress.com/tag/xvc-vmotion/
+
+Special characters in URIs (string starting with vi://) must be escaped. Use % followed by the character HEX code. You can find character HEX codes here: http://www.techdictionary.com/ascii.html.
+For example use “vi://root:P%40ssword@10.0.1.10”, instead of “vi://root:P@ssword@10.0.1.10” or you can get confusing errors similar to this: Error: Could not lookup host: root
+
+Disconnect ISO images from VMs before migrating them or you will get the following error: Error: A general system error occurred: vim.fault.FileNotFound
+
