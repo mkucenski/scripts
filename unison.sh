@@ -11,6 +11,9 @@ fi
 RV=$COMMON_SUCCESS
 
 if [ -e "$SRC" ]; then
+	if [ ! -e "$DST" ]; then
+		mkdir -p "$DST"
+	fi
 	if [ -e "$DST" ]; then
 		INFO "--- $SRC -> $DST ---"
 		RESULT=$(execUnison2 "$SRC" "$DST")
@@ -21,11 +24,11 @@ if [ -e "$SRC" ]; then
 			INFO "Success!"
 		fi
 	else
-		ERROR "<$DSTBASEDIR> Not Available!" "$0"
+		ERROR "<$DST> Not Available!" "$0"
 		RV=$COMMON_ERROR
 	fi
 else
-	ERROR "<$SRCDIR> Not Available!" "$0"
+	ERROR "<$SRC> Not Available!" "$0"
 	RV=$COMMON_ERROR
 fi
 

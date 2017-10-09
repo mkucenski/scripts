@@ -23,10 +23,10 @@ START "$0" "$LOGFILE" "$*"
 FULL_IMAGE_PATH="$(cd "$(dirname "$IMAGE")"; pwd)/$(basename "$IMAGE")"
 INFO "Executing ewfinfo ($IMAGE)..."
 INFO "Image: $FULL_IMAGE_PATH" "$LOGFILE"
-INFO "$(~/Development/opt/bin/ewfinfo "$IMAGE" 2>&1)" "$LOGFILE"
+INFO "$(ewfinfo "$IMAGE" 2>&1)" "$LOGFILE"
 
 INFO "Executing ewfverify ($IMAGE)..."
-RESULT=$(~/Development/opt/bin/ewfverify -l "$LOGFILE" -q "$IMAGE" 2>&1)
+RESULT=$(ewfverify -l "$LOGFILE" -q "$IMAGE" 2>&1)
 VERIFY=$(echo "$RESULT" | egrep "ewfverify: (SUCCESS|FAILURE)" | $SEDCMD -r 's/ewfverify: (.+)/\1/')
 if [ "$VERIFY" == "SUCCESS" ]; then
 	INFO "Successfully Verified!" "$LOGFILE"

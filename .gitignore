@@ -1,6 +1,6 @@
 unison/unison-sync.sh
-unison/unison-sync-images.sh
 unison/unison-sync-data.sh
+unison/unison-sync-images.sh
 unison/*.prf
 test.sh
 easylist/

@@ -15,6 +15,10 @@ DEBUG "PST=$PST, DEST=$DEST, PST_BASE_NAME=$PST_BASE_NAME, INFOFILE=$INFOFILE, L
 RV=$COMMON_SUCCESS
 START "$0" "$LOGFILE" "$*"
 
+if [ ! -e "$DEST" ]; then
+	mkdir -p "$DEST"
+fi
+
 pushd "$DEST"
 pffinfo "$PST" | tee "$INFOFILE"
 pffexport -f text -m items -l "$LOGFILE" -q "$PST"
