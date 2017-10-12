@@ -35,9 +35,7 @@ function setup() {
 		createDir "$PRFDIR"
 	fi
 
-	if [ ! -e "$PRFDIR/common" ]; then
-		cp -n $(dirname "$0")/common "$PRFDIR/"
-	fi
+	cp $(dirname "$0")/common "$PRFDIR/"
 }
 
 function buildprf() {
