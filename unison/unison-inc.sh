@@ -149,7 +149,8 @@ function execRsync2() {
 	DSTBASEDIR=$(normalizeDir "$2")
 
 	ERR=0
-	RESULT=$(rsync -av --fileflags "$SRCDIR" "$DSTBASEDIR/")
+	# RESULT=$(rsync -av --fileflags "$SRCDIR" "$DSTBASEDIR/")
+	RESULT=$(rsync -av "$SRCDIR" "$DSTBASEDIR/")
 	ERR=$(expr $ERR + $?)
 	return $ERR
 }
