@@ -2,8 +2,7 @@
 . ${BASH_SOURCE%/*}/../common-include.sh || exit 1
 
 PRFDIR="$HOME/.unison/sync"
-BACKUP=".unison-backup"
-LOGFILE="unison-sync.log"
+LOGDIR="$HOME/.unison/log"
 
 function createDir() {
 	ERR=0
@@ -35,6 +34,10 @@ function setup() {
 		createDir "$PRFDIR"
 	fi
 
+	if [ ! -e "$LOGDIR" ]; then
+		createDir "$LOGDIR"
+	fi
+
 	cp $(dirname "$0")/common "$PRFDIR/"
 }
 
@@ -44,40 +47,27 @@ function buildprf() {
 	DIR="$3"
 
 	PRF="$(mktemp "$PRFDIR/unison-XXXXXX")"
-	LABEL="$ROOT1 <-> $ROOT2 - $DIR"
 	echo "include sync/common" > "$PRF"
-	echo "label = \"$LABEL\"" >> "$PRF"
 	echo "root = $ROOT1/$DIR/" >> "$PRF"
 	echo "root = $ROOT2/$DIR/" >> "$PRF"
-
-	BACKUPDIR="$ROOT1/$DIR/$BACKUP"
-	createDir "$BACKUPDIR"
-	echo >> "$PRF"
-	echo "backupdir = $BACKUPDIR" >> "$PRF"
-	echo "backup = Name *" >> "$PRF"
-	echo "logfile = $BACKUPDIR/$LOGFILE" >> "$PRF"
+	echo "backups = true" >> "$PRF"
+	echo "log = true" >> "$PRF"
+	echo "logfile = $LOGDIR/unison-$(BASE64_STRING "$ROOT1")-$(BASE64_STRING "$ROOT2").log" >> "$PRF"
 
 	echo "$PRF"
 }
-
 
 function buildprf2() {
 	ROOT1="$1"
 	ROOT2="$2"
 
 	PRF="$(mktemp "$PRFDIR/unison-XXXXXX")"
-
 	echo "include sync/common" > "$PRF"
-	echo "label = \"$ROOT1 <-> $ROOT2\"" >> "$PRF"
 	echo "root = $ROOT1/" >> "$PRF"
 	echo "root = $ROOT2/" >> "$PRF"
-
-	BACKUPDIR="$ROOT1/$BACKUP"
-	createDir "$BACKUPDIR"
-	echo >> "$PRF"
-	echo "backupdir = $BACKUPDIR" >> "$PRF"
-	echo "backup = Name *" >> "$PRF"
-	echo "logfile = $BACKUPDIR/$LOGFILE" >> "$PRF"
+	echo "backups = true" >> "$PRF"
+	echo "log = true" >> "$PRF"
+	echo "logfile = $LOGDIR/unison-$(base64 "$ROOT1")-$(base64 "$ROOT2").log" >> "$PRF"
 
 	echo "$PRF"
 }
@@ -113,10 +103,8 @@ function execUnison() {
 		UNILOG="$(getlogfile "$PRF")"
 		START "$0" "$UNILOG" "$*"
 		LOG "$BANNER" "$UNILOG"
-		PRFBASE="$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
-		unison "$PRFBASE"
-		# changeFlags "$SRC/$DIR"
-		# changeFlags "$DST/$DIR"
+		unison "$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
+		cat "$PRF" >> "$UNILOG"
 		rm "$PRF"
 		END "$0" "$UNILOG"
 	fi
@@ -134,10 +122,8 @@ function execUnison2() {
 	UNILOG="$(getlogfile "$PRF")"
 	START "$0" "$UNILOG" "$*"
 	LOG "$BANNER" "$UNILOG"
-	PRFBASE="$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
-	unison "$PRFBASE"
-	# changeFlags "$SRC"
-	# changeFlags "$DST"
+	unison "$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
+	cat "$PRF" >> "$UNILOG"
 	rm "$PRF"
 	END "$0" "$UNILOG"
 	INFO

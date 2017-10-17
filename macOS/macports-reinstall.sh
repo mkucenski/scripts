@@ -7,19 +7,19 @@ fi
 
 RV=$COMMON_SUCCESS
 
-LOGFILE="`echo ~`/Logs/macports-reinstall.log"
+LOGFILE="$(echo ~)/Logs/macports-reinstall.log"
 
 START "$0" "$LOGFILE" "$*"
-LOG "Args: $@" "$LOGFILE"
 
 # Save the list of installed ports:
+LOG "Currently Installed:" "$LOGFILE"
 INSTALLED=$(MKTEMP "$0-installed" || exit $COMMON_ERROR)
-
-${BASH_SOURCE%/*}/macports-wrapper.sh -qv installed > "$INSTALLED"
+${BASH_SOURCE%/*}/macports-wrapper.sh -qv installed | tee "$INSTALLED" >> "$LOGFILE"
 
 # (optional) Save the list of requested ports:
+LOG "Requested:" "$LOGFILE"
 REQUESTED=$(MKTEMP "$0-requested" || exit $COMMON_ERROR)
-${BASH_SOURCE%/*}/macports-wrapper.sh echo requested | cut -d ' ' -f 1 > "$REQUESTED"
+${BASH_SOURCE%/*}/macports-wrapper.sh echo requested | cut -d ' ' -f 1 | tee "$REQUESTED" >> "$LOGFILE"
 
 # Uninstall all installed ports:
 ${BASH_SOURCE%/*}/macports-wrapper.sh -f uninstall installed
