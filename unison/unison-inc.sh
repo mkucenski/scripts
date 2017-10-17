@@ -3,8 +3,6 @@
 
 PRFDIR="$HOME/.unison/sync"
 LOGDIR="$HOME/.unison/log"
-# BACKUP=".unison-backup"
-# LOGFILE="unison-sync.log"
 
 function createDir() {
 	ERR=0
@@ -52,13 +50,7 @@ function buildprf() {
 	echo "include sync/common" > "$PRF"
 	echo "root = $ROOT1/$DIR/" >> "$PRF"
 	echo "root = $ROOT2/$DIR/" >> "$PRF"
-	# BACKUPDIR="$ROOT1/$DIR/$BACKUP"
-	# createDir "$BACKUPDIR"
 	echo "backups = true" >> "$PRF"
-	# echo "backuploc = central" >> "$PRF"
-	# echo "backupdir = $BACKUPDIR" >> "$PRF"
-	# echo "backup = Name *" >> "$PRF"
-	# echo "logfile = $BACKUPDIR/$LOGFILE" >> "$PRF"
 	echo "logfile = $LOGDIR/unison-$(BASE64_STRING "$ROOT1")-$(BASE64_STRING "$ROOT2").log" >> "$PRF"
 
 	echo "$PRF"
@@ -72,13 +64,7 @@ function buildprf2() {
 	echo "include sync/common" > "$PRF"
 	echo "root = $ROOT1/" >> "$PRF"
 	echo "root = $ROOT2/" >> "$PRF"
-	# BACKUPDIR="$ROOT1/$BACKUP"
-	# createDir "$BACKUPDIR"
 	echo "backups = true" >> "$PRF"
-	# echo "backuploc = central" >> "$PRF"
-	# echo "backupdir = $BACKUPDIR" >> "$PRF"
-	# echo "backup = Name *" >> "$PRF"
-	# echo "logfile = $BACKUPDIR/$LOGFILE" >> "$PRF"
 	echo "logfile = $LOGDIR/unison-$(base64 "$ROOT1")-$(base64 "$ROOT2").log" >> "$PRF"
 
 	echo "$PRF"
@@ -116,8 +102,6 @@ function execUnison() {
 		START "$0" "$UNILOG" "$*"
 		LOG "$BANNER" "$UNILOG"
 		unison "$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
-		# changeFlags "$SRC/$DIR"
-		# changeFlags "$DST/$DIR"
 		cat "$PRF" >> "$UNILOG"
 		rm "$PRF"
 		END "$0" "$UNILOG"
@@ -137,8 +121,6 @@ function execUnison2() {
 	START "$0" "$UNILOG" "$*"
 	LOG "$BANNER" "$UNILOG"
 	unison "$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
-	# changeFlags "$SRC"
-	# changeFlags "$DST"
 	cat "$PRF" >> "$UNILOG"
 	rm "$PRF"
 	END "$0" "$UNILOG"
