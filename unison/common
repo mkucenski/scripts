@@ -10,11 +10,8 @@ ignore = Name .FBCIndex
 ignore = Name .FBCLockFolder
 ignore = Name {Cache*,.Trash*,.VolumeIcon.icns,.HSicon,Temporary*,.Temporary*,TheFindByContentFolder}
 ignore = Name {TheVolumeSettingsFolder,.Metadata,.filler,.idsff,.Spotlight,.DS_Store,.CFUserTextEncoding} 
-ignore = Name {._.DS_Store}
+ignore = Name ._.DS_Store
 ignore = Name .DS_Store
-
-# Avoid syncing unison backup records
-ignore = Name .unison-backup
 
 # Avoid syncing extraneous Windows stuff
 ignore = Name desktop.ini

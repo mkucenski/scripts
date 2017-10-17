@@ -64,6 +64,14 @@ function LOG_SCRIPT_BASE64() {
 	fi
 }
 
+function BASE64_STRING() {
+	echo "$1" | base64
+}
+
+function BASE64_FILE() {
+	base64 "$1"
+}
+
 function MKTEMP() {
 	mktemp -t "$(basename "$1")" || return $COMMON_ERROR
 	return $COMMON_SUCCESS
