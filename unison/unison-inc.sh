@@ -50,7 +50,8 @@ function buildprf() {
 	echo "include sync/common" > "$PRF"
 	echo "root = $ROOT1/$DIR/" >> "$PRF"
 	echo "root = $ROOT2/$DIR/" >> "$PRF"
-	echo "backups = true" >> "$PRF"
+	echo "backuploc = local" >> "$PRF"
+	echo "backup = Name *" >> "$PRF"
 	echo "log = true" >> "$PRF"
 	echo "logfile = $LOGDIR/unison-$(BASE64_STRING "$ROOT1")-$(BASE64_STRING "$ROOT2").log" >> "$PRF"
 
@@ -65,7 +66,8 @@ function buildprf2() {
 	echo "include sync/common" > "$PRF"
 	echo "root = $ROOT1/" >> "$PRF"
 	echo "root = $ROOT2/" >> "$PRF"
-	echo "backups = true" >> "$PRF"
+	echo "backuploc = local" >> "$PRF"
+	echo "backup = Name *" >> "$PRF"
 	echo "log = true" >> "$PRF"
 	echo "logfile = $LOGDIR/unison-$(base64 "$ROOT1")-$(base64 "$ROOT2").log" >> "$PRF"
 
