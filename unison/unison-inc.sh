@@ -69,7 +69,7 @@ function buildprf2() {
 	echo "backuploc = local" >> "$PRF"
 	echo "backup = Name *" >> "$PRF"
 	echo "log = true" >> "$PRF"
-	echo "logfile = $LOGDIR/unison-$(base64 "$ROOT1")-$(base64 "$ROOT2").log" >> "$PRF"
+	echo "logfile = $LOGDIR/unison-$(BASE64_STRING "$ROOT1")-$(BASE64_STRING "$ROOT2").log" >> "$PRF"
 
 	echo "$PRF"
 }
