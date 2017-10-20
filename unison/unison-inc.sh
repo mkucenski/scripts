@@ -98,38 +98,40 @@ function execUnison() {
 	DST="$2"
 	DIR="$3"
 
-	BANNER="$SRC <-> $DST - $DIR"
-	NOTIFY "$BANNER" "$0"
 	if ( createDirs "$SRC/$DIR" "$DST/$DIR" ); then
 		setup
 		PRF=$(buildprf "$SRC" "$DST" "$DIR")
 		UNILOG="$(getlogfile "$PRF")"
+		BANNER="$SRC <-> $DST - $DIR"
 		START "$0" "$UNILOG" "$*"
+
 		LOG "$BANNER" "$UNILOG"
+		NOTIFY "$BANNER" "$0"
 		unison "$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
 		cat "$PRF" >> "$UNILOG"
 		rm "$PRF"
+
 		END "$0" "$UNILOG"
 	fi
-	INFO
 }
 
 function execUnison2() {
 	SRC="$1"
 	DST="$2"
 
-	BANNER="$SRC <-> $DST"
-	NOTIFY "$BANNER" "$0"
 	setup
 	PRF=$(buildprf2 "$SRC" "$DST")
 	UNILOG="$(getlogfile "$PRF")"
+	BANNER="$SRC <-> $DST"
 	START "$0" "$UNILOG" "$*"
+
 	LOG "$BANNER" "$UNILOG"
+	NOTIFY "$BANNER" "$0"
 	unison "$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
 	cat "$PRF" >> "$UNILOG"
 	rm "$PRF"
+
 	END "$0" "$UNILOG"
-	INFO
 }
 
 function execRsync() {
@@ -138,10 +140,11 @@ function execRsync() {
 	SRCSUBDIR="$3"
 
 	ERR=0
+
 	NOTIFY "$SRCDIR -> $DSTBASEDIR - $SRCSUBDIR" "$0"
 	RESULT=$(execRsync2 "$SRCDIR/$SRCSUBDIR" "$DSTBASEDIR")
 	ERR=$(expr $ERR + $?)
-	INFO	
+
 	return $ERR
 }
 
@@ -150,9 +153,11 @@ function execRsync2() {
 	DSTBASEDIR=$(normalizeDir "$2")
 
 	ERR=0
+
 	# RESULT=$(rsync -av --fileflags "$SRCDIR" "$DSTBASEDIR/")
 	RESULT=$(rsync -av "$SRCDIR" "$DSTBASEDIR/")
 	ERR=$(expr $ERR + $?)
+
 	return $ERR
 }
 
