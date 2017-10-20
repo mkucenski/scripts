@@ -3,6 +3,7 @@
 
 PRFDIR="$HOME/.unison/sync"
 LOGDIR="$HOME/.unison/log"
+LOGFILE="$LOGDIR/unison-inc.log"
 
 function createDir() {
 	ERR=0
@@ -53,7 +54,7 @@ function buildprf() {
 	echo "backuploc = local" >> "$PRF"
 	echo "backup = Name *" >> "$PRF"
 	echo "log = true" >> "$PRF"
-	echo "logfile = $LOGDIR/unison-$(BASE64_STRING "$ROOT1")-$(BASE64_STRING "$ROOT2").log" >> "$PRF"
+	echo "logfile = $LOGFILE" >> "$PRF"
 
 	echo "$PRF"
 }
@@ -69,7 +70,7 @@ function buildprf2() {
 	echo "backuploc = local" >> "$PRF"
 	echo "backup = Name *" >> "$PRF"
 	echo "log = true" >> "$PRF"
-	echo "logfile = $LOGDIR/unison-$(BASE64_STRING "$ROOT1")-$(BASE64_STRING "$ROOT2").log" >> "$PRF"
+	echo "logfile = $LOGFILE" >> "$PRF"
 
 	echo "$PRF"
 }
@@ -97,8 +98,8 @@ function execUnison() {
 	DST="$2"
 	DIR="$3"
 
-	BANNER="--- $SRC <-> $DST - $DIR ---"
-	INFO "$BANNER"
+	BANNER="$SRC <-> $DST - $DIR"
+	NOTIFY "$BANNER" "$0"
 	if ( createDirs "$SRC/$DIR" "$DST/$DIR" ); then
 		setup
 		PRF=$(buildprf "$SRC" "$DST" "$DIR")
@@ -117,8 +118,8 @@ function execUnison2() {
 	SRC="$1"
 	DST="$2"
 
-	BANNER="--- $SRC <-> $DST ---"
-	INFO "$BANNER"
+	BANNER="$SRC <-> $DST"
+	NOTIFY "$BANNER" "$0"
 	setup
 	PRF=$(buildprf2 "$SRC" "$DST")
 	UNILOG="$(getlogfile "$PRF")"
@@ -137,7 +138,7 @@ function execRsync() {
 	SRCSUBDIR="$3"
 
 	ERR=0
-	INFO "--- $SRCDIR -> $DSTBASEDIR - $SRCSUBDIR ---"
+	NOTIFY "$SRCDIR -> $DSTBASEDIR - $SRCSUBDIR" "$0"
 	RESULT=$(execRsync2 "$SRCDIR/$SRCSUBDIR" "$DSTBASEDIR")
 	ERR=$(expr $ERR + $?)
 	INFO	
