@@ -215,3 +215,30 @@ function ECHO_ARGS() {
 	done
 }
 
+function LOCK {
+	_COMMON_LOCK_SRC_SCRIPT="$1"
+	_COMMON_LOCK_LOG="$2"
+
+	_COMMON_LOCK="$(dirname "$_COMMON_LOCK_SRC_SCRIPT")/.$(basename "$_COMMON_LOCK_SRC_SCRIPT").pid"
+
+	if [ -f "$_COMMON_LOCK" ]; then
+		PID=$(cat "$_COMMON_LOCK")
+		if kill -0 $PID >/dev/null 2>&1; then
+			WARNING "Active lock; script already running!" "$_COMMON_LOCK_SRC_SCRIPT" "$_COMMON_LOCK_LOG"
+			exit $COMMON_ERROR
+		else
+			WARNING "Stale lock; removing ($_COMMON_LOCK)" "$_COMMON_LOCK_SRC_SCRIPT" "$_COMMON_LOCK_LOG"
+		fi
+	fi
+
+	echo $$ > "$_COMMON_LOCK"
+}
+
+function UNLOCK {
+	_COMMON_LOCK_SRC_SCRIPT="$1"
+	_COMMON_LOCK_LOG="$2"
+
+	_COMMON_LOCK="$(dirname "$_COMMON_LOCK_SRC_SCRIPT")/.$(basename "$_COMMON_LOCK_SRC_SCRIPT").pid"
+
+   rm -f "$_COMMON_LOCK"
+}
