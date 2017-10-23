@@ -14,11 +14,11 @@ START "$0" "$LOG" "$*"
 LOG_EXEC_VERSION "wget" "$(wget --version)" "$LOG"
 
 if [ ! -e "$DESTDIR/$SITE" ]; then
+	${BASH_SOURCE%/*}/whois.sh "$SITE" "$DESTDIR"
+	${BASH_SOURCE%/*}/dig.sh "$SITE" "$DESTDIR"
+
 	mkdir -p "$DESTDIR/$SITE"
 	pushd "$DESTDIR/$SITE"
-
-	${BASH_SOURCE%/*}/whois.sh "$SITE" ./
-	${BASH_SOURCE%/*}/dig.sh "$SITE" ./
 
 	# wget --recursive --level=1 --append-output "$LOG" --show-progress -t 3 --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17" --span-hosts --adjust-extension --page-requisites --server-response --convert-links --backup-converted "$SITE"
 	wget --recursive --append-output "$LOG" --show-progress -t 3 --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17" --adjust-extension --page-requisites --server-response --convert-links --backup-converted "$SITE"
