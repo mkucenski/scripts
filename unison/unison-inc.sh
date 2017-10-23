@@ -104,6 +104,7 @@ function execUnison() {
 		UNILOG="$(getlogfile "$PRF")"
 		BANNER="$SRC <-> $DST - $DIR"
 		START "$0" "$UNILOG" "$*"
+		LOG_VERSION "unison" "$(unison -version)" "$UNILOG"
 
 		LOG "$BANNER" "$UNILOG"
 		NOTIFY "$BANNER" "$0"
@@ -124,6 +125,7 @@ function execUnison2() {
 	UNILOG="$(getlogfile "$PRF")"
 	BANNER="$SRC <-> $DST"
 	START "$0" "$UNILOG" "$*"
+	LOG_VERSION "unison" "$(unison -version)" "$UNILOG"
 
 	LOG "$BANNER" "$UNILOG"
 	NOTIFY "$BANNER" "$0"
