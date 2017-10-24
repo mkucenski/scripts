@@ -6,12 +6,24 @@ COMMON_SUCCESS=0
 COMMON_ERROR=1
 COMMON_UNKNOWN=255
 
+function NOTIFY() {
+	_COMMON_NOTIFY_MSG="$1"
+	_COMMON_NOTIFY_SRC="$(basename "$2")"
+	_COMMON_NOTIFY_OS="$(uname)"
+	if [ $_COMMON_NOTIFY_OS = "Darwin" ]; then
+		INFO "$_COMMON_NOTIFY_SRC: $_COMMON_NOTIFY_MSG"
+		${BASH_SOURCE%/*}/macOS/notification.sh "$_COMMON_NOTIFY_MSG" "$_COMMON_NOTIFY_SRC" ""
+	else
+		INFO "$_COMMON_NOTIFY_SRC: $_COMMON_NOTIFY_MSG"
+	fi
+}
+
 function DEBUG() {
 	if [ $ENABLE_DEBUG -gt 0 ]; then
 		_COMMON_DEBUG_MSG="$1"
-		_COMMON_DEBUG_SRC="$2"
+		_COMMON_DEBUG_SRC="$(basename "$2")"
 		_COMMON_DEBUG_LOG="$3"
-		_COMMON_DEBUG_OUTPUT="DEBUG($(basename "$_COMMON_DEBUG_SRC")): $_COMMON_DEBUG_MSG"
+		_COMMON_DEBUG_OUTPUT="DEBUG("$_COMMON_DEBUG_SRC"): $_COMMON_DEBUG_MSG"
 		echo "$_COMMON_DEBUG_OUTPUT" > /dev/stderr
 		if [ -n "$_COMMON_DEBUG_LOG" ]; then
 			LOG "$_COMMON_DEBUG_OUTPUT" "$_COMMON_DEBUG_LOG"
@@ -28,6 +40,13 @@ function USAGE() {
 		echo > /dev/stderr; echo > /dev/stderr
 	else
 		echo "Usage information unavailable!" > /dev/stderr
+	fi
+}
+
+function USAGE_DESCRIPTION() {
+	if [ $# -eq 1 ]; then
+		echo "Description: $1" > /dev/stderr
+		echo > /dev/stderr
 	fi
 }
 
@@ -50,6 +69,14 @@ function FULL_PATH() {
 	# Return the full/absolute path for a file
 	FILE="$1"
 	echo "$(cd $(dirname "$FILE"); pwd)/$(basename "$FILE")"
+}
+
+function LOG_EXEC_VERSION() {
+	_COMMON_LOG_EXEC_VERSION_EXEC="$1"
+	_COMMON_LOG_EXEC_VERSION_STRING="$2"
+	_COMMON_LOG_EXEC_VERSION_LOG="$3"
+
+	LOG "VERSION($_COMMON_LOG_EXEC_VERSION_EXEC): $_COMMON_LOG_EXEC_VERSION_STRING" "$_COMMON_LOG_EXEC_VERSION_LOG"
 }
 
 function LOG_SCRIPT_BASE64() {
@@ -132,9 +159,9 @@ function ERROR() {
 	# Output clear ERROR message to stderr and LOG (if specified)
 
 	_COMMON_ERROR_MSG="$1"
-	_COMMON_ERROR_SRC="$2"
+	_COMMON_ERROR_SRC="$(basename "$2")"
 	_COMMON_ERROR_LOG="$3"
-	_COMMON_ERROR_OUTPUT="ERROR($(basename "$_COMMON_ERROR_SRC")): $_COMMON_ERROR_MSG"
+	_COMMON_ERROR_OUTPUT="ERROR("$_COMMON_ERROR_SRC"): $_COMMON_ERROR_MSG"
 	echo "$_COMMON_ERROR_OUTPUT" > /dev/stderr
 	if [ -n "$_COMMON_ERROR_LOG" ]; then
 		LOG "$_COMMON_ERROR_OUTPUT" "$_COMMON_ERROR_LOG"
@@ -145,9 +172,9 @@ function WARNING() {
 	# Output clear WARNING message to stderr and LOG (if specified)
 
 	_COMMON_WARNING_MSG="$1"
-	_COMMON_WARNING_SRC="$2"
+	_COMMON_WARNING_SRC="$(basename "$2")"
 	_COMMON_WARNING_LOG="$3"
-	_COMMON_WARNING_OUTPUT="WARNING($(basename "$_COMMON_WARNING_SRC")): $_COMMON_WARNING_MSG"
+	_COMMON_WARNING_OUTPUT="WARNING("$_COMMON_WARNING_SRC"): $_COMMON_WARNING_MSG"
 	echo "$_COMMON_WARNING_OUTPUT" > /dev/stderr
 	if [ -n "$_COMMON_WARNING_LOG" ]; then
 		LOG "$_COMMON_WARNING_OUTPUT" "$_COMMON_WARNING_LOG"
@@ -165,6 +192,7 @@ function START() {
 		LOG "ARGS($_COMMON_START_SCRIPT): '$_COMMON_START_ARGS'" "$_COMMON_START_LOG"
 	fi
 	LOG_SCRIPT_BASE64 "$_COMMON_START_SRC" "$_COMMON_START_LOG"
+	LOG "HOST: $(uname -a)" "$_COMMON_START_LOG"
 	LOG "" "$_COMMON_START_LOG"
 }
 
@@ -196,3 +224,30 @@ function ECHO_ARGS() {
 	done
 }
 
+function LOCK {
+	_COMMON_LOCK_SRC_SCRIPT="$1"
+	_COMMON_LOCK_LOG="$2"
+
+	_COMMON_LOCK="$(dirname "$_COMMON_LOCK_SRC_SCRIPT")/.$(basename "$_COMMON_LOCK_SRC_SCRIPT").pid"
+
+	if [ -f "$_COMMON_LOCK" ]; then
+		PID=$(cat "$_COMMON_LOCK")
+		if kill -0 $PID >/dev/null 2>&1; then
+			WARNING "Active lock; script already running!" "$_COMMON_LOCK_SRC_SCRIPT" "$_COMMON_LOCK_LOG"
+			exit $COMMON_ERROR
+		else
+			WARNING "Stale lock; removing ($_COMMON_LOCK)" "$_COMMON_LOCK_SRC_SCRIPT" "$_COMMON_LOCK_LOG"
+		fi
+	fi
+
+	echo $$ > "$_COMMON_LOCK"
+}
+
+function UNLOCK {
+	_COMMON_LOCK_SRC_SCRIPT="$1"
+	_COMMON_LOCK_LOG="$2"
+
+	_COMMON_LOCK="$(dirname "$_COMMON_LOCK_SRC_SCRIPT")/.$(basename "$_COMMON_LOCK_SRC_SCRIPT").pid"
+
+   rm -f "$_COMMON_LOCK"
+}

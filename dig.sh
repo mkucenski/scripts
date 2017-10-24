@@ -26,6 +26,7 @@ fi
 
 if [ -e "$DEST" ]; then
 	START "$0" "$DEST" "$*"
+	LOG_EXEC_VERSION "dig" "$(dig -version 2>&1)" "$DEST"
 	INFO "$SITE -> $DEST"
 	LOG "Dig Query for: $SITE" "$DEST"
 

@@ -13,9 +13,13 @@ fi
 
 RV=$COMMON_SUCCESS
 
-HASH="$(md5 -r "$FILE" | gsed -r 's/([^[:space:]]+).*/\1/')"
-mkdir -p "$DEST"
-cp -v "$FILE" "$DEST/$HASH.$(SAVE_EXTENSION "$FILE")"
+if [ -e "$FILE" ]; then
+	HASH="$(md5 -r "$FILE" | gsed -r 's/([^[:space:]]+).*/\1/')"
+	mkdir -p "$DEST"
+	cp -v "$FILE" "$DEST/$HASH.$(SAVE_EXTENSION "$FILE")"
+else
+	ERROR "File <$FILE> does not exist!" "$0"
+fi
 
 exit $RV
 
