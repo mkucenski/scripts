@@ -11,7 +11,7 @@ LOG="./$SITE.log"
 
 RV=$COMMON_SUCCESS
 START "$0" "$LOG" "$*"
-LOG_EXEC_VERSION "wget" "$(wget --version)" "$LOG"
+LOG_VERSION "wget" "$(wget --version | head -n 1)" "$LOG"
 
 if [ ! -e "$DESTDIR/$SITE" ]; then
 	${BASH_SOURCE%/*}/whois.sh "$SITE" "$DESTDIR"
