@@ -107,7 +107,6 @@ function execUnison() {
 		LOG_VERSION "unison" "$(unison -version)" "$UNILOG"
 
 		LOG "$BANNER" "$UNILOG"
-		NOTIFY "$BANNER" "$0"
 		unison "$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
 		cat "$PRF" >> "$UNILOG"
 		rm "$PRF"
@@ -128,7 +127,6 @@ function execUnison2() {
 	LOG_VERSION "unison" "$(unison -version)" "$UNILOG"
 
 	LOG "$BANNER" "$UNILOG"
-	NOTIFY "$BANNER" "$0"
 	unison "$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
 	cat "$PRF" >> "$UNILOG"
 	rm "$PRF"
@@ -143,7 +141,6 @@ function execRsync() {
 
 	ERR=0
 
-	NOTIFY "$SRCDIR -> $DSTBASEDIR - $SRCSUBDIR" "$0"
 	RESULT=$(execRsync2 "$SRCDIR/$SRCSUBDIR" "$DSTBASEDIR")
 	ERR=$(expr $ERR + $?)
 
