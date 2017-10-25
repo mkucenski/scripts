@@ -9,7 +9,7 @@ LOG="`basename $0`.log"
 mkdir -p "$DEST"
 pushd "$DEST"
 
-torify wget -e robots=off --span-hosts --wait 0.25 --append-output "$LOG" --show-progress -t 3 --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17" --adjust-extension --page-requisites --server-response --convert-links --backup-converted "$URL"
+wget -e robots=off --span-hosts --wait 0.25 --append-output "$LOG" --show-progress -t 3 --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17" --adjust-extension --page-requisites --server-response --convert-links --backup-converted --recursive --level=5 "$URL"
 
 echo "Script Code --------------------------------------------------" >> "$LOG"
 cat "$0" >> "$LOG"
