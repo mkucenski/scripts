@@ -71,12 +71,14 @@ function FULL_PATH() {
 	echo "$(cd $(dirname "$FILE"); pwd)/$(basename "$FILE")"
 }
 
-function LOG_EXEC_VERSION() {
-	_COMMON_LOG_EXEC_VERSION_EXEC="$1"
-	_COMMON_LOG_EXEC_VERSION_STRING="$2"
-	_COMMON_LOG_EXEC_VERSION_LOG="$3"
+function LOG_VERSION() {
+	# LOG an executable name (e.g. dig) and it's version string into the given log file for future reference.
 
-	LOG "VERSION($_COMMON_LOG_EXEC_VERSION_EXEC): $_COMMON_LOG_EXEC_VERSION_STRING" "$_COMMON_LOG_EXEC_VERSION_LOG"
+	_COMMON_LOG_VERSION_CMD="$1"
+	_COMMON_LOG_VERSION_STRING="$2"
+	_COMMON_LOG_VERSION_LOG="$3"
+
+	LOG "VERSION($_COMMON_LOG_VERSION_CMD): $_COMMON_LOG_VERSION_STRING" "$_COMMON_LOG_VERSION_LOG"
 }
 
 function LOG_SCRIPT_BASE64() {
@@ -84,7 +86,7 @@ function LOG_SCRIPT_BASE64() {
 	_COMMON_LOG_SCRIPT_BASE64_FILE="$1"
 	_COMMON_LOG_SCRIPT_BASE64_LOG="$2"
 	if [ -e "$_COMMON_LOG_SCRIPT_BASE64_FILE" ]; then
-		_COMMON_LOG_SCRIPT_BASE64="$(base64 "$_COMMON_LOG_SCRIPT_BASE64_FILE")"
+		_COMMON_LOG_SCRIPT_BASE64="$(BASE64_FILE "$_COMMON_LOG_SCRIPT_BASE64_FILE")"
 		LOG "BASE64($(basename "$_COMMON_LOG_SCRIPT_BASE64_FILE")): $_COMMON_LOG_SCRIPT_BASE64" "$_COMMON_LOG_SCRIPT_BASE64_LOG"
 	else
 		ERROR "File does not exist!" "$0" "$_COMMON_LOG_SCRIPT_BASE64_LOG"
@@ -186,7 +188,7 @@ function START() {
 	_COMMON_START_LOG="$2"
 	_COMMON_START_ARGS="$(echo "$3" | tr "\n" ";")"
 	_COMMON_START_SCRIPT="$(basename "$_COMMON_START_SRC")"
-	_COMMON_START_OUTPUT="START($_COMMON_START_SCRIPT): $(date "+%Y%m%d %H:%M:%S")"
+	_COMMON_START_OUTPUT="START($_COMMON_START_SCRIPT): $(DATETIME)"
 	LOG "$_COMMON_START_OUTPUT" "$_COMMON_START_LOG"
 	if [ -n "$_COMMON_START_ARGS" ]; then
 		LOG "ARGS($_COMMON_START_SCRIPT): '$_COMMON_START_ARGS'" "$_COMMON_START_LOG"
@@ -199,7 +201,7 @@ function START() {
 function END() {
 	_COMMON_END_SRC="$1"
 	_COMMON_END_LOG="$2"
-	_COMMON_END_OUTPUT="END($(basename "$_COMMON_END_SRC")): $(date "+%Y%m%d %H:%M:%S")"
+	_COMMON_END_OUTPUT="END($(basename "$_COMMON_END_SRC")): $(DATETIME)"
 	LOG "$_COMMON_END_OUTPUT" "$_COMMON_END_LOG"
 	LOG "" "$_COMMON_END_LOG"
 }
@@ -225,6 +227,9 @@ function ECHO_ARGS() {
 }
 
 function LOCK {
+	# Store PID in a lockfile to prevent concurrent execution of the script.
+	# lockfile will be SCRIPT_DIR/.$SCRIPT_NAME.pid
+
 	_COMMON_LOCK_SRC_SCRIPT="$1"
 	_COMMON_LOCK_LOG="$2"
 
