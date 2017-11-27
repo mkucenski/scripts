@@ -1,6 +1,6 @@
 #!/bin/bash
 . ${BASH_SOURCE%/*}/common-include.sh || exit 1
-. ${BASH_SOURCE%/*}/unison/unison-sync-inc.sh || exit 1
+. ${BASH_SOURCE%/*}/unison/unison-inc.sh || exit 1
 
 SRCDIR="$1"
 DSTBASEDIR="$2"
@@ -13,9 +13,9 @@ RV=$COMMON_SUCCESS
 if [ -e "$SRCDIR" ]; then
 	if [ -e "$DSTBASEDIR" ]; then
 		INFO "--- $SRCDIR -> $DSTBASEDIR ---"
-		RESULT=$(execRsync2 "$SRCDIR" "$DSTBASEDIR")
+		execRsync "$SRCDIR" "$DSTBASEDIR"
 		if [ $? -ne 0 ]; then
-			ERROR "$RESULT ($?)" "$0"
+			ERROR "execRsync ($?)" "$0"
 			RV=$COMMON_ERROR
 		else
 			INFO "Success!"
