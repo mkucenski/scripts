@@ -23,13 +23,6 @@ function createDirs() {
 	return $ERR
 }
 
-function normalizeDir() {
-	# rsync in particular operates differently depending on whether the source has a trailing '/';
-	# this function normalizes directory names w/o the trailing '/'
-	DIR=$(dirname "$1")/$(basename "$1")
-	echo "$DIR"
-}
-
 function setup() {
 	if [ ! -e "$PRFDIR" ]; then
 		createDir "$PRFDIR"
@@ -132,31 +125,5 @@ function execUnison2() {
 	rm "$PRF"
 
 	END "$0" "$UNILOG"
-}
-
-function execRsync() {
-	SRCDIR="$1"
-	DSTBASEDIR="$2"
-	SRCSUBDIR="$3"
-
-	ERR=0
-
-	RESULT=$(execRsync2 "$SRCDIR/$SRCSUBDIR" "$DSTBASEDIR")
-	ERR=$(expr $ERR + $?)
-
-	return $ERR
-}
-
-function execRsync2() {
-	SRCDIR=$(normalizeDir "$1")
-	DSTBASEDIR=$(normalizeDir "$2")
-
-	ERR=0
-
-	# RESULT=$(rsync -av --fileflags "$SRCDIR" "$DSTBASEDIR/")
-	RESULT=$(rsync -av "$SRCDIR" "$DSTBASEDIR/")
-	ERR=$(expr $ERR + $?)
-
-	return $ERR
 }
 
