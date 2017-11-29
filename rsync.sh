@@ -2,39 +2,24 @@
 . ${BASH_SOURCE%/*}/common-include.sh || exit 1
 
 SRCDIR="$1"
-DSTDIR="$2"
+DSTBASEDIR="$2"
 if [ $# -eq 0 ]; then
-	USAGE "SRCDIR" "DSTDIR" && exit $COMMON_ERROR
+	USAGE "SRCDIR" "DSTBASEDIR" && exit $COMMON_ERROR
 fi
-
-function normalizeDir() {
-	# rsync in particular operates differently depending on whether the source has a trailing '/';
-	# this function normalizes directory names w/o the trailing '/'
-	DIR=$(dirname "$1")/$(basename "$1")
-	echo "$DIR"
-}
 
 function execRsync() {
 	SRCDIR="$1"
-	DSTDIR="$2"
+	DSTBASEDIR="$2"
 	SRCSUBDIR="$3"
 
-	ERR=0
-
-	RESULT=$(execRsync2 "$SRCDIR/$SRCSUBDIR" "$DSTDIR")
-	ERR=$(expr $ERR + $?)
-
-	return $ERR
-}
-
-function execRsync2() {
-	SRCDIR=$(normalizeDir "$1")
-	DSTDIR=$(normalizeDir "$2")
+	if [ -n "$SRCSUBDIR" ]; then
+		SRCDIR="$SRCDIR/$SRCSUBDIR"
+	fi
 
 	ERR=0
 
-	# RESULT=$(rsync -av --fileflags "$SRCDIR" "$DSTDIR/")
-	RESULT=$(rsync -av "$SRCDIR/" "$DSTDIR/")
+	# rsync -av --fileflags "$SRCDIR" "$DSTBASEDIR/"
+	rsync -av "$(NORMALIZEDIR "$SRCDIR")" "$(NORMALIZEDIR "$DSTBASEDIR")/"
 	ERR=$(expr $ERR + $?)
 
 	return $ERR
@@ -43,17 +28,17 @@ function execRsync2() {
 RV=$COMMON_SUCCESS
 
 if [ -e "$SRCDIR" ]; then
-	if [ -e "$DSTDIR" ]; then
-		INFO "--- $SRCDIR -> $DSTDIR ---"
-		RESULT=$(execRsync2 "$SRCDIR" "$DSTDIR")
+	if [ -e "$DSTBASEDIR" ]; then
+		INFO "--- $SRCDIR -> $DSTBASEDIR ---"
+		execRsync "$SRCDIR" "$DSTBASEDIR"
 		if [ $? -ne 0 ]; then
-			ERROR "$RESULT ($?)" "$0"
+			ERROR "execRsync ($?)" "$0"
 			RV=$COMMON_ERROR
 		else
 			INFO "Success!"
 		fi
 	else
-		ERROR "<$DSTDIR> Not Available!" "$0"
+		ERROR "<$DSTBASEDIR> Not Available!" "$0"
 		RV=$COMMON_ERROR
 	fi
 else

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!bin/bash
 . ${BASH_SOURCE%/*}/../common-include.sh || exit 1
 
 PRFDIR="$HOME/.unison/sync"
@@ -38,23 +38,6 @@ function setup() {
 function buildprf() {
 	ROOT1="$1"
 	ROOT2="$2"
-	DIR="$3"
-
-	PRF="$(mktemp "$PRFDIR/unison-XXXXXX")"
-	echo "include sync/common" > "$PRF"
-	echo "root = $ROOT1/$DIR/" >> "$PRF"
-	echo "root = $ROOT2/$DIR/" >> "$PRF"
-	echo "backuploc = local" >> "$PRF"
-	echo "backup = Name *" >> "$PRF"
-	echo "log = true" >> "$PRF"
-	echo "logfile = $LOGFILE" >> "$PRF"
-
-	echo "$PRF"
-}
-
-function buildprf2() {
-	ROOT1="$1"
-	ROOT2="$2"
 
 	PRF="$(mktemp "$PRFDIR/unison-XXXXXX")"
 	echo "include sync/common" > "$PRF"
@@ -89,41 +72,29 @@ function changeFlags() {
 function execUnison() {
 	SRC="$1"
 	DST="$2"
-	DIR="$3"
+	SUBDIR="$3"
 
-	if ( createDirs "$SRC/$DIR" "$DST/$DIR" ); then
+	if [ -n "$SUBDIR" ]; then
+		ROOT1="$SRC/$SUBDIR"
+		ROOT2="$DST/$SUBDIR"
+	else
+		ROOT1="$SRC"
+		ROOT2="$DST"
+	fi
+
+	if ( createDirs "$ROOT1" "$ROOT2" ); then
 		setup
-		PRF=$(buildprf "$SRC" "$DST" "$DIR")
+		PRF="$(buildprf "$ROOT1" "$ROOT2")"
 		UNILOG="$(getlogfile "$PRF")"
-		BANNER="$SRC <-> $DST - $DIR"
 		START "$0" "$UNILOG" "$*"
 		LOG_VERSION "unison" "$(unison -version)" "$UNILOG"
 
-		LOG "$BANNER" "$UNILOG"
+		LOG "$ROOT1 <-> $ROOT2" "$UNILOG"
 		unison "$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
 		cat "$PRF" >> "$UNILOG"
 		rm "$PRF"
 
 		END "$0" "$UNILOG"
 	fi
-}
-
-function execUnison2() {
-	SRC="$1"
-	DST="$2"
-
-	setup
-	PRF=$(buildprf2 "$SRC" "$DST")
-	UNILOG="$(getlogfile "$PRF")"
-	BANNER="$SRC <-> $DST"
-	START "$0" "$UNILOG" "$*"
-	LOG_VERSION "unison" "$(unison -version)" "$UNILOG"
-
-	LOG "$BANNER" "$UNILOG"
-	unison "$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
-	cat "$PRF" >> "$UNILOG"
-	rm "$PRF"
-
-	END "$0" "$UNILOG"
 }
 
