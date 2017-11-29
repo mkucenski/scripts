@@ -1,29 +1,12 @@
 #!/bin/bash
 . ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. ${BASH_SOURCE%/*}/unison/unison-inc.sh || exit 1
 
 SRCDIR="$1"
 DSTBASEDIR="$2"
 if [ $# -eq 0 ]; then
 	USAGE "SRCDIR" "DSTBASEDIR" && exit $COMMON_ERROR
 fi
-
-function execRsync() {
-	SRCDIR="$1"
-	DSTBASEDIR="$2"
-	SRCSUBDIR="$3"
-
-	if [ -n "$SRCSUBDIR" ]; then
-		SRCDIR="$SRCDIR/$SRCSUBDIR"
-	fi
-
-	ERR=0
-
-	# rsync -av --fileflags "$SRCDIR" "$DSTBASEDIR/"
-	rsync -av "$(NORMALIZEDIR "$SRCDIR")" "$(NORMALIZEDIR "$DSTBASEDIR")/"
-	ERR=$(expr $ERR + $?)
-
-	return $ERR
-}
 
 RV=$COMMON_SUCCESS
 

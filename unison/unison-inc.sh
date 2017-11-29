@@ -98,3 +98,21 @@ function execUnison() {
 	fi
 }
 
+function execRsync() {
+	SRCDIR="$1"
+	DSTBASEDIR="$2"
+	SRCSUBDIR="$3"
+
+	if [ -n "$SRCSUBDIR" ]; then
+		SRCDIR="$SRCDIR/$SRCSUBDIR"
+	fi
+
+	ERR=0
+
+	# rsync -av --fileflags "$SRCDIR" "$DSTBASEDIR/"
+	rsync -av "$(NORMALIZEDIR "$SRCDIR")" "$(NORMALIZEDIR "$DSTBASEDIR")/"
+	ERR=$(expr $ERR + $?)
+
+	return $ERR
+}
+
