@@ -6,6 +6,13 @@ COMMON_SUCCESS=0
 COMMON_ERROR=1
 COMMON_UNKNOWN=255
 
+function NORMALIZEDIR() {
+	# rsync in particular operates differently depending on whether the source has a trailing '/';
+	# this function normalizes directory names to not include the trailing '/'
+	DIR="$(dirname "$1")/$(basename "$1")"
+	echo "$DIR"
+}
+
 function NOTIFY() {
 	_COMMON_NOTIFY_MSG="$1"
 	_COMMON_NOTIFY_SRC="$(basename "$2")"
