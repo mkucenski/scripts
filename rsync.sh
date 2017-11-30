@@ -4,6 +4,7 @@
 
 SRCDIR="$1"
 DSTBASEDIR="$2"
+
 if [ $# -eq 0 ]; then
 	USAGE "SRCDIR" "DSTBASEDIR" && exit $COMMON_ERROR
 fi
