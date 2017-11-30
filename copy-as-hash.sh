@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # The purpose of this script is to copy files, but rename them with their MD5 hash and the existing file extension.
 # This can be used with something like 'find ./ -type f -exec <script> {} ./uniq \;' to save all unique files in one

@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/../common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 DESTDIR="$1"
 if [ $# -ne 1 ]; then

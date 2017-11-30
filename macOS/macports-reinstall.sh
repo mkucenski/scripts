@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/../common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 if [ $(CHECK_ROOT) != true ]; then
 	ERROR "MacPorts *MUST* be run as 'root'!" && exit $COMMON_ERROR

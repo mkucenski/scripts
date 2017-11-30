@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # Takes a list of IP addresses (one per line) on stdin or via a text file argument.
 # Uses software and databases found here: http://www.maxmind.com/app/ip-location.

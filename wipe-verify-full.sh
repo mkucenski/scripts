@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 DEVICE="$1"
 SERIALNUM="$2"
@@ -17,8 +17,8 @@ COUNT=1024
 BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
 SECTORS=$(${BASH_SOURCE%/*}/disksectors.sh "$DEVICE")
 SECTOR_SIZE=512
-SIZE=$(expr $SECTORS \* $SECTOR_SIZE)
-BLOCKS=$(expr $SIZE / $BS)
+SIZE=$(($SECTORS * $SECTOR_SIZE))
+BLOCKS=$(($SIZE / $BS))
 
 INFO "Verifying entire wiped device ($DEVICE) using (bs=$BS)..." "$LOGFILE"
 RESULTS=$(dd if="$DEVICE" bs=$BS | xxd -a)

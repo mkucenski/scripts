@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # The idea here is to generate a baseline of the given command output, then periodically
 # re-run the command and compare the results--any differences are reported. Useful for

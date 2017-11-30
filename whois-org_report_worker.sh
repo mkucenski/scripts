@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # This script parses the output of "whois.sh" into a CSV format showing the IP and OrgName.
 # It expects the specific output from my "whois.sh", not any whois output.

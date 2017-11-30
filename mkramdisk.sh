@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 GBYTES="$1"
 MOUNTPOINT="$2"
@@ -9,7 +9,7 @@ fi
 
 RV=$COMMON_SUCCESS
 
-SECTORS=$(expr $GBYTES \* 1024 \* 1024 \* 1024 / 512)
+SECTORS=$(($GBYTES * 1024 * 1024 * 1024 / 512))
 UNAME=$(uname)
 if [ "$UNAME" = "Darwin" ]; then
 	RAMDEVICE=$(hdiutil attach -nomount ram://$SECTORS)

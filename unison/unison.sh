@@ -1,6 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/../common-include.sh || exit 1
-. ${BASH_SOURCE%/*}/unison-inc.sh || exit 1
+. "${BASH_SOURCE%/*}/unison-include.sh" || exit 1
 
 ROOT1="$1"
 ROOT2="$2"

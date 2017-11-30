@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 DEVICE="$1"
 SERIAL="$2"
@@ -26,11 +26,11 @@ if [ $SECTORS -lt 0 ]; then
 fi
 
 SECTOR_SIZE=512
-SIZE=$(expr $SECTORS \* $SECTOR_SIZE)
+SIZE=$(($SECTORS * $SECTOR_SIZE))
 BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
-COUNT=$(expr $SIZE / $BS)
+COUNT=$(($SIZE / $BS))
 PATTERN="The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick br... "
-PATTERN_LEN=$(expr ${#PATTERN} + 1)
+PATTERN_LEN=$((${#PATTERN} + 1))
 
 INFO "Building Calibration Drive ($DEVICE)..." "$LOGFILE"
 INFO "Device: $DEVICE" "$LOGFILE"
@@ -43,7 +43,7 @@ INFO "Pattern Bytes: $PATTERN_LEN" "$LOGFILE"
 INFO "" "$LOGFILE"
 
 INFO "Building expected MD5..." "$LOGFILE"
-EXPECTED_MD5=$(yes "$PATTERN" | dd ibs=$PATTERN_LEN obs=$BS count=$(expr $SIZE / $PATTERN_LEN) | openssl md5 | tr a-z A-Z | $SEDCMD -r 's/\(STDIN\)= //')
+EXPECTED_MD5=$(yes "$PATTERN" | dd ibs=$PATTERN_LEN obs=$BS count=$(($SIZE / $PATTERN_LEN)) | openssl md5 | tr a-z A-Z | $SEDCMD -r 's/\(STDIN\)= //')
 INFO "$EXPECTED_MD5 - MD5 expected from pattern generation" "$LOGFILE"
 INFO "" "$LOGFILE"
 

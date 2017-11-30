@@ -11,7 +11,7 @@ SIZE=-1
 SECTORS=$(${BASH_SOURCE%/*}/disksectors.sh "$DEVICE")
 if [ $SECTORS -gt 0 ]; then
 	SECTOR_SIZE=512
-	SIZE=$(expr $SECTORS \* $SECTOR_SIZE)
+	SIZE=$(($SECTORS * $SECTOR_SIZE))
 	echo $SIZE
 else
 	ERROR "Error getting disk sectors!" "$0"

@@ -1,10 +1,10 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 FILE="$1"
 DOSHA1="$2"
 if [ $# -eq 0 ]; then
-	USAGE "FILE" "DOSHA1" && exit 0
+	USAGE "FILE" "DOSHA1" && exit $COMMON_ERROR
 fi
 
 RV=$COMMON_SUCCESS

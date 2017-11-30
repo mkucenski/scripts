@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # The purpose of this script is to find files based on their MD5 hash value.
 # This can be used in conjunction with 'copy-as-hash.sh' to go back and

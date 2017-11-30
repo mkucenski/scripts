@@ -2,9 +2,9 @@
 ENABLE_DEBUG=0
 IFS=$(echo -en "\n\b")
 
-COMMON_SUCCESS=0
-COMMON_ERROR=1
-COMMON_UNKNOWN=255
+export COMMON_SUCCESS=0
+export COMMON_ERROR=1
+export COMMON_UNKNOWN=255
 
 function NORMALIZEDIR() {
 	# rsync in particular operates differently depending on whether the source has a trailing '/';
@@ -17,9 +17,9 @@ function NOTIFY() {
 	_COMMON_NOTIFY_MSG="$1"
 	_COMMON_NOTIFY_SRC="$(basename "$2")"
 	_COMMON_NOTIFY_OS="$(uname)"
-	if [ $_COMMON_NOTIFY_OS = "Darwin" ]; then
+	if [ "$_COMMON_NOTIFY_OS" = "Darwin" ]; then
 		INFO "$_COMMON_NOTIFY_SRC: $_COMMON_NOTIFY_MSG"
-		${BASH_SOURCE%/*}/macOS/notification.sh "$_COMMON_NOTIFY_MSG" "$_COMMON_NOTIFY_SRC" ""
+		"${BASH_SOURCE%/*}/macOS/notification.sh" "$_COMMON_NOTIFY_MSG" "$_COMMON_NOTIFY_SRC" ""
 	else
 		INFO "$_COMMON_NOTIFY_SRC: $_COMMON_NOTIFY_MSG"
 	fi
@@ -30,7 +30,7 @@ function DEBUG() {
 		_COMMON_DEBUG_MSG="$1"
 		_COMMON_DEBUG_SRC="$(basename "$2")"
 		_COMMON_DEBUG_LOG="$3"
-		_COMMON_DEBUG_OUTPUT="DEBUG("$_COMMON_DEBUG_SRC"): $_COMMON_DEBUG_MSG"
+		_COMMON_DEBUG_OUTPUT="DEBUG($_COMMON_DEBUG_SRC): $_COMMON_DEBUG_MSG"
 		echo "$_COMMON_DEBUG_OUTPUT" > /dev/stderr
 		if [ -n "$_COMMON_DEBUG_LOG" ]; then
 			LOG "$_COMMON_DEBUG_OUTPUT" "$_COMMON_DEBUG_LOG"
@@ -65,8 +65,8 @@ function USAGE_EXAMPLE() {
 }
 
 # On systems where gsed/gawk exist, we assume that is the correct GNU version to use.
-SEDCMD=$(if [ -n "$(which gsed)" ]; then echo "gsed"; else echo "sed"; fi)
-AWKCMD=$(if [ -n "$(which gawk)" ]; then echo "gawk"; else echo "awk"; fi)
+SEDCMD=$(if [ -n "$(which gsed)" ]; then echo "gsed"; else echo "sed"; fi); export SEDCMD
+AWKCMD=$(if [ -n "$(which gawk)" ]; then echo "gawk"; else echo "awk"; fi); export AWKCMD
 
 function SUDO_USER() {
 	who am i | $SEDCMD -r 's/([^[:space:]]+).*/\1/'
@@ -75,7 +75,7 @@ function SUDO_USER() {
 function FULL_PATH() {
 	# Return the full/absolute path for a file
 	FILE="$1"
-	echo "$(cd $(dirname "$FILE"); pwd)/$(basename "$FILE")"
+	echo "$(cd "$(dirname "$FILE")"; pwd)/$(basename "$FILE")"
 }
 
 function LOG_VERSION() {
@@ -170,7 +170,7 @@ function ERROR() {
 	_COMMON_ERROR_MSG="$1"
 	_COMMON_ERROR_SRC="$(basename "$2")"
 	_COMMON_ERROR_LOG="$3"
-	_COMMON_ERROR_OUTPUT="ERROR("$_COMMON_ERROR_SRC"): $_COMMON_ERROR_MSG"
+	_COMMON_ERROR_OUTPUT="ERROR($_COMMON_ERROR_SRC): $_COMMON_ERROR_MSG"
 	echo "$_COMMON_ERROR_OUTPUT" > /dev/stderr
 	if [ -n "$_COMMON_ERROR_LOG" ]; then
 		LOG "$_COMMON_ERROR_OUTPUT" "$_COMMON_ERROR_LOG"
@@ -183,7 +183,7 @@ function WARNING() {
 	_COMMON_WARNING_MSG="$1"
 	_COMMON_WARNING_SRC="$(basename "$2")"
 	_COMMON_WARNING_LOG="$3"
-	_COMMON_WARNING_OUTPUT="WARNING("$_COMMON_WARNING_SRC"): $_COMMON_WARNING_MSG"
+	_COMMON_WARNING_OUTPUT="WARNING($_COMMON_WARNING_SRC): $_COMMON_WARNING_MSG"
 	echo "$_COMMON_WARNING_OUTPUT" > /dev/stderr
 	if [ -n "$_COMMON_WARNING_LOG" ]; then
 		LOG "$_COMMON_WARNING_OUTPUT" "$_COMMON_WARNING_LOG"
@@ -217,6 +217,14 @@ function DATETIME() {
 	date "+%Y%m%d %H:%M:%S"
 }
 
+function DATE() {
+	date "+%Y%m%d"
+}
+
+function TIME() {
+	date "+%H%M%S"
+}
+
 function LOG() {
 	# Output message to LOG (no output to stdout/stderr)
 
@@ -228,7 +236,7 @@ function LOG() {
 }
 
 function ECHO_ARGS() {
-	for X in $@; do
+	for X in "$@"; do
 		echo -n "<$X> "
 	done
 }
@@ -244,7 +252,7 @@ function LOCK {
 
 	if [ -f "$_COMMON_LOCK" ]; then
 		PID=$(cat "$_COMMON_LOCK")
-		if kill -0 $PID >/dev/null 2>&1; then
+		if kill -0 "$PID" > /dev/null 2>&1; then
 			WARNING "Active lock; script already running!" "$_COMMON_LOCK_SRC_SCRIPT" "$_COMMON_LOCK_LOG"
 			exit $COMMON_ERROR
 		else

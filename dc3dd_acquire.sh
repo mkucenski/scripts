@@ -5,7 +5,7 @@ SSZ=4096
 
 #Legacy standard sector size--Mac OS X seems to incorrectly probe as such
 #SSZ=512
-BUFSZ=`expr 4096 \* $SSZ`
+BUFSZ=$((4096 * $SSZ))
 
 dc3dd if="$1" hofs="$2.000" log="$2.log" hlog="$2.hash" ofsz=4G verb=on hash=md5 hash=sha1 b10=on ssz=$SSZ bufsz=$BUFSZ
 

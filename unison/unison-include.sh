@@ -1,5 +1,5 @@
 #!bin/bash
-. ${BASH_SOURCE%/*}/../common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 PRFDIR="$HOME/.unison/sync"
 LOGDIR="$HOME/.unison/log"
@@ -9,7 +9,7 @@ function createDir() {
 	ERR=0
 	if [ ! -e "$1" ]; then
 		mkdir -p "$1"
-		ERR=$(expr $ERR + $?)
+		ERR=$((ERR + $?))
 	fi
 	return $ERR
 }
@@ -17,9 +17,9 @@ function createDir() {
 function createDirs() {
 	ERR=0
 	createDir "$1"
-	ERR=$(expr $ERR + $?)
+	ERR=$((ERR + $?))
 	createDir "$2"
-	ERR=$(expr $ERR + $?)
+	ERR=$((ERR + $?))
 	return $ERR
 }
 
@@ -32,7 +32,7 @@ function setup() {
 		createDir "$LOGDIR"
 	fi
 
-	cp $(dirname "$0")/common "$PRFDIR/"
+	cp "$(dirname "$0")/common" "$PRFDIR/"
 }
 
 function buildprf() {
@@ -40,13 +40,16 @@ function buildprf() {
 	ROOT2="$2"
 
 	PRF="$(mktemp "$PRFDIR/unison-XXXXXX")"
+
 	echo "include sync/common" > "$PRF"
-	echo "root = $ROOT1/" >> "$PRF"
-	echo "root = $ROOT2/" >> "$PRF"
-	echo "backuploc = local" >> "$PRF"
-	echo "backup = Name *" >> "$PRF"
-	echo "log = true" >> "$PRF"
-	echo "logfile = $LOGFILE" >> "$PRF"
+	{
+		echo "root = $ROOT1/"
+		echo "root = $ROOT2/"
+		echo "backuploc = local"
+		echo "backup = Name *"
+		echo "log = true"
+		echo "logfile = $LOGFILE"
+	} >> "$PRF"
 
 	echo "$PRF"
 }
@@ -64,7 +67,7 @@ function changeFlags() {
 	# Synchronization to an SMB share seems to result in files on the share getting marked as 'hidden'
 	# Use this function to get rid of that flag
 	chflags -R nohidden "$1"
-	ERR=$(expr $ERR + $?)
+	ERR=$((ERR + $?))
 
 	return $ERR
 }
@@ -111,7 +114,7 @@ function execRsync() {
 
 	# rsync -av --fileflags "$SRCDIR" "$DSTBASEDIR/"
 	rsync -av "$(NORMALIZEDIR "$SRCDIR")" "$(NORMALIZEDIR "$DSTBASEDIR")/"
-	ERR=$(expr $ERR + $?)
+	ERR=$((ERR + $?))
 
 	return $ERR
 }
