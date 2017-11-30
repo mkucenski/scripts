@@ -14,10 +14,9 @@ fi
 
 ulimit -n 10240
 if [ $? -ne 0 ]; then 
-	ERROR "Unable to set increased ulimit value! Try execution as 'root'." "$0" "$LOGFILE" && exit $COMMON_ERROR
+	ERROR "Unable to set increased ulimit value! Try execution as 'root'." "$0" "$LOGFILE" && exit 1
 fi
 
-RV=$COMMON_SUCCESS
 START "$0" "$LOGFILE" "$*"
 
 FULL_IMAGE_PATH="$(cd "$(dirname "$IMAGE")"; pwd)/$(basename "$IMAGE")"
@@ -31,15 +30,12 @@ VERIFY=$(echo "$RESULT" | egrep "ewfverify: (SUCCESS|FAILURE)" | $SEDCMD -r 's/e
 if [ "$VERIFY" == "SUCCESS" ]; then
 	INFO "Successfully Verified!" "$LOGFILE"
 elif [ "$VERIFY" == "FAILURE" ]; then
-	ERROR "Failure Verifying Image!" "$0" "$LOGFILE"
-	RV=$COMMON_ERROR
+	ERROR "Failure Verifying Image!" "$0" "$LOGFILE" && exit 1
 else
-	ERROR "Unknown Error!" "$0" "$LOGFILE"
-	RV=$COMMON_UNKNOWN
+	ERROR "Unknown Error!" "$0" "$LOGFILE" && exit 1
 fi
 
 END "$0" "$LOGFILE"
-exit $RV
 
 # ewfverify 20140608
 # 

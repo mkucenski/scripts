@@ -6,8 +6,6 @@
 
 DBDIR="/opt/local/share/GeoIP"
 
-RV=$COMMON_SUCCESS
-
 while read IP; do 
 	COUNTRY="$(geoiplookup -f "$DBDIR/GeoLiteCountry.dat" $IP | $SEDCMD -r 's/^GeoIP Country Edition: (.+)/\1/; s/, /,/g')"
 	CITY="$(geoiplookup -f "$DBDIR/GeoLiteCity.dat" $IP | gsed -r 's/GeoIP City Edition, Rev .: .., ([^,]+), ([^,]+), ([^,]+),.*/\1, \2, \3/; s/, /,/g')"
@@ -24,6 +22,4 @@ while read IP; do
 		echo "UNK,UNK,UNK"
 	fi
 done < "${1:-/dev/stdin}"
-
-exit $RV
 

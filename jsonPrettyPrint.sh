@@ -3,7 +3,7 @@
 
 JSON="$1"
 if [ $# -eq 0 ]; then
-	USAGE "JSON" && exit $COMMON_ERROR
+	USAGE "JSON" && exit 1
 fi
 
 python -m json.tool "$JSON"

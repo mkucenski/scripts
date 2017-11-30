@@ -7,10 +7,9 @@ DOMAIN="$1"
 DEST="$2"
 LOGFILE="$DEST/$DOMAIN-wget.log"
 if [ $# -eq 0 ]; then
-	USAGE "DOMAIN" "DEST" && exit $COMMON_ERROR
+	USAGE "DOMAIN" "DEST" && exit 1
 fi
 
-RV=$COMMON_SUCCESS
 START "$0" "$LOGFILE" "$*"
 
 ${BASH_SOURCE%/*}/whois.sh "$DOMAIN" "$DEST"
@@ -35,5 +34,4 @@ popd
 
 
 END "$0" "$LOGFILE"
-exit $RV
 

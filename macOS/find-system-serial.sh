@@ -3,7 +3,7 @@
 
 DESTDIR="$1"
 if [ $# -ne 1 ]; then
-	USAGE "DESTDIR" && exit $COMMON_ERROR
+	USAGE "DESTDIR" && exit 1
 fi
 
 ROOT_USER_CACHE="/private/var/folders/zz/zyxvpxvq6csfxvn_n00000sm00006d/C"

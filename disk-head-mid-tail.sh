@@ -3,10 +3,8 @@
 
 DEVICE="$1"
 if [ $# -ne 1 ]; then
-	USAGE "DEVICE" && exit $COMMON_ERROR
+	USAGE "DEVICE" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 COUNT=1
 # BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
@@ -27,6 +25,4 @@ INFO ""
 INFO "Tail: $(($BS * $COUNT))-bytes of ($DEVICE) using (bs=$BS, skip=$(($BLOCKS - $COUNT)) -> $(printf "%'d\n" $(($BS * ( $BLOCKS - $COUNT )))))"
 dd if="$DEVICE" bs=$BS skip=$(($BLOCKS - $COUNT)) count=$COUNT 2>/dev/null | xxd -a
 INFO ""
-
-exit $RV
 

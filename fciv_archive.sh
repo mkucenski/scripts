@@ -5,10 +5,8 @@ DIR="$1"
 DOSHA1="$2"
 ARCHIVE="$3"
 if [ $# -ne 3 ]; then
-	USAGE "DIR" "DOSHA1" "ARCHIVE" && exit $COMMON_ERROR
+	USAGE "DIR" "DOSHA1" "ARCHIVE" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 HASHES="$(STRIP_EXTENSION "$ARCHIVE").md5"
 
@@ -20,6 +18,4 @@ INFO "Archiving source files into <$ARCHIVE>..."
 
 INFO "Hashing archive file into <$HASHES>..."
 "${BASH_SOURCE%/*}/fciv_worker.sh" "$ARCHIVE" "$DOSHA1" >> "$HASHES"
-
-exit $RV
 

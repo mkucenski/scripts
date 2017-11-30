@@ -2,10 +2,6 @@
 ENABLE_DEBUG=0
 IFS=$(echo -en "\n\b")
 
-export COMMON_SUCCESS=0
-export COMMON_ERROR=1
-export COMMON_UNKNOWN=255
-
 function NORMALIZEDIR() {
 	# rsync in particular operates differently depending on whether the source has a trailing '/';
 	# this function normalizes directory names to not include the trailing '/'
@@ -109,18 +105,15 @@ function BASE64_FILE() {
 }
 
 function MKTEMP() {
-	mktemp -t "$(basename "$1")" || return $COMMON_ERROR
-	return $COMMON_SUCCESS
+	mktemp -t "$(basename "$1")"
 }
 
 function MKTEMPDIR() {
-	mktemp -d -t "$(basename "$1")" || return $COMMON_ERROR
-	return $COMMON_SUCCESS
+	mktemp -d -t "$(basename "$1")"
 }
 
 function MKTEMPUNIQ() {
-	mktemp "$1.XXXXXX" || return $COMMON_ERROR
-	return $COMMON_SUCCESS
+	mktemp "$1.XXXXXX"
 }	
 
 function SAVE_EXTENSION() {
@@ -254,7 +247,7 @@ function LOCK {
 		PID=$(cat "$_COMMON_LOCK")
 		if kill -0 "$PID" > /dev/null 2>&1; then
 			WARNING "Active lock; script already running!" "$_COMMON_LOCK_SRC_SCRIPT" "$_COMMON_LOCK_LOG"
-			exit $COMMON_ERROR
+			exit 1
 		else
 			WARNING "Stale lock; removing ($_COMMON_LOCK)" "$_COMMON_LOCK_SRC_SCRIPT" "$_COMMON_LOCK_LOG"
 		fi

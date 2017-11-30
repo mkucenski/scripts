@@ -2,18 +2,16 @@
 . "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 if [ $(CHECK_ROOT) != true ]; then
-	ERROR "MacPorts *MUST* be run as 'root'!" && exit $COMMON_ERROR
+	ERROR "MacPorts *MUST* be run as 'root'!" && exit 1
 fi
 
 LOGFILE="`echo ~`/Logs/macports-update.log"
 
-RV=$COMMON_SUCCESS
-
 START "$0" "$LOGFILE" "$*"
 LOG "Args: $@" "$LOGFILE"
 
-PRE=$(MKTEMP "$0" || exit $COMMON_ERROR)
-POST=$(MKTEMP "$0" || exit $COMMON_ERROR)
+PRE=$(MKTEMP "$0" || exit 1)
+POST=$(MKTEMP "$0" || exit 1)
 
 port installed > "$PRE"
 
@@ -26,6 +24,4 @@ diff --side-by-side --suppress-common-lines "$PRE" "$POST" | tee -a "$LOGFILE"
 rm "$PRE" "$POST"
 
 END "$0" "$LOGFILE"
-
-exit $RV
 

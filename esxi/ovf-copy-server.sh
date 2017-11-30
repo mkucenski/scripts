@@ -7,10 +7,8 @@ VM="$(${BASH_SOURCE%/*}/../python/urlEncode.py "$3")"
 DEST_SERVER="$4"
 DEST_DATASTORE="$5"
 if [ $# -eq 0 ]; then
-	USAGE "SERVER" "USER" "VM" "DEST_SERVER" "DEST_DATASTORE" && exit $COMMON_ERROR
+	USAGE "SERVER" "USER" "VM" "DEST_SERVER" "DEST_DATASTORE" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 URL="vi://$USER@$SERVER/$VM"
 DEST_URL="vi://$USER@$DEST_SERVER"
@@ -19,8 +17,6 @@ INFO "DEST_URL=$DEST_URL"
 INFO "DEST_DATASTORE=$DEST_DATASTORE"
 
 ovftool --datastore="$DEST_DATASTORE" "$URL" "$DEST_URL"
-
-exit $RV
 
 # Usage: ovftool [options] <source> [<target>]
 # where

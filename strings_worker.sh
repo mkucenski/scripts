@@ -4,7 +4,7 @@ export LC_ALL='C'
 
 FILE="$1"
 if [ $# -eq 0 ]; then
-	USAGE "FILE" && exit $COMMON_ERROR
+	USAGE "FILE" && exit 1
 fi
 
 # --encoding=encoding
@@ -17,15 +17,11 @@ fi
 # 			L = 32-bit littleendian.
 # 		Useful for finding wide character strings. (l and b apply to, for example, Unicode UTF-16/UCS-2 encodings).
 
-RV=$COMMON_SUCCESS
-
-TMP=$(MKTEMP "$0" || exit $COMMON_ERROR)
+TMP=$(MKTEMP "$0" || exit 1)
 gstrings -t x -e s "$FILE" > "$TMP"
 gstrings -t x -e S "$FILE" > "$TMP"
 gstrings -t x -e l "$FILE" >> "$TMP"
 gstrings -t x -e L "$FILE" >> "$TMP"
 gsort -u -k 1 "$TMP"
 rm "$TMP"
-
-exit $RV
 

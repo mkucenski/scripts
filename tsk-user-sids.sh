@@ -9,12 +9,10 @@ if [ -z "$OFFSET" ]; then OFFSET=0; fi
 CSV="$3"
 if [ -z "$CSV" ]; then CSV="$(STRIP_EXTENSION "$IMAGE")-User-SIDs.csv"; fi
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "OFFSET" && exit $COMMON_ERROR
+	USAGE "IMAGE" "OFFSET" && exit 1
 fi
 
 IFS=$(echo -en "\n\b")
-
-RV=$COMMON_SUCCESS
 
 INFO_ERR "Saving to <$CSV>..."
 INFO "Username,SID" | tee "$CSV"
@@ -43,17 +41,13 @@ for USER_MCT in $(${BASH_SOURCE%/*}/tsk.sh fls "$IMAGE" $OFFSET $USERS_INODE "-m
 			if [ -n "$NTUSER_SID" ]; then
 				INFO "\"$USER_NAME\",\"$NTUSER_SID\"" | tee -a "$CSV"
 			else
-				ERROR "Unable to find SID via istat for <$NTUSER_MCT>!" "$0"
+				ERROR "Unable to find SID via istat for <$NTUSER_MCT>!" "$0" && exit 1
 			fi
 		else
-			ERROR "Unable to find <NTUSER.DAT> entry for <$USER_NAME>!" "$0"
+			ERROR "Unable to find <NTUSER.DAT> entry for <$USER_NAME>!" "$0" && exit 1
 		fi
 	else
-		ERROR "Unable to find username for <$USER_MCT>!" "$0"
+		ERROR "Unable to find username for <$USER_MCT>!" "$0" && exit 1
 	fi
 done
-
-RV=$((RV+$?))
-
-exit $RV
 

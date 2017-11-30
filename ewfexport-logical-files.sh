@@ -5,15 +5,11 @@ LOGICAL_IMAGE="$1"
 LOGFILE="$2"
 DESTDIR="$3"
 if [ $# -ne 3 ]; then
-	USAGE "LOGICAL_IMAGE" "LOGFILE" "DESTDIR" && exit $COMMON_ERROR
+	USAGE "LOGICAL_IMAGE" "LOGFILE" "DESTDIR" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 INFO "Exporting All Logical Files Found in Image... ($DESTDIR)"
 ewfexport -f files -l "$LOGFILE" -t "$DESTDIR" -q -u "$LOGICAL_IMAGE" 2>/dev/null
-
-exit $RV
 
 # ewfexport 20140608
 # 

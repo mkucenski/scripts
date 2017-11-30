@@ -1,8 +1,6 @@
 #!/bin/bash
 . "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
-RV=$COMMON_SUCCESS
-
 IFS=$(echo -en "\n\b")
 
 echo "//"
@@ -12,8 +10,5 @@ echo "		MD5				SHA-1"
 echo "-------------------------------------------------------------------------"
 for arg in "$@"; do
 	"${BASH_SOURCE%/*}/fciv_worker.sh" "$arg" 1
-	RV=$((RV+$?))
 done
-
-exit $RV
 

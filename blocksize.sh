@@ -4,15 +4,12 @@
 # The goal of this script is simply to find the largest blocksize (bs=) that can be used and still cover the entire disk.
 DEVICE="$1"
 if [ $# -eq 0 ]; then
-	USAGE "DEVICE" && exit $COMMON_ERROR
+	USAGE "DEVICE" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 SECTORS=$(${BASH_SOURCE%/*}/disksectors.sh "$DEVICE")
 if [ $SECTORS -lt 0 ]; then
-	ERROR "Unable to read disk sectors!" "$0"
-	exit $COMMON_ERROR
+	ERROR "Unable to read disk sectors!" "$0" && exit 1
 fi
 SECTOR_SIZE=512
 SIZE=$(($SECTORS * $SECTOR_SIZE))
@@ -32,6 +29,4 @@ while [ 1 ]; do
 done
 
 echo $BS | tee /dev/stderr
-
-exit $RV
 

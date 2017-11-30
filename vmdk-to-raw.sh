@@ -4,10 +4,8 @@
 VMDK="$1"
 RAW="$2"
 if [ $# -eq 0 ]; then
-	USAGE "VMDK" "RAW" && exit $COMMON_ERROR
+	USAGE "VMDK" "RAW" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 DEBUG=0
 LOG="$(STRIP_EXTENSION "$RAW").log"
@@ -17,8 +15,6 @@ if [ ! -e "$RAW" ]; then
 else
 	echo "$0: Destination RAW already exists!" | tee -a "$LOG"
 fi
-
-exit $RV
 
 # qemu-img version 2.9.0
 # Copyright (c) 2003-2017 Fabrice Bellard and the QEMU Project developers

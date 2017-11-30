@@ -5,10 +5,8 @@ CSV="$1"
 DELIM="$2"
 FIELD_COUNT=$3
 if [ $# -ne 3 ]; then
-	USAGE "CSV" "DELIM" "FIELD_COUNT" && exit $COMMON_ERROR
+	USAGE "CSV" "DELIM" "FIELD_COUNT" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 HEADER="$(head -n 1 "$CSV")"
 SED="s/$DELIM/ | /g; s/^(.*)$/| \1 |/"
@@ -25,8 +23,6 @@ while read -r LINE; do
 		echo "$LINE" | $SEDCMD -r "$SED"
 	fi
 done < "$CSV"
-
-exit $RV
 
 # | Date | Time | user | src_ip | dst_ip |
 # | :--: | :--: | :--: | :----: | :----: |

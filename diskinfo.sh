@@ -3,10 +3,8 @@
 
 DEVICE="$1"
 if [ $# -ne 1 ]; then
-	USAGE "DEVICE" && exit $COMMON_ERROR
+	USAGE "DEVICE" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 OS=`uname`
 if [ $OS = "Darwin" ]; then
@@ -28,6 +26,4 @@ else
 	INFO "No disk information available for this OS ($OS)..."
 
 fi
-
-exit $RV
 

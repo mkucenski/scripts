@@ -7,7 +7,6 @@ LOGDIR="$2"
 # FAILURE in <LOGDIR/ewfverify.log>. Execute <ewfverify-all.sh> for each such
 # directory.
 
-RV=$COMMON_SUCCESS
 LOG="$LOGDIR/ewfverify.log"
 
 # Adjust field separators for for loop to support whitespace in filenames
@@ -24,11 +23,8 @@ for IMAGE in `find "$BASEDIR" -type f -iname "*.e01"`; do
 	if [ -z "$RESULT" ]; then
 		echo "Executing <ewfverify-all.sh> on <$IMAGEDIR>..."
 		$(dirname "$0")/ewfverify-all.sh "$IMAGEDIR" "$LOGDIR"
-		RV=$((RV+$?))
 	else
 		echo "Found previous result ($RESULT) for <$IMAGE>!"
 	fi
 done
-
-exit $RV
 

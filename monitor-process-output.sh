@@ -8,10 +8,8 @@
 CMD="$1"
 FREQ="$2"
 if [ $# -eq 0 ]; then
-	USAGE "CMD" "FREQ" && exit $COMMON_ERROR
+	USAGE "CMD" "FREQ" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 BASE_TMP="$(MKTEMP "$0")"
 eval "$CMD 2>/dev/null" > "$BASE_TMP"
@@ -34,6 +32,4 @@ while true; do
 done
 
 rm "$BASE_TMP" "$NEW_TMP" "$DIFF"
-
-exit $RV
 

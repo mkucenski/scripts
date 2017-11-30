@@ -7,19 +7,16 @@ OFFSET="$2"
 DOSHA1="$3"
 LOGFILE="$4"
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "OFFSET" "DOSHA1" "LOGFILE" && exit $COMMON_ERROR
+	USAGE "IMAGE" "OFFSET" "DOSHA1" "LOGFILE" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 KEY="1.75"
 
-MCT=$(MKTEMP "$0" || exit $COMMON_ERROR)
+MCT=$(MKTEMP "$0" || exit 1)
 INFO "Building List of All Files Found in Image/Device... ($MCT)"
 fls -o $OFFSET -m "" -F -r "$IMAGE" | $SEDCMD -r 's/^([[:digit:]]+\|)\/?/\1/' > "$MCT"
-RV=$((RV+$?))
 
-UNSORTED=$(MKTEMP "$0" || exit $COMMON_ERROR)
+UNSORTED=$(MKTEMP "$0" || exit 1)
 INFO "Extracting and Hashing Each File... ($UNSORTED)"
 while read LINE; do
 	if [ -n "$LINE" ]; then
@@ -28,11 +25,10 @@ while read LINE; do
 		if [ -n "$FILE" ]; then
 			if [ -n "$INODE" ]; then
 				icat -o $OFFSET "$IMAGE" $INODE 2> >(tee -a "$LOGFILE" >&2) | ${BASH_SOURCE%/*}/fciv_worker_stdin.sh "$FILE" $DOSHA1 2> >(tee -a "$LOGFILE" >&2) >> "$UNSORTED"
-				RV=$((RV+$?))
 	 		fi
 		fi
 	else
-		ERROR "Read invalid line!" "$0"
+		ERROR "Read invalid line!" "$0" && exit 1
 	fi
 done < "$MCT"
 
@@ -42,6 +38,4 @@ sort --key=$KEY "$UNSORTED"
 
 rm "$MCT"
 rm "$UNSORTED"
-
-exit $RV
 

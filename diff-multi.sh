@@ -2,10 +2,8 @@
 . "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 if [ $# -eq 0 ]; then
-	USAGE "FILES..." && exit $COMMON_ERROR
+	USAGE "FILES..." && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 for ARG1 in "$@"; do
 	for ARG2 in "$@"; do
@@ -20,6 +18,4 @@ for ARG1 in "$@"; do
 		fi
 	done
 done
-
-exit $RV
 

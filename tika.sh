@@ -4,15 +4,12 @@
 IMAGE="$1"
 LOGFILE="$2"
 if [ $# -ne 1 ]; then
-	USAGE "IMAGE" "LOGFILE (optional - defaults to \$IMAGE-ewfverify.log)" && exit $COMMON_ERROR
+	USAGE "IMAGE" "LOGFILE (optional - defaults to \$IMAGE-ewfverify.log)" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 java -jar ~/.m2/repository/org/apache/tika/tika-app/1.16/tika-app-1.16.jar --jsonRecursive
 
 END "$0" "$LOGFILE"
-exit $RV
 
 # usage: java -jar tika-app.jar [option...] [file|port...]
 # 

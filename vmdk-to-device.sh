@@ -4,10 +4,8 @@
 VMDK="$1"
 DEVICE="$2"
 if [ $# -eq 0 ]; then
-	USAGE "VMDK" "DEVICE" && exit $COMMON_ERROR
+	USAGE "VMDK" "DEVICE" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 DEBUG=0
 LOG="$(STRIP_EXTENSION "$VMDK")-export.log"
@@ -19,8 +17,6 @@ if [ -e "$DEVICE" ]; then
 else
 	echo "$0: Device ($DEVICE) does not exist!" | tee -a "$LOG"
 fi
-
-exit $RV
 
 # qemu-img version 2.9.0
 # Copyright (c) 2003-2017 Fabrice Bellard and the QEMU Project developers

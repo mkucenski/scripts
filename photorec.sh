@@ -7,19 +7,18 @@ IMAGE="$(FULL_PATH "$1")"
 DEST="$(FULL_PATH "$2")"
 LOGFILE="$DEST/photorec.log"
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "DEST" && exit $COMMON_ERROR
+	USAGE "IMAGE" "DEST" && exit 1
 fi
 
 ulimit -n 10240
 if [ $? -ne 0 ]; then 
-	ERROR "Unable to set increased ulimit value! Try execution as 'root'." "$0" "$LOGFILE" && exit $COMMON_ERROR
+	ERROR "Unable to set increased ulimit value! Try execution as 'root'." "$0" "$LOGFILE" && exit 1
 fi
 
 if [ ! -e "$DEST" ]; then
 	mkdir -p "$DEST"
 fi
 
-RV=$COMMON_SUCCESS
 START "$0" "$LOGFILE" "$*"
 
 pushd "$DEST"
@@ -43,7 +42,6 @@ echo "$TAR_MD5" > "$TAR.md5"
 INFO "$TAR_MD5" "$LOGFILE"
 
 END "$0" "$LOGFILE"
-exit $RV
 
 # PhotoRec 6.14, Data Recovery Utility, July 2013
 # Christophe GRENIER <grenier@cgsecurity.org>

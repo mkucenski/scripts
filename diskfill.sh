@@ -3,10 +3,8 @@
 
 DEVICE="$1"
 if [ $# -eq 0 ]; then
-	USAGE "DEVICE" && exit $COMMON_ERROR
+	USAGE "DEVICE" && exit 1
 fi
-
-RV=$COMMON_ERROR
 
 BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
 PATTERN="The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick brown fox jumps over the lazy dog! The quick br... "
@@ -18,7 +16,4 @@ INFO ""
 
 INFO "Writing pattern to device ($DEVICE)..."
 yes "$PATTERN" | dd bs=$BS of="$DEVICE"
-RV=$((RV+$?))
-
-exit $RV
 

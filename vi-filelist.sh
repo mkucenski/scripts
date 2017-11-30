@@ -3,7 +3,7 @@
 
 FILELIST="$1"
 if [ $# -eq 0 ]; then
-	USAGE "FILELIST" && exit $COMMON_ERROR
+	USAGE "FILELIST" && exit 1
 fi
 
 vi $(cat "$FILELIST")

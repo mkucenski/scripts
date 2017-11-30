@@ -6,12 +6,11 @@ DSTDIR="$2"
 DSTNAME="$3"
 
 if [ $# -eq 0 ]; then
-	USAGE "SRCDIR" "DSTDIR" "DSTNAME" && exit $COMMON_ERROR
+	USAGE "SRCDIR" "DSTDIR" "DSTNAME" && exit 1
 fi
 
 FULLBACKUP="$DSTDIR/$DSTNAME.7z"
 
-RV=$COMMON_SUCCESS
 LOCK
 
 if [ ! -e "$FULLBACKUP" ]; then
@@ -26,5 +25,4 @@ echo "Press any key to continue..."
 read
 
 UNLOCK
-exit $RV
 

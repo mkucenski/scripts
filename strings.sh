@@ -3,23 +3,18 @@
 ENABLE_DEBUG=0
 IFS=$(echo -en "\n\b")
 
-RV=$COMMON_SUCCESS
-
 INFO "Extracting strings for:"
 for arg in "$@"; do
 	if [ -e "$arg" ]; then
 		OUTPUT="$arg-strings.txt"
 		# if [ -e "$OUTPUT" ]; then
-		# 	ERROR "Output file <$OUTPUT> already exists!"
+		# 	ERROR "Output file <$OUTPUT> already exists!" && exit 1
 		# else
 			INFO "$arg -> $OUTPUT"
 			${BASH_SOURCE%/*}/strings_worker.sh "$arg" > "$OUTPUT"
-			RV=$((RV+$?))
 		# fi
 	else
-		ERROR "File <$arg> does not exist!"
+		ERROR "File <$arg> does not exist!" && exit 1
 	fi
 done
-
-exit $RV
 
