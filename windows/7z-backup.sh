@@ -11,7 +11,7 @@ fi
 
 FULLBACKUP="$DSTDIR/$DSTNAME.7z"
 
-LOCK
+LOCK "$DSTDIR/$DSTNAME.pid"
 
 if [ ! -e "$FULLBACKUP" ]; then
 	# Do full backup to create a base archive
@@ -24,5 +24,5 @@ fi
 echo "Press any key to continue..."
 read
 
-UNLOCK
+UNLOCK "$DSTDIR/$DSTNAME.pid"
 

@@ -235,21 +235,21 @@ function ECHO_ARGS() {
 }
 
 function LOCK {
-	# Store PID in a lockfile to prevent concurrent execution of the script.
-	# lockfile will be SCRIPT_DIR/.$SCRIPT_NAME.pid
+	# Store PID in a lockfile to prevent concurrent execution;
+	# lockfile can be any arbitrary location based on how 
+	# restrictive you want to be. Pass "$0" to prevent 
+	# concurrent execution of the script in all cases.
 
-	_COMMON_LOCK_SRC_SCRIPT="$1"
+	_COMMON_LOCK="$1"
 	_COMMON_LOCK_LOG="$2"
-
-	_COMMON_LOCK="$(dirname "$_COMMON_LOCK_SRC_SCRIPT")/.$(basename "$_COMMON_LOCK_SRC_SCRIPT").pid"
 
 	if [ -f "$_COMMON_LOCK" ]; then
 		PID=$(cat "$_COMMON_LOCK")
 		if kill -0 "$PID" > /dev/null 2>&1; then
-			WARNING "Active lock; script already running!" "$_COMMON_LOCK_SRC_SCRIPT" "$_COMMON_LOCK_LOG"
+			WARNING "Active lock; script already running!" "$_COMMON_LOCK" "$_COMMON_LOCK_LOG"
 			exit 1
 		else
-			WARNING "Stale lock; removing ($_COMMON_LOCK)" "$_COMMON_LOCK_SRC_SCRIPT" "$_COMMON_LOCK_LOG"
+			WARNING "Stale lock; removing lockfile." "$_COMMON_LOCK" "$_COMMON_LOCK_LOG"
 		fi
 	fi
 
@@ -257,10 +257,8 @@ function LOCK {
 }
 
 function UNLOCK {
-	_COMMON_LOCK_SRC_SCRIPT="$1"
+	_COMMON_LOCK="$1"
 	_COMMON_LOCK_LOG="$2"
-
-	_COMMON_LOCK="$(dirname "$_COMMON_LOCK_SRC_SCRIPT")/.$(basename "$_COMMON_LOCK_SRC_SCRIPT").pid"
 
    rm -f "$_COMMON_LOCK"
 }
