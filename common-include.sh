@@ -61,8 +61,8 @@ function USAGE_EXAMPLE() {
 }
 
 # On systems where gsed/gawk exist, we assume that is the correct GNU version to use.
-SEDCMD=$(if [ -n "$(which gsed)" ]; then echo "gsed"; else echo "sed"; fi); export SEDCMD
-AWKCMD=$(if [ -n "$(which gawk)" ]; then echo "gawk"; else echo "awk"; fi); export AWKCMD
+SEDCMD=$(if [ -n "$(which gsed 2>/dev/null)" ]; then echo "gsed"; else echo "sed"; fi); export SEDCMD
+AWKCMD=$(if [ -n "$(which gawk 2>/dev/null)" ]; then echo "gawk"; else echo "awk"; fi); export AWKCMD
 
 function SUDO_USER() {
 	who am i | $SEDCMD -r 's/([^[:space:]]+).*/\1/'
@@ -124,6 +124,11 @@ function SAVE_EXTENSION() {
 function STRIP_EXTENSION() {
 	_COMMON_FILENAME="$1"
 	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/\...?.?.?$//'
+}
+
+function GET_EXTENSION() {
+	_COMMON_FILENAME="$1"
+	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/.*\.(..?.?.?)$/\1/'
 }
 
 function CHECK_ROOT() {
@@ -243,6 +248,13 @@ function LOCK {
 	_COMMON_LOCK="$1"
 	_COMMON_LOCK_LOG="$2"
 
+	# Append ".pid" to any lock request that doesn't already
+	# have it. Allows you to pass "$0" as the lock.
+	EXT="$(GET_EXTENSION "$_COMMON_LOCK")"
+	if [ "$EXT" != "pid" ]; then
+		_COMMON_LOCK="$_COMMON_LOCK.pid"
+	fi
+
 	if [ -f "$_COMMON_LOCK" ]; then
 		PID=$(cat "$_COMMON_LOCK")
 		if kill -0 "$PID" > /dev/null 2>&1; then
@@ -260,5 +272,10 @@ function UNLOCK {
 	_COMMON_LOCK="$1"
 	_COMMON_LOCK_LOG="$2"
 
-   rm -f "$_COMMON_LOCK"
+	EXT="$(GET_EXTENSION "$_COMMON_LOCK")"
+	if [ "$EXT" != "pid" ]; then
+		_COMMON_LOCK="$_COMMON_LOCK.pid"
+	fi
+
+	rm -f "$_COMMON_LOCK"
 }

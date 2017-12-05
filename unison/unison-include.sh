@@ -1,9 +1,9 @@
 #!bin/bash
 . "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
-PRFDIR="$HOME/.unison/sync"
-LOGDIR="$HOME/.unison/log"
-LOGFILE="$LOGDIR/unison-inc.log"
+_UNISON_PRFDIR="$HOME/.unison/sync"
+_UNISON_LOGDIR="$HOME/.unison/log"
+_UNISON_LOGFILE="$_UNISON_LOGDIR/unison-inc.log"
 
 function createDir() {
 	ERR=0
@@ -24,40 +24,40 @@ function createDirs() {
 }
 
 function setup() {
-	if [ ! -e "$PRFDIR" ]; then
-		createDir "$PRFDIR"
+	if [ ! -e "$_UNISON_PRFDIR" ]; then
+		createDir "$_UNISON_PRFDIR"
 	fi
 
-	if [ ! -e "$LOGDIR" ]; then
-		createDir "$LOGDIR"
+	if [ ! -e "$_UNISON_LOGDIR" ]; then
+		createDir "$_UNISON_LOGDIR"
 	fi
 
-	cp "$(dirname "$0")/common" "$PRFDIR/"
+	cp "$(dirname "$0")/common" "$_UNISON_PRFDIR/"
 }
 
 function buildprf() {
-	ROOT1="$1"
-	ROOT2="$2"
+	_UNISON_ROOT1="$1"
+	_UNISON_ROOT2="$2"
 
-	PRF="$(mktemp "$PRFDIR/unison-XXXXXX")"
+	_UNISON_PRF="$(mktemp "$_UNISON_PRFDIR/unison-XXXXXX")"
 
-	echo "include sync/common" > "$PRF"
+	echo "include sync/common" > "$_UNISON_PRF"
 	{
-		echo "root = $ROOT1/"
-		echo "root = $ROOT2/"
+		echo "root = $_UNISON_ROOT1/"
+		echo "root = $_UNISON_ROOT2/"
 		echo "backuploc = local"
 		echo "backup = Name *"
 		echo "log = true"
-		echo "logfile = $LOGFILE"
-	} >> "$PRF"
+		echo "logfile = $_UNISON_LOGFILE"
+	} >> "$_UNISON_PRF"
 
-	echo "$PRF"
+	echo "$_UNISON_PRF"
 }
 
 function getlogfile() {
-	PRF="$1"
-	UNILOG="$(grep "logfile = " "$PRF" | $SEDCMD -r 's/logfile = (.*)/\1/')"
-	echo "$UNILOG"
+	_UNISON_PRF="$1"
+	_UNISON_LOG="$(grep "logfile = " "$_UNISON_PRF" | $SEDCMD -r 's/logfile = (.*)/\1/')"
+	echo "$_UNISON_LOG"
 }
 
 function changeFlags() {
@@ -73,47 +73,49 @@ function changeFlags() {
 }
 
 function execUnison() {
-	SRC="$1"
-	DST="$2"
-	SUBDIR="$3"
+	_UNISON_SRC="$1"
+	_UNISON_DST="$2"
+	_UNISON_SUBDIR="$3"
 
-	if [ -n "$SUBDIR" ]; then
-		ROOT1="$SRC/$SUBDIR"
-		ROOT2="$DST/$SUBDIR"
+	if [ -n "$_UNISON_SUBDIR" ]; then
+		_UNISON_ROOT1="$_UNISON_SRC/$_UNISON_SUBDIR"
+		_UNISON_ROOT2="$_UNISON_DST/$_UNISON_SUBDIR"
 	else
-		ROOT1="$SRC"
-		ROOT2="$DST"
+		_UNISON_ROOT1="$_UNISON_SRC"
+		_UNISON_ROOT2="$_UNISON_DST"
 	fi
 
-	if ( createDirs "$ROOT1" "$ROOT2" ); then
+	INFO "--- $_UNISON_SRC <-> $_UNISON_DST ---"
+
+	if ( createDirs "$_UNISON_ROOT1" "$_UNISON_ROOT2" ); then
 		setup
-		PRF="$(buildprf "$ROOT1" "$ROOT2")"
-		UNILOG="$(getlogfile "$PRF")"
-		START "$0" "$UNILOG" "$*"
-		LOG_VERSION "unison" "$(unison -version)" "$UNILOG"
+		_UNISON_PRF="$(buildprf "$_UNISON_ROOT1" "$_UNISON_ROOT2")"
+		_UNISON_LOG="$(getlogfile "$_UNISON_PRF")"
+		START "$0" "$_UNISON_LOG" "$*"
+		LOG_VERSION "unison" "$(unison -version)" "$_UNISON_LOG"
 
-		LOG "$ROOT1 <-> $ROOT2" "$UNILOG"
-		unison "$(basename "$(dirname "$PRF")")/$(basename "$PRF")"
-		cat "$PRF" >> "$UNILOG"
-		rm "$PRF"
+		LOG "$_UNISON_ROOT1 <-> $_UNISON_ROOT2" "$_UNISON_LOG"
+		unison "$(basename "$(dirname "$_UNISON_PRF")")/$(basename "$_UNISON_PRF")"
+		cat "$_UNISON_PRF" >> "$_UNISON_LOG"
+		rm "$_UNISON_PRF"
 
-		END "$0" "$UNILOG"
+		END "$0" "$_UNISON_LOG"
 	fi
 }
 
 function execRsync() {
-	SRCDIR="$1"
-	DSTBASEDIR="$2"
-	SRCSUBDIR="$3"
+	_UNISON_SRCDIR="$1"
+	_UNISON_DSTBASEDIR="$2"
+	_UNISON_SRCSUBDIR="$3"
 
-	if [ -n "$SRCSUBDIR" ]; then
-		SRCDIR="$SRCDIR/$SRCSUBDIR"
+	if [ -n "$_UNISON_SRCSUBDIR" ]; then
+		_UNISON_SRCDIR="$_UNISON_SRCDIR/$_UNISON_SRCSUBDIR"
 	fi
 
 	ERR=0
 
-	# rsync -av --fileflags "$SRCDIR" "$DSTBASEDIR/"
-	rsync -av "$(NORMALIZEDIR "$SRCDIR")" "$(NORMALIZEDIR "$DSTBASEDIR")/"
+	# rsync -av --fileflags "$_UNISON_SRCDIR" "$_UNISON_DSTBASEDIR/"
+	rsync -av "$(NORMALIZEDIR "$_UNISON_SRCDIR")" "$(NORMALIZEDIR "$_UNISON_DSTBASEDIR")/"
 	ERR=$((ERR + $?))
 
 	return $ERR
