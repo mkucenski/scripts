@@ -1,23 +1,19 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/../common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 SERVER="$1"
 USER="$2"
 VM=$(${BASH_SOURCE%/*}/../python/urlEncode.py "$3")
 DEST="$4"
 if [ $# -eq 0 ]; then
-	USAGE "SERVER" "USER" "VM" "DEST" && exit $COMMON_ERROR
+	USAGE "SERVER" "USER" "VM" "DEST" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 if [ ! -e "$DEST" ]; then
 	mkdir -p "$DEST"
 fi
 
 ovftool "vi://$USER@$SERVER/$VM" "$DEST"
-
-exit $RV
 
 # Usage: ovftool [options] <source> [<target>]
 # where

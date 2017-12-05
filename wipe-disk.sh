@@ -1,14 +1,12 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 DEVICE="$1"
 SERIALNUM="$2"
 LOGDIR="$3"
 if [ $# -eq 0 ]; then
-	USAGE "DEVICE" "SERIALNUM" "LOGDIR" && exit $COMMON_ERROR
+	USAGE "DEVICE" "SERIALNUM" "LOGDIR" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
 START "$0" "$LOGFILE" "$*"
@@ -22,14 +20,10 @@ BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
 INFO "Wiping device ($DEVICE)..." "$LOGFILE"
 
 ${BASH_SOURCE%/*}/wipe-disk_worker.sh "$DEVICE" "$LOGFILE"
-RV=$((RV+$?))
 
 INFO "Completed wiping device ($DEVICE)!" "$LOGFILE"
 
 ${BASH_SOURCE%/*}/wipe-verify.sh "$DEVICE" "$SERIALNUM" "$LOGDIR"
-RV=$((RV+$?))
 
 END "$0" "$LOGFILE"
-
-exit $RV
 

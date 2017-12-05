@@ -1,15 +1,13 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # This script parses the output of "whois.sh" into a CSV format showing the IP and OrgName.
 # It expects the specific output from my "whois.sh", not any whois output.
 
 WHOIS_FILE="$1"
 if [ $# -eq 0 ]; then
-	USAGE "WHOIS_FILE" && exit $COMMON_ERROR
+	USAGE "WHOIS_FILE" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 if [ -e "$WHOIS_FILE" ]; then
 	SITE="$(grep "Whois Query for:" "$WHOIS_FILE" | gsed -r 's/Whois Query for:[[:space:]]+(.+)/\1/')"
@@ -44,9 +42,6 @@ if [ -e "$WHOIS_FILE" ]; then
 		echo "$SITE,$ORG"
 	fi
 else
-	ERROR "Whois file doesn't exist!" "$0"
-	RV=$COMMON_ERROR
+	ERROR "Whois file doesn't exist!" "$0" && exit 1
 fi
-
-exit $RV
 

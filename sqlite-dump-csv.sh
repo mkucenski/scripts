@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 DB="$1"
 CSV="$2"
@@ -8,10 +8,9 @@ if [ -z "$LOGFILE" ]; then
 	LOGFILE="$(STRIP_EXTENSION "$CSV").log"
 fi
 if [ $# -ne 2 ]; then
-	USAGE "DB" "CSV" "LOGFILE (optional)" && exit $COMMON_ERROR
+	USAGE "DB" "CSV" "LOGFILE (optional)" && exit 1
 fi
 
-RV=$COMMON_SUCCESS
 START "$0" "$LOGFILE" "$*"
 
 IFS=$(echo -en " ")
@@ -29,5 +28,4 @@ select * from $TABLE;
 done
 
 END "$0" "$LOGFILE"
-exit $RV
 

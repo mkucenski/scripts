@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # Run dig/nslookup records consistently and store the results in a specific directory
 
@@ -10,13 +10,11 @@
 SITE="$1"
 DESTDIR="$2"
 if [ $# -eq 0 ]; then
-	USAGE "SITE" "DESTDIR" && exit $COMMON_ERROR
+	USAGE "SITE" "DESTDIR" && exit 1
 fi
 if [ -z "$DESTDIR" ]; then
 	DESTDIR="./"
 fi
-
-RV=$COMMON_SUCCESS
 
 DEST="$DESTDIR/$SITE-dig.txt"
 if [ ! -e "$DEST" ]; then
@@ -32,14 +30,10 @@ if [ -e "$DEST" ]; then
 
 	for TYPE in A AAAA CNAME DNAME LOC MX NS PTR RP SOA SRV TXT URI; do
 		dig "$SITE" $TYPE | egrep -v "(;; Query time:|;; MSG SIZE|;; Got answer:|;; global options:|; <<>> DiG|;; ->>HEADER<<-|;; flags:|;; SERVER:|;; WHEN:)" | "$SEDCMD" -r '/^\s*$/d; s/(;; QUESTION SECTION:)/\n\1/' | tee -a "$DEST"
-		RV=$((RV+$?))
 	done
 
 	END "$0" "$DEST"
 else
-	ERROR "Unable to create destination file!" "$0"
-	RV=$COMMON_ERROR
+	ERROR "Unable to create destination file!" "$0" && exit 1
 fi
-
-exit $RV
 

@@ -1,15 +1,13 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/../common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 DEST_SERVER="$1"
 USER="$2"
 DATASTORE="$3"
 OVF="$4"
 if [ $# -eq 0 ]; then
-	USAGE "DEST_SERVER" "USER" "DATASTORE" "OVF" && exit $COMMON_ERROR
+	USAGE "DEST_SERVER" "USER" "DATASTORE" "OVF" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 DEST_URL="vi://$USER@$DEST_SERVER"
 INFO "OVF=$OVF"
@@ -17,8 +15,6 @@ INFO "DATASTORE=$DATASTORE"
 INFO "DEST_URL=$DEST_URL"
 
 ovftool --datastore="$DATASTORE" "$OVF" "$DEST_URL"
-
-exit $RV
 
 # Usage: ovftool [options] <source> [<target>]
 # where

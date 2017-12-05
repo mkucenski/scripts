@@ -1,15 +1,13 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 SITE="$1"
 DESTDIR="$2"
 if [ $# -eq 0 ]; then
-	USAGE "SITE" "DESTDIR" && exit $COMMON_ERROR
+	USAGE "SITE" "DESTDIR" && exit 1
 fi
 
 SITE_STRIPPED="$(echo "$SITE" | $SEDCMD -r -f "${BASH_SOURCE%/*}/sed/url-strip-to-filename.sed")"
-
-RV=$COMMON_SUCCESS
 
 if [ ! -e "$DESTDIR/$SITE_STRIPPED" ]; then
 	mkdir -p "$DESTDIR/$SITE_STRIPPED"
@@ -33,9 +31,6 @@ if [ ! -e "$DESTDIR/$SITE_STRIPPED" ]; then
 
 	END "$0" "$LOG"
 else
-	ERROR "Site directory ($DESTDIR/$SITE_STRIPPED) already exists!" "$0"
-	RV=$COMMON_ERROR
+	ERROR "Site directory ($DESTDIR/$SITE_STRIPPED) already exists!" "$0" && exit 1
 fi
-
-exit $RV
 

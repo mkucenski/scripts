@@ -1,11 +1,11 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 IMAGE="$1"
 DEVICE="$2"
 LOGFILE="$3"
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "DEVICE" "LOGFILE" && exit $COMMON_ERROR
+	USAGE "IMAGE" "DEVICE" "LOGFILE" && exit 1
 fi
 
 START "$0" "$LOGFILE" "$*"
@@ -25,7 +25,7 @@ INFO "Device MD5: $DEVICE_HASH" "$LOGFILE"
 if [ "$ORIGINAL_HASH" == "$DEVICE_HASH" ]; then
 	INFO "SUCCESS! Hash Match!" "$LOGFILE"
 else
-	ERROR "FAILURE! Hash Mismatch!" "$0" "$LOGFILE"
+	ERROR "FAILURE! Hash Mismatch!" "$0" "$LOGFILE" && exit 1
 fi
 
 END "$0" "$LOGFILE"

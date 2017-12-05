@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # The purpose of this script is to find files based on their MD5 hash value.
 # This can be used in conjunction with 'copy-as-hash.sh' to go back and
@@ -9,10 +9,8 @@
 HASH="$1"
 DIR="$2"
 if [ $# -ne 2 ]; then
-	USAGE "HASH" "DIR" && exit $COMMON_ERROR
+	USAGE "HASH" "DIR" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 for FILE in $(find "$DIR" -type f); do
 	FILE_HASH="$(md5 -r "$FILE" | gsed -r 's/([^[:space:]]+).*/\1/')"
@@ -20,6 +18,4 @@ for FILE in $(find "$DIR" -type f); do
 		echo "Found: $FILE"
 	fi
 done
-
-exit $RV
 

@@ -1,21 +1,17 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/../common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 SERVER="$1"
 USER="$2"
 VM=$(${BASH_SOURCE%/*}/../python/urlEncode.py "$3")
 if [ $# -eq 0 ]; then
-	USAGE "SERVER" "USER" "VM" && exit $COMMON_ERROR
+	USAGE "SERVER" "USER" "VM" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 URL="vi://$USER@$SERVER/$VM"
 INFO "URL=$URL"
 
 ovftool "$URL"
-
-exit $RV
 
 # Usage: ovftool [options] <source> [<target>]
 # where

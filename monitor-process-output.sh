@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # The idea here is to generate a baseline of the given command output, then periodically
 # re-run the command and compare the results--any differences are reported. Useful for
@@ -8,10 +8,8 @@
 CMD="$1"
 FREQ="$2"
 if [ $# -eq 0 ]; then
-	USAGE "CMD" "FREQ" && exit $COMMON_ERROR
+	USAGE "CMD" "FREQ" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 BASE_TMP="$(MKTEMP "$0")"
 eval "$CMD 2>/dev/null" > "$BASE_TMP"
@@ -34,6 +32,4 @@ while true; do
 done
 
 rm "$BASE_TMP" "$NEW_TMP" "$DIFF"
-
-exit $RV
 

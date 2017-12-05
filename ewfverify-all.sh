@@ -1,5 +1,5 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # Find all .E01 files within BASEDIR and execute <ewfverify> on each.
 
@@ -9,7 +9,6 @@ if [ $# -eq 0 ]; then
 	USAGE "BASEDIR" "ALL_LOGFILE (optional)" && exit $COMMON_ERROR
 fi
 
-RV=$COMMON_SUCCESS
 START "$0" "$ALL_LOGFILE" "$*"
 
 # Adjust field separators for for loop to support whitespace in filenames
@@ -28,14 +27,12 @@ for FOUND_IMAGE in $(find "$BASEDIR" -type f -iname "*.E01"); do
 		fi
 	else
 		if [ -n "$ALL_LOGFILE" ]; then
-			ERROR "$FULL_FOUND_IMAGE_PATH" "$0" "$ALL_LOGFILE"
+			ERROR "$FULL_FOUND_IMAGE_PATH" "$0" "$ALL_LOGFILE" && exit 1
 		else
-			ERROR "$FULL_FOUND_IMAGE_PATH" "$0"
+			ERROR "$FULL_FOUND_IMAGE_PATH" "$0" && exit 1
 		fi
-		RV=$COMMON_ERROR
 	fi
 done
 
 END "$0" "$ALL_LOGFILE"
-exit $RV
 

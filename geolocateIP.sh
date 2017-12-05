@@ -1,12 +1,10 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # Takes a list of IP addresses (one per line) on stdin or via a text file argument.
 # Uses software and databases found here: http://www.maxmind.com/app/ip-location.
 
 DBDIR="/opt/local/share/GeoIP"
-
-RV=$COMMON_SUCCESS
 
 while read IP; do 
 	COUNTRY="$(geoiplookup -f "$DBDIR/GeoLiteCountry.dat" $IP | $SEDCMD -r 's/^GeoIP Country Edition: (.+)/\1/; s/, /,/g')"
@@ -24,6 +22,4 @@ while read IP; do
 		echo "UNK,UNK,UNK"
 	fi
 done < "${1:-/dev/stdin}"
-
-exit $RV
 

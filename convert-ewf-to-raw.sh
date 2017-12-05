@@ -1,13 +1,11 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 EWF="$1"
 RAW="$2"
 if [ $# -eq 0 ]; then
-	USAGE "EWF" "RAW" && exit $COMMON_ERROR
+	USAGE "EWF" "RAW" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 DEBUG=0
 LOG="$RAW.log"
@@ -24,16 +22,11 @@ if [ ! -e "$RAW" ]; then
 
 	if [ $BYTES -gt 0 ]; then
 		ewfexport -u -o 0 -B $BYTES -f raw -t "$RAW" "$EWF" | tee -a "$LOG"
-		RV=$((RV+$?))
 		INFO "EWF-Stored MD5:				$EWFMD5" "$LOG"
 	else
-		ERROR "ewfinfo unable to retrieve bytes value!" "$0" "$LOG"
-		RV=$COMMON_ERROR
+		ERROR "ewfinfo unable to retrieve bytes value!" "$0" "$LOG" && exit 1
 	fi
 else
-	ERROR "Destination RAW already exists!" "$0" "$LOG"
-	RV=$COMMON_ERROR
+	ERROR "Destination RAW already exists!" "$0" "$LOG" && exit 1
 fi
-
-exit $RV
 

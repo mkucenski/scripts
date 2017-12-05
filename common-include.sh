@@ -2,17 +2,20 @@
 ENABLE_DEBUG=0
 IFS=$(echo -en "\n\b")
 
-COMMON_SUCCESS=0
-COMMON_ERROR=1
-COMMON_UNKNOWN=255
+function NORMALIZEDIR() {
+	# rsync in particular operates differently depending on whether the source has a trailing '/';
+	# this function normalizes directory names to not include the trailing '/'
+	DIR="$(dirname "$1")/$(basename "$1")"
+	echo "$DIR"
+}
 
 function NOTIFY() {
 	_COMMON_NOTIFY_MSG="$1"
 	_COMMON_NOTIFY_SRC="$(basename "$2")"
 	_COMMON_NOTIFY_OS="$(uname)"
-	if [ $_COMMON_NOTIFY_OS = "Darwin" ]; then
+	if [ "$_COMMON_NOTIFY_OS" = "Darwin" ]; then
 		INFO "$_COMMON_NOTIFY_SRC: $_COMMON_NOTIFY_MSG"
-		${BASH_SOURCE%/*}/macOS/notification.sh "$_COMMON_NOTIFY_MSG" "$_COMMON_NOTIFY_SRC" ""
+		"${BASH_SOURCE%/*}/macOS/notification.sh" "$_COMMON_NOTIFY_MSG" "$_COMMON_NOTIFY_SRC" ""
 	else
 		INFO "$_COMMON_NOTIFY_SRC: $_COMMON_NOTIFY_MSG"
 	fi
@@ -23,7 +26,7 @@ function DEBUG() {
 		_COMMON_DEBUG_MSG="$1"
 		_COMMON_DEBUG_SRC="$(basename "$2")"
 		_COMMON_DEBUG_LOG="$3"
-		_COMMON_DEBUG_OUTPUT="DEBUG("$_COMMON_DEBUG_SRC"): $_COMMON_DEBUG_MSG"
+		_COMMON_DEBUG_OUTPUT="DEBUG($_COMMON_DEBUG_SRC): $_COMMON_DEBUG_MSG"
 		echo "$_COMMON_DEBUG_OUTPUT" > /dev/stderr
 		if [ -n "$_COMMON_DEBUG_LOG" ]; then
 			LOG "$_COMMON_DEBUG_OUTPUT" "$_COMMON_DEBUG_LOG"
@@ -58,8 +61,8 @@ function USAGE_EXAMPLE() {
 }
 
 # On systems where gsed/gawk exist, we assume that is the correct GNU version to use.
-SEDCMD=$(if [ -n "$(which gsed)" ]; then echo "gsed"; else echo "sed"; fi)
-AWKCMD=$(if [ -n "$(which gawk)" ]; then echo "gawk"; else echo "awk"; fi)
+SEDCMD=$(if [ -n "$(which gsed 2>/dev/null)" ]; then echo "gsed"; else echo "sed"; fi); export SEDCMD
+AWKCMD=$(if [ -n "$(which gawk 2>/dev/null)" ]; then echo "gawk"; else echo "awk"; fi); export AWKCMD
 
 function SUDO_USER() {
 	who am i | $SEDCMD -r 's/([^[:space:]]+).*/\1/'
@@ -68,7 +71,7 @@ function SUDO_USER() {
 function FULL_PATH() {
 	# Return the full/absolute path for a file
 	FILE="$1"
-	echo "$(cd $(dirname "$FILE"); pwd)/$(basename "$FILE")"
+	echo "$(cd "$(dirname "$FILE")"; pwd)/$(basename "$FILE")"
 }
 
 function LOG_VERSION() {
@@ -102,18 +105,15 @@ function BASE64_FILE() {
 }
 
 function MKTEMP() {
-	mktemp -t "$(basename "$1")" || return $COMMON_ERROR
-	return $COMMON_SUCCESS
+	mktemp -t "$(basename "$1")"
 }
 
 function MKTEMPDIR() {
-	mktemp -d -t "$(basename "$1")" || return $COMMON_ERROR
-	return $COMMON_SUCCESS
+	mktemp -d -t "$(basename "$1")"
 }
 
 function MKTEMPUNIQ() {
-	mktemp "$1.XXXXXX" || return $COMMON_ERROR
-	return $COMMON_SUCCESS
+	mktemp "$1.XXXXXX"
 }	
 
 function SAVE_EXTENSION() {
@@ -124,6 +124,11 @@ function SAVE_EXTENSION() {
 function STRIP_EXTENSION() {
 	_COMMON_FILENAME="$1"
 	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/\...?.?.?$//'
+}
+
+function GET_EXTENSION() {
+	_COMMON_FILENAME="$1"
+	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/.*\.(..?.?.?)$/\1/'
 }
 
 function CHECK_ROOT() {
@@ -163,7 +168,7 @@ function ERROR() {
 	_COMMON_ERROR_MSG="$1"
 	_COMMON_ERROR_SRC="$(basename "$2")"
 	_COMMON_ERROR_LOG="$3"
-	_COMMON_ERROR_OUTPUT="ERROR("$_COMMON_ERROR_SRC"): $_COMMON_ERROR_MSG"
+	_COMMON_ERROR_OUTPUT="ERROR($_COMMON_ERROR_SRC): $_COMMON_ERROR_MSG"
 	echo "$_COMMON_ERROR_OUTPUT" > /dev/stderr
 	if [ -n "$_COMMON_ERROR_LOG" ]; then
 		LOG "$_COMMON_ERROR_OUTPUT" "$_COMMON_ERROR_LOG"
@@ -176,7 +181,7 @@ function WARNING() {
 	_COMMON_WARNING_MSG="$1"
 	_COMMON_WARNING_SRC="$(basename "$2")"
 	_COMMON_WARNING_LOG="$3"
-	_COMMON_WARNING_OUTPUT="WARNING("$_COMMON_WARNING_SRC"): $_COMMON_WARNING_MSG"
+	_COMMON_WARNING_OUTPUT="WARNING($_COMMON_WARNING_SRC): $_COMMON_WARNING_MSG"
 	echo "$_COMMON_WARNING_OUTPUT" > /dev/stderr
 	if [ -n "$_COMMON_WARNING_LOG" ]; then
 		LOG "$_COMMON_WARNING_OUTPUT" "$_COMMON_WARNING_LOG"
@@ -210,6 +215,14 @@ function DATETIME() {
 	date "+%Y%m%d %H:%M:%S"
 }
 
+function DATE() {
+	date "+%Y%m%d"
+}
+
+function TIME() {
+	date "+%H%M%S"
+}
+
 function LOG() {
 	# Output message to LOG (no output to stdout/stderr)
 
@@ -221,27 +234,34 @@ function LOG() {
 }
 
 function ECHO_ARGS() {
-	for X in $@; do
+	for X in "$@"; do
 		echo -n "<$X> "
 	done
 }
 
 function LOCK {
-	# Store PID in a lockfile to prevent concurrent execution of the script.
-	# lockfile will be SCRIPT_DIR/.$SCRIPT_NAME.pid
+	# Store PID in a lockfile to prevent concurrent execution;
+	# lockfile can be any arbitrary location based on how 
+	# restrictive you want to be. Pass "$0" to prevent 
+	# concurrent execution of the script in all cases.
 
-	_COMMON_LOCK_SRC_SCRIPT="$1"
+	_COMMON_LOCK="$1"
 	_COMMON_LOCK_LOG="$2"
 
-	_COMMON_LOCK="$(dirname "$_COMMON_LOCK_SRC_SCRIPT")/.$(basename "$_COMMON_LOCK_SRC_SCRIPT").pid"
+	# Append ".pid" to any lock request that doesn't already
+	# have it. Allows you to pass "$0" as the lock.
+	EXT="$(GET_EXTENSION "$_COMMON_LOCK")"
+	if [ "$EXT" != "pid" ]; then
+		_COMMON_LOCK="$_COMMON_LOCK.pid"
+	fi
 
 	if [ -f "$_COMMON_LOCK" ]; then
 		PID=$(cat "$_COMMON_LOCK")
-		if kill -0 $PID >/dev/null 2>&1; then
-			WARNING "Active lock; script already running!" "$_COMMON_LOCK_SRC_SCRIPT" "$_COMMON_LOCK_LOG"
-			exit $COMMON_ERROR
+		if kill -0 "$PID" > /dev/null 2>&1; then
+			WARNING "Active lock; script already running!" "$_COMMON_LOCK" "$_COMMON_LOCK_LOG"
+			exit 1
 		else
-			WARNING "Stale lock; removing ($_COMMON_LOCK)" "$_COMMON_LOCK_SRC_SCRIPT" "$_COMMON_LOCK_LOG"
+			WARNING "Stale lock; removing lockfile." "$_COMMON_LOCK" "$_COMMON_LOCK_LOG"
 		fi
 	fi
 
@@ -249,10 +269,13 @@ function LOCK {
 }
 
 function UNLOCK {
-	_COMMON_LOCK_SRC_SCRIPT="$1"
+	_COMMON_LOCK="$1"
 	_COMMON_LOCK_LOG="$2"
 
-	_COMMON_LOCK="$(dirname "$_COMMON_LOCK_SRC_SCRIPT")/.$(basename "$_COMMON_LOCK_SRC_SCRIPT").pid"
+	EXT="$(GET_EXTENSION "$_COMMON_LOCK")"
+	if [ "$EXT" != "pid" ]; then
+		_COMMON_LOCK="$_COMMON_LOCK.pid"
+	fi
 
-   rm -f "$_COMMON_LOCK"
+	rm -f "$_COMMON_LOCK"
 }

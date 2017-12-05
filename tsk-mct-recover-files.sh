@@ -1,25 +1,19 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 IMAGE="$1"
 OFFSET="$2"
 DEST="$3"
 LOGFILE="$4"
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "OFFSET" "DEST" "LOGFILE" && exit $COMMON_ERROR
+	USAGE "IMAGE" "OFFSET" "DEST" "LOGFILE" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 while read LINE; do
 	if [ -n "$LINE" ]; then
 		${BASH_SOURCE%/*}/tsk-mct-recover-files_worker.sh "$IMAGE" "$OFFSET" "$DEST" "$LINE" "$LOGFILE"
-		RV=$((RV+$?))
 	else
-		ERROR "Read invalid line!" "$0"
-		RV=$COMMON_ERROR
+		ERROR "Read invalid line!" "$0" && exit 1
 	fi
 done
-
-exit $RV
 
