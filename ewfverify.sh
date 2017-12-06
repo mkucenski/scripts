@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 . "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # NOTE: If you receive errors regarding too many files open, use 'ulimit -n XXXX' to increase the max open file limit.

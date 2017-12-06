@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # https://easylist.to/index.html
 # https://easylist.to/pages/other-supplementary-filter-lists-and-easylist-variants.html

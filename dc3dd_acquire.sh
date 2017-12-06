@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #Advanced Format (4k) sector size--most new drives should support
 SSZ=4096

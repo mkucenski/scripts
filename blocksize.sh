@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 . "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # The goal of this script is simply to find the largest blocksize (bs=) that can be used and still cover the entire disk.

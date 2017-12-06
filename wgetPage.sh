@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # The goal of this script is to capture a useable copy of an Internet Page for retention/evidence.
 

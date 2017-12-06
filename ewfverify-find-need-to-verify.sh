@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 BASEDIR="$1"
 LOGDIR="$2"

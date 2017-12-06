@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 SED=${BASH_SOURCE%/*}/sed/html_ascii_encoding.sed
 cat /dev/stdin | gsed -f "$SED" | gsed -f "$SED" | gsed -f "$SED"

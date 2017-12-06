@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 OUTPUTFILE=`basename "$2"`
 PSFILE="/tmp/$OUTPUTFILE.ps"

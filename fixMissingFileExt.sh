@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 for X in "$@"; do
 	OLDEXT=`echo "$X" | egrep '.+\..{1,4}$' | gsed -r 's/^.+\.(.{1,4})$/\1/'`

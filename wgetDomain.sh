@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 . "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # The goal of this script is to capture a useable copy of an Internet website for retention/evidence.

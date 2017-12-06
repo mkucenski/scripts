@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Quick script to verify whether the first X and last X bytes of a device have been wiped.
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 . "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # Once the tor proxy service is started (via 'sudo tor'), this script can be used to verify whether everything is working correctly; subsquent use of "torify" should be successful

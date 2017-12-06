@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 . "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # Takes a list of IP addresses (one per line) on stdin or via a text file argument.
