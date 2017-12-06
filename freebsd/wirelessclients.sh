@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env bash
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 ifconfig ath0 list sta
 ifconfig ath1 list sta | grep -v ADDR

@@ -10,8 +10,6 @@ if [ $# -eq 0 ]; then
 	USAGE_EXAMPLE "cat file_list.txt | exec-per-line.sh \"copy-as-hash.sh {} dest_directory/\""
 	exit 1
 fi
-INFO "SEARCH=$SEARCH"
-INFO "REPLACE=$REPLACE"
 
 if [ -e "$BACKUPDIR" ]; then
 	while read -r FILE; do 

@@ -1,8 +1,12 @@
-#!/bin/sh
+#!/usr/bin/env bash
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 # This script must get run as root.  I wasn't able to figure out a way for non-root users
 # to add the tap interface to the bridge.  Setting this script to setuid root did not seem
 # to help.
+if [ $(CHECK_ROOT) != true ]; then
+	ERROR "This script *MUST* be run as 'root'!" && exit 1
+fi
 
 HOSTNIC=em0
 BRIDGE=bridge0

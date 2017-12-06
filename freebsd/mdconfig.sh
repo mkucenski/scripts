@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env bash
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 if [ "$1" = "-d" ]
 then

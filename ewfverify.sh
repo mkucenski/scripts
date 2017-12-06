@@ -9,7 +9,7 @@ if [ -z "$LOGFILE" ]; then
 	LOGFILE="$(STRIP_EXTENSION "$IMAGE")-ewfverify.log"
 fi
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "LOGFILE (optional - defaults to \$IMAGE-ewfverify.log)" && exit $COMMON_ERROR
+	USAGE "IMAGE" "LOGFILE (optional - defaults to \$IMAGE-ewfverify.log)" && exit 1
 fi
 
 ulimit -n 10240

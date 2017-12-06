@@ -6,7 +6,7 @@
 BASEDIR="$1"
 ALL_LOGFILE="$2"
 if [ $# -eq 0 ]; then
-	USAGE "BASEDIR" "ALL_LOGFILE (optional)" && exit $COMMON_ERROR
+	USAGE "BASEDIR" "ALL_LOGFILE (optional)" && exit 1
 fi
 
 START "$0" "$ALL_LOGFILE" "$*"
