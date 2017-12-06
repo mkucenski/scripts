@@ -5,9 +5,9 @@ SEARCH="$1"
 REPLACE="$2"
 BACKUPDIR="$3"
 if [ $# -eq 0 ]; then
-	USAGE "CMD_TEMPLATE ('{}' will be substituted by each text file line)" "(stdin) TEXT_FILE"
-	USAGE_DESCRIPTION "This script is meant to function similar to 'xargs -I {}'. It will replace every instance of '{}' in the command template with a line of text via STDIN, execute the resulting command, and repeat the process for each line."
-	USAGE_EXAMPLE "cat file_list.txt | exec-per-line.sh \"copy-as-hash.sh {} dest_directory/\""
+	USAGE "SEARCH" "REPLACE" "BACKUPDIR"
+	USAGE_DESCRIPTION "This script is meant to replace SEARCH with REPLACE within a series of files using GNU sed (gsed). Files are first copied to a backup directory for safe-keeping."
+	USAGE_EXAMPLE "cat file_list.txt | $(basename "$0") '#!\/bin\/bash' '#!\/usr\/bin\/env bash' ~/Temp/"
 	exit 1
 fi
 
