@@ -6,21 +6,16 @@ _UNISON_LOGDIR="$HOME/.unison/log"
 _UNISON_LOGFILE="$_UNISON_LOGDIR/unison-inc.log"
 
 function createDir() {
-	ERR=0
 	if [ ! -e "$1" ]; then
 		mkdir -p "$1"
-		ERR=$((ERR + $?))
 	fi
-	return $ERR
+	return $?
 }
 
 function createDirs() {
-	ERR=0
-	createDir "$1"
-	ERR=$((ERR + $?))
-	createDir "$2"
-	ERR=$((ERR + $?))
-	return $ERR
+	ERR1=$(createDir "$1")
+	ERR2=$(createDir "$2")
+	return $((ERR1 + ERR2))
 }
 
 function setup() {
@@ -63,13 +58,9 @@ function getlogfile() {
 function changeFlags() {
 	INFO "changeFlags($1)"
 
-	ERR=0
 	# Synchronization to an SMB share seems to result in files on the share getting marked as 'hidden'
 	# Use this function to get rid of that flag
 	chflags -R nohidden "$1"
-	ERR=$((ERR + $?))
-
-	return $ERR
 }
 
 function execUnison() {
@@ -85,13 +76,12 @@ function execUnison() {
 		_UNISON_ROOT2="$_UNISON_DST"
 	fi
 
-	INFO "--- $_UNISON_SRC <-> $_UNISON_DST ---"
-
 	if ( createDirs "$_UNISON_ROOT1" "$_UNISON_ROOT2" ); then
 		setup
 		_UNISON_PRF="$(buildprf "$_UNISON_ROOT1" "$_UNISON_ROOT2")"
 		_UNISON_LOG="$(getlogfile "$_UNISON_PRF")"
 		START "$0" "$_UNISON_LOG" "$*"
+		INFO "--- $_UNISON_ROOT1 <-> $_UNISON_ROOT2 ---" "$_UNISON_LOG"
 		LOG_VERSION "unison" "$(unison -version)" "$_UNISON_LOG"
 
 		LOG "$_UNISON_ROOT1 <-> $_UNISON_ROOT2" "$_UNISON_LOG"
@@ -112,12 +102,7 @@ function execRsync() {
 		_UNISON_SRCDIR="$_UNISON_SRCDIR/$_UNISON_SRCSUBDIR"
 	fi
 
-	ERR=0
-
 	# rsync -av --fileflags "$_UNISON_SRCDIR" "$_UNISON_DSTBASEDIR/"
 	rsync -av "$(NORMALIZEDIR "$_UNISON_SRCDIR")" "$(NORMALIZEDIR "$_UNISON_DSTBASEDIR")/"
-	ERR=$((ERR + $?))
-
-	return $ERR
 }
 
