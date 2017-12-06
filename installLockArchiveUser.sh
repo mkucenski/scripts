@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 cp lockArchiveUser.sh /usr/local/bin/
 chown root:wheel /usr/local/bin/lockArchiveUser.sh

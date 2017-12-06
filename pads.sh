@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 pads -D -i fxp1 -w /usr/local/var/log/pads_fxp1_assets.csv -n 192.168.0.0/16
 pads -D -i fxp0 -w /usr/local/var/log/pads_fxp0_assets.csv -n 192.168.1.0/24

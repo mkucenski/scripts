@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 cat /var/log/auth.log | grep "Invalid user" | gsed -r 's/.* (([[:digit:]]{1,3}\.){3}[[:digit:]]{1,3})$/\1/' > /tmp/blockedIPs.txt
 

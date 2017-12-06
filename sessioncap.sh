@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 interface=$1
 datetime=`date -j +%G%m%d%H%M%S`

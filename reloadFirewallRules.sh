@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #ipfw -q flush; ipfw /etc/ipfw.rules
 #ipfw reset

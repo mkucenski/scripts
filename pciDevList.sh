@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # pciconf -lv | grep -A 1 -B1 "device"
 

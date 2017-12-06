@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #This script does not work as the password is somehow encoded within the bits sent below.  Need to do more testing
 #to figure out if the password is accessible from the device.  This script simply illustrates how to send various 

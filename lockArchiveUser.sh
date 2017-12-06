@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 LOGGER="logger -s -t `basename "$0"`"
 INFOLOG="$LOGGER -p user.info"

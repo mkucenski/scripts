@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 directory=`dirname "$1"`
 filename=`basename "$1"`

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 ipfw pipe 1 config bw 250kbit/s
 ipfw add pipe 1 dst-port http
