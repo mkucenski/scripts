@@ -6,6 +6,7 @@ unison/unison-sync-elrond.sh
 unison/unison-sync-local.sh
 unison/*.prf
 .*.pid
+.bak.*
 test.sh
 easylist/
 windows/fciv.exe
