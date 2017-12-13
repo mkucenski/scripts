@@ -6,7 +6,7 @@ if [ $# -eq 0 ]; then
 	USAGE "LOGFILE" && exit 1
 fi
 
-EXPECTED_MD5=$(grep "MD5 Expected from Pattern Generation" "$LOGFILE" | tail -n 1 | $SEDCMD -r 's/([a-fA-F0-9]+) - MD5 Expected from Pattern Generation/\1/')
+EXPECTED_MD5=$(grep "MD5 expected from pattern generation" "$LOGFILE" | tail -n 1 | $SEDCMD -r 's/([a-fA-F0-9]+) - MD5 Expected from Pattern Generation/\1/')
 if [ -n "$EXPECTED_MD5" ]; then
 	echo "$EXPECTED_MD5"
 else

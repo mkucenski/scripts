@@ -15,11 +15,11 @@ ORIGINAL_HASH=$(ewfinfo "$IMAGE" | grep "MD5:" | $SEDCMD -r 's/.*MD5:[[:space:]]
 INFO "Original MD5: $ORIGINAL_HASH" "$LOGFILE"
 
 INFO "Exporting raw data to device ($DEVICE)..."
-BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
-ewfexport -l "$LOGFILE" -q -u -t - "$IMAGE" | dd of="$DEVICE" bs=$BS 2> >(tee -a "$LOGFILE" >&2)
+BS=$("${BASH_SOURCE%/*}/blocksize.sh" "$DEVICE")
+ewfexport -l "$LOGFILE" -q -u -t - "$IMAGE" | dd of="$DEVICE" bs="$BS" 2> >(tee -a "$LOGFILE" >&2)
 
 INFO "Hashing Target Device..."
-DEVICE_HASH=$(${BASH_SOURCE%/*}/diskmd5.sh "$DEVICE" | tr A-F a-f)
+DEVICE_HASH=$("${BASH_SOURCE%/*}/diskmd5.sh" "$DEVICE" | tr A-F a-f)
 INFO "Device MD5: $DEVICE_HASH" "$LOGFILE"
 
 if [ "$ORIGINAL_HASH" == "$DEVICE_HASH" ]; then

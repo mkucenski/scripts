@@ -6,7 +6,7 @@ DEST="$2"
 CASE="$3"
 EXAMINER="$4"
 if [ $# -eq 0 ]; then
-	USAGE "DEVICE" "BASE DEST. NAME" "CASE #" "EXAMINER" && exit $COMMON_SUCCESS
+	USAGE "DEVICE" "BASE DEST. NAME" "CASE #" "EXAMINER" && exit 1
 fi
 
 ewfacquire -u -c deflate:best -C "$CASE" -e "$EXAMINER" -f encase6 -l "$DEST-ewfacquire.log" -t "$DEST" "$DEVICE"

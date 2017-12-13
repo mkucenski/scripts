@@ -18,7 +18,7 @@ if [ -n "$MCTENTRY" ]; then
 	if [ -n "$FILE" ]; then
 		if [ -n "$INODE" ]; then
 			mkdir -p "$DEST/$(dirname "$FILE")"
-			icat -o $OFFSET "$IMAGE" $INODE 2> >(tee -a "$LOGFILE" >2&) > "$DEST/$FILE"
+			icat -o "$OFFSET" "$IMAGE" "$INODE" 2> >(tee -a "$LOGFILE" >2&) > "$DEST/$FILE"
 		fi
 	fi
 else

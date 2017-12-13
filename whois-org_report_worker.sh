@@ -38,7 +38,7 @@ if [ -e "$WHOIS_FILE" ]; then
 		fi
 	else
 		# If we still didn't find anything, then try to output each line of the data that is there--it often seems to be useful in figuring out the org.
-		ORG="$(cat "$WHOIS_FILE" | egrep -v "(Whois Query for|START|END|ARGS|BASE64)" | egrep -v "^$" | tr "\n" "|" | $SEDCMD -r 's/\|$/"/; s/\|/","/g; s/(.*)/"\1/')"
+		ORG="$(egrep -v "(Whois Query for|START|END|ARGS|BASE64)" < "$WHOIS_FILE" | egrep -v "^$" | tr "\n" "|" | $SEDCMD -r 's/\|$/"/; s/\|/","/g; s/(.*)/"\1/')"
 		echo "$SITE,$ORG"
 	fi
 else

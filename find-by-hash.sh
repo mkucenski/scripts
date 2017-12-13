@@ -12,7 +12,8 @@ if [ $# -ne 2 ]; then
 	USAGE "HASH" "DIR" && exit 1
 fi
 
-for FILE in $(find "$DIR" -type f); do
+find "$DIR" -type f -print0 |
+while IFS= read -r -d $'\0' FILE; do
 	FILE_HASH="$(md5 -r "$FILE" | gsed -r 's/([^[:space:]]+).*/\1/')"
 	if [ "$HASH" == "$FILE_HASH" ]; then
 		echo "Found: $FILE"

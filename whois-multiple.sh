@@ -13,6 +13,6 @@ if [ -z "$DESTDIR" ]; then
 fi
 
 while read -r LINE; do
-	${BASH_SOURCE%/*}/whois.sh "$LINE" "$DESTDIR"
+	"${BASH_SOURCE%/*}/whois.sh" "$LINE" "$DESTDIR"
 done < "$IP_FILE"
 

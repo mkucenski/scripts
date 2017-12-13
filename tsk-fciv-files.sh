@@ -14,7 +14,7 @@ KEY="1.75"
 
 MCT=$(MKTEMP "$0" || exit 1)
 INFO "Building List of All Files Found in Image/Device... ($MCT)"
-fls -o $OFFSET -m "" -F -r "$IMAGE" | $SEDCMD -r 's/^([[:digit:]]+\|)\/?/\1/' > "$MCT"
+fls -o "$OFFSET" -m "" -F -r "$IMAGE" | "$SEDCMD" -r 's/^([[:digit:]]+\|)\/?/\1/' > "$MCT"
 
 UNSORTED=$(MKTEMP "$0" || exit 1)
 INFO "Extracting and Hashing Each File... ($UNSORTED)"
@@ -24,7 +24,7 @@ while read LINE; do
 		INODE=$(_tsk_mct_inode "$LINE")
 		if [ -n "$FILE" ]; then
 			if [ -n "$INODE" ]; then
-				icat -o $OFFSET "$IMAGE" $INODE 2> >(tee -a "$LOGFILE" >&2) | ${BASH_SOURCE%/*}/fciv_worker_stdin.sh "$FILE" $DOSHA1 2> >(tee -a "$LOGFILE" >&2) >> "$UNSORTED"
+				icat -o "$OFFSET" "$IMAGE" "$INODE" 2> >(tee -a "$LOGFILE" >&2) | "${BASH_SOURCE%/*}/fciv_worker_stdin.sh" "$FILE" "$DOSHA1" 2> >(tee -a "$LOGFILE" >&2) >> "$UNSORTED"
 	 		fi
 		fi
 	else
@@ -33,7 +33,7 @@ while read LINE; do
 done < "$MCT"
 
 INFO "Sorting Based on File Name..."
-${BASH_SOURCE%/*}/fciv.sh 
+"${BASH_SOURCE%/*}/fciv.sh"
 sort --key=$KEY "$UNSORTED"
 
 rm "$MCT"

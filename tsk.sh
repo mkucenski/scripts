@@ -16,7 +16,7 @@ fi
 START "$0" "$LOGFILE" "$*"
 
 LOG "$CMD -o $OFFSET \"$IMAGE\" $INODE" "$LOGFILE"
-"$CMD" $(if [ -n "$OPTS" ]; then echo "$OPTS"; fi) -o $OFFSET "$IMAGE" $INODE | tee -a "$LOGFILE"
+"$CMD" "$(if [ -n "$OPTS" ]; then echo "$OPTS"; fi)" -o "$OFFSET" "$IMAGE" "$INODE" | tee -a "$LOGFILE"
 
 END "$0" "$LOGFILE"
 

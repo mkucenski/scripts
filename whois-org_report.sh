@@ -10,8 +10,9 @@ if [ $# -eq 0 ]; then
 fi
 
 if [ -e "$WHOIS_DIR" ]; then
-	for WHOIS_FILE in $(find "$WHOIS_DIR" -type f); do
-		${BASH_SOURCE%/*}/whois-org_report_worker.sh "$WHOIS_FILE"
+	find "$WHOIS_DIR" -type f -print0 |
+	while IFS= read -r -d $'\0' WHOIS_FILE; do
+		"${BASH_SOURCE%/*}/whois-org_report_worker.sh" "$WHOIS_FILE"
 	done
 else
 	ERROR "Whois dir doesn't exist!" "$0" && exit 1

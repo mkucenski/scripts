@@ -11,15 +11,10 @@ fi
 LOGFILE="$LOGDIR/$SERIALNUM-wipe.log"
 START "$0" "$LOGFILE" "$*"
 
-COUNT=1024
-BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
-SECTORS=$(${BASH_SOURCE%/*}/disksectors.sh "$DEVICE")
-SECTOR_SIZE=512
-SIZE=$(($SECTORS * $SECTOR_SIZE))
-BLOCKS=$(($SIZE / $BS))
+BS=$("${BASH_SOURCE%/*}/blocksize.sh" "$DEVICE")
 
 INFO "Verifying entire wiped device ($DEVICE) using (bs=$BS)..." "$LOGFILE"
-RESULTS=$(dd if="$DEVICE" bs=$BS | xxd -a)
+RESULTS=$(dd if="$DEVICE" bs="$BS" | xxd -a)
 INFO "$RESULTS" "$LOGFILE"
 
 END "$0" "$LOGFILE"

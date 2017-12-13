@@ -7,11 +7,10 @@ if [ $# -eq 0 ]; then
 	USAGE "DEVICE" "LOGFILE" && exit 1
 fi
 
-COUNT=1024
-BS=$(${BASH_SOURCE%/*}/blocksize.sh "$DEVICE")
+BS=$("${BASH_SOURCE%/*}/blocksize.sh" "$DEVICE")
 
-OS=`uname`
-if [ $OS = "Darwin" ]; then
+OS="$(uname)"
+if [ "$OS" = "Darwin" ]; then
 
 	INFO "Using MacOSX (diskutil secureErase)..." "$LOGFILE"
 	RESULTS=$(diskutil secureErase 0 "$DEVICE" 2>&1)
@@ -20,7 +19,7 @@ if [ $OS = "Darwin" ]; then
 else
 
 	INFO "Using dd (/dev/zero)..." "$LOGFILE"
-	RESULTS=$(dd if=/dev/zero of="$DEVICE" bs=$BS)
+	RESULT=$(dd if=/dev/zero of="$DEVICE" bs="$BS")
 	INFO "$RESULT" "$LOGFILE"
 
 fi
