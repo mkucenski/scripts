@@ -8,7 +8,7 @@ if [ $# -eq 0 ]; then
 fi
 
 if [ -e "$VMDIR/$REPL.vmx" ]; then
-	cat "$VMDIR/$REPL.vmx" | sed -r "s/displayName = \"$REPL\"/displayName = \"$WITH\"/;s/annotation = \".*\"/annotation = \"$WITH\"/" > "$VMDIR/$WITH.vmx"
+	cat "$VMDIR/$REPL.vmx" | sed -r "s/displayName = \".*\"/displayName = \"$WITH\"/;s/annotation = \".*\"/annotation = \"$WITH\"/" > "$VMDIR/$WITH.vmx"
 	diff "$VMDIR/$REPL.vmx" "$VMDIR/$WITH.vmx"
 	rm "$VMDIR/$REPL.vmx"
 else
