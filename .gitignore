@@ -1,9 +1,3 @@
-unison/unison-sync.sh
-unison/unison-sync-data.sh
-unison/unison-sync-images.sh
-unison/unison-sync-elrond-test.sh
-unison/unison-sync-elrond.sh
-unison/unison-sync-local.sh
 unison/*.prf
 .*.pid
 .bak.*

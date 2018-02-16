@@ -28,18 +28,33 @@ if [ -e "$WHOIS_FILE" ]; then
 		fi
 	fi
 
+	# Attempt to pull out "Country", ARIN reports the info we need right here.
+	COUNTRY="$(grep -i "Country:" "$WHOIS_FILE" | $SEDCMD -r 's/Country:[[:space:]]+(.+)/\1/')"
+	if [ -n "$COUNTRY" ]; then
+
+		# If ARIN says someone else is responsible, try and pull out their version of the org name.
+		if [ "$COUNTRY" == "Asia Pacific Network Information Centre" ]; then
+			COUNTRY="$(grep -i "Country:" "$WHOIS_FILE" | $SEDCMD -r 's/Country:[[:space:]]+(.+)/\1/')"
+		elif [ "$COUNTRY" == "RIPE Network Coordination Centre" ]; then
+			COUNTRY="$(grep -i "Country:" "$WHOIS_FILE" | $SEDCMD -r 's/Country:[[:space:]]+(.+)/\1/')"
+		elif [ "$COUNTRY" == "African Network Information Center" ]; then
+			COUNTRY="$(grep -i "Country:" "$WHOIS_FILE" | $SEDCMD -r 's/Country:[[:space:]]+(.+)/\1/')"
+		elif [ "$COUNTRY" == "Latin American and Caribbean IP address Regional Registry" ]; then
+			COUNTRY="$(grep -i "Country:" "$WHOIS_FILE" | $SEDCMD -r 's/Country:[[:space:]]+(.+)/\1/')"
+		fi
+	fi
+
 	# If we found something, output in CSV
 	if [ -n "$ORG" ]; then
 		echo -n "$SITE,\"$ORG\""
 		if [ -n "$SERVER" ]; then
-			echo ",\"(via $SERVER)\""
-		else
-			echo
+			echo -n ",\"(via $SERVER)\""
 		fi
+		echo ",$COUNTRY"
 	else
 		# If we still didn't find anything, then try to output each line of the data that is there--it often seems to be useful in figuring out the org.
 		ORG="$(egrep -v "(Whois Query for|START|END|ARGS|BASE64)" < "$WHOIS_FILE" | egrep -v "^$" | tr "\n" "|" | $SEDCMD -r 's/\|$/"/; s/\|/","/g; s/(.*)/"\1/')"
-		echo "$SITE,$ORG"
+		echo "$SITE,$ORG,$COUNTRY"
 	fi
 else
 	ERROR "Whois file doesn't exist!" "$0" && exit 1

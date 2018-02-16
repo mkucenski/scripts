@@ -5,7 +5,7 @@
 
 IP_FILE="$1"
 DESTDIR="$2"
-if [ $# -ge 1 ]; then
+if [ $# -eq 0 ]; then
 	USAGE "IP_FILE" "DESTDIR" && exit 1
 fi
 if [ -z "$DESTDIR" ]; then
