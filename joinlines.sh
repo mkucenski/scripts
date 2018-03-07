@@ -7,3 +7,4 @@ if [ $# -eq 0 ]; then
 fi
 
 cat /dev/stdin | gsed -r ":a;/$DELIM$/{N;s/\n//;ba}"
+
