@@ -11,23 +11,29 @@ SITE_STRIPPED="$(echo "$SITE" | $SEDCMD -r -f "${BASH_SOURCE%/*}/sed/url-strip-t
 
 if [ ! -e "$DESTDIR/$SITE_STRIPPED" ]; then
 	mkdir -p "$DESTDIR/$SITE_STRIPPED"
+	LOG="$(FULL_PATH "$DESTDIR")/$SITE_STRIPPED/$SITE_STRIPPED.log"
+	START "$0" "$LOG" "$*"
+
 	pushd "$DESTDIR/$SITE_STRIPPED"
 
-	LOG="./$SITE_STRIPPED.log"
-	START "$0" "$LOG" "$*"
-	LOG_EXEC_VERSION "wget" "$(wget --version | grep "GNU Wget")" "$LOG"
+	LOG_VERSION "wget" "$(wget --version | grep "GNU Wget")" "$LOG"
 
 	# Save whois/dig records for specified site
 	${BASH_SOURCE%/*}/whois.sh "$SITE_STRIPPED" ./
 	${BASH_SOURCE%/*}/dig.sh "$SITE_STRIPPED" ./
 
 	# wget --recursive --level=1 --append-output "$LOG" --show-progress -t 3 --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17" --span-hosts --adjust-extension --page-requisites --server-response --convert-links --backup-converted "$SITE"
-	wget --recursive --append-output "$LOG" --show-progress -t 3 --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17" --adjust-extension --page-requisites --server-response --convert-links --backup-converted "$SITE"
+	wget --recursive --level=1 --append-output "$LOG" --show-progress -t 3 --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17" --adjust-extension --page-requisites --server-response --convert-links --backup-converted "$SITE"
+
+	# Hash results for retention
+	"${BASH_SOURCE%/*}/fciv_recursive.sh" ./ 0 > "./$SITE_STRIPPED.md5"
 
 	popd
 
-	# Hash/archive results for retention
-	"${BASH_SOURCE%/*}/fciv_archive.sh" "$DESTDIR/$SITE_STRIPPED" 0 "$DESTDIR/$SITE_STRIPPED.7z"
+	# Archive results
+ 	ARCHIVE="$DESTDIR/${SITE_STRIPPED}_$(DATE).7z"
+	7z a "$ARCHIVE" "$DESTDIR/$SITE_STRIPPED"
+	"${BASH_SOURCE%/*}/fciv.sh" "$ARCHIVE" > "$ARCHIVE.md5"
 
 	END "$0" "$LOG"
 else
