@@ -69,9 +69,8 @@ function SUDO_USER() {
 }
 
 function FULL_PATH() {
-	# Return the full/absolute path for a file
-	FILE="$1"
-	echo "$(cd "$(dirname "$FILE")"; pwd)/$(basename "$FILE")"
+	# Return the full/absolute path
+	echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
 }
 
 function LOG_VERSION() {
