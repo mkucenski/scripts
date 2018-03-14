@@ -2,7 +2,9 @@
 
 PREFIX="$HOME/Development/opt"
 LIBEWF="$HOME/Development/GitHub/sleuthkit/libewf_64bit/opt"
-./configure --prefix="$PREFIX" --with-libewf="$LIBEWF"
+./configure --prefix="$PREFIX" --with-libewf="$LIBEWF" &&
+		  make &&
+		  make install
 
 # `configure' configures sleuthkit 4.6.0 to adapt to many kinds of systems.
 # 

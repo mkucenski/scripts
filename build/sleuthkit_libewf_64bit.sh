@@ -2,7 +2,9 @@
 . "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 PREFIX="$(FULL_PATH "./")/opt"
-./configure --prefix="$PREFIX" --with-openssl=/opt/local
+./configure --prefix="$PREFIX" --with-openssl=/opt/local &&
+		  make &&
+		  make install
 
 # `configure' configures libewf 20130416 to adapt to many kinds of systems.
 # 
