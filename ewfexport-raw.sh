@@ -2,13 +2,14 @@
 . "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 IMAGE="$1"
-OFFSET="$2"
-COUNT="$3"
+SECTOR_SIZE="$2"
+OFFSET="$3"
+COUNT="$4"
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "OFFSET" "COUNT (512-byte sectors)" && exit 1
+	USAGE "IMAGE" "SECTOR_SIZE" "OFFSET" "COUNT" && exit 1
 fi
 
-ewfexport -q -u -t - -o "$OFFSET" "$IMAGE" | dd bs=512 count="$COUNT"
+ewfexport -q -u -t - -o $(($SECTOR_SIZE * $OFFSET)) -B $(($SECTOR_SIZE * $COUNT)) "$IMAGE" 
 
 # ewfexport 20140608
 # 
