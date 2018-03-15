@@ -10,11 +10,6 @@ if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "DEST" && exit 1
 fi
 
-ulimit -n 10240
-if [ $? -ne 0 ]; then 
-	ERROR "Unable to set increased ulimit value! Try execution as 'root'." "$0" "$LOGFILE" && exit 1
-fi
-
 if [ ! -e "$DEST" ]; then
 	mkdir -p "$DEST"
 fi

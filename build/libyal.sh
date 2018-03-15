@@ -1,12 +1,12 @@
-#!/usr/bin/env bash
-. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
+#!/bin/sh
 
-PREFIX="$(FULL_PATH "./")/opt"
-./configure --prefix="$PREFIX" --with-openssl=/opt/local --with-libcstring=no &&
-		  make &&
-		  make install
+./synclibs.sh && 
+	./autogen.sh && 
+	./configure --prefix="$HOME/Development/opt/" --with-openssl=/opt/local && 
+	make && 
+	make install
 
-# `configure' configures libewf 20130416 to adapt to many kinds of systems.
+# `configure' configures libewf 20180204 to adapt to many kinds of systems.
 # 
 # Usage: ./configure [OPTION]... [VAR=VALUE]...
 # 
@@ -73,7 +73,8 @@ PREFIX="$(FULL_PATH "./")/opt"
 #   --disable-option-checking  ignore unrecognized --enable/--with options
 #   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
 #   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
-#   --disable-largefile     omit support for large files
+#   --enable-silent-rules   less verbose build output (undo: "make V=1")
+#   --disable-silent-rules  verbose build output (undo: "make V=0")
 #   --enable-dependency-tracking
 #                           do not reject slow dependency extractors
 #   --disable-dependency-tracking
@@ -85,41 +86,58 @@ PREFIX="$(FULL_PATH "./")/opt"
 #   --disable-libtool-lock  avoid locking (might break parallel builds)
 #   --disable-nls           do not use Native Language Support
 #   --disable-rpath         do not hardcode runtime library paths
+#   --disable-largefile     omit support for large files
 #   --enable-winapi         enable WINAPI support for cross-compilation
 #                           [default=auto-detect]
 #   --enable-wide-character-type
 #                           enable wide character type support [default=no]
-#   --enable-static-executables
-#                           build static executables (binaries) [default=no]
-#   --enable-low-level-functions
-#                           use libewf's low level read and write functions in
-#                           the ewftools [default=no]
+#   --enable-multi-threading-support
+#                           enable multi-threading support [default=yes]
+#   --enable-openssl-evp-cipher
+#                           enable openssl EVP CIPHER support if available
+#                           [default=auto-detect]
+#   --enable-openssl-evp-md enable openssl EVP MD support if available
+#                           [default=auto-detect]
 #   --enable-verbose-output enable verbose output [default=no]
 #   --enable-debug-output   enable debug output [default=no]
 #   --enable-python         build Python bindings [default=no]
-#   --enable-v1-api         enable version 1 API [default=no]
+#   --enable-python2        build Python 2 bindings [default=no]
+#   --enable-python3        build Python 3 bindings [default=no]
+#   --enable-static-executables
+#                           build static executables (binaries) [default=no]
 # 
 # Optional Packages:
 #   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
 #   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
 #   --with-pic[=PKGS]       try to use only PIC/non-PIC objects [default=use
 #                           both]
+#   --with-aix-soname=aix|svr4|both
+#                           shared library versioning (aka "SONAME") variant to
+#                           provide on AIX, [default=aix].
 #   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
-#   --with-sysroot=DIR Search for dependent libraries within DIR
-#                         (or the compiler's sysroot if not specified).
+#   --with-sysroot[=DIR]    Search for dependent libraries within DIR (or the
+#                           compiler's sysroot if not specified).
 #   --with-gnu-ld           assume the C compiler uses GNU ld default=no
 #   --with-libiconv-prefix[=DIR]  search for libiconv in DIR/include and DIR/lib
 #   --without-libiconv-prefix     don't search for libiconv in includedir and libdir
 #   --with-libintl-prefix[=DIR]  search for libintl in DIR/include and DIR/lib
 #   --without-libintl-prefix     don't search for libintl in includedir and libdir
-#   --with-libcstring[=DIR] search for libcstring in includedir and libdir or in
-#                           the specified DIR, or no if to use local version
-#                           [default=auto-detect]
 #   --with-libcerror[=DIR]  search for libcerror in includedir and libdir or in
 #                           the specified DIR, or no if to use local version
 #                           [default=auto-detect]
+#   --with-libcthreads[=DIR]
+#                           search for libcthreads in includedir and libdir or
+#                           in the specified DIR, or no if to use local version
+#                           [default=auto-detect]
+#   --with-pthread[=DIR]    search for pthread in includedir and libdir or in
+#                           the specified DIR, or no if not to use pthread
+#                           [default=auto-detect]
 #   --with-libcdata[=DIR]   search for libcdata in includedir and libdir or in
 #                           the specified DIR, or no if to use local version
+#                           [default=auto-detect]
+#   --with-libcdatetime[=DIR]
+#                           search for libcdatetime in includedir and libdir or
+#                           in the specified DIR, or no if to use local version
 #                           [default=auto-detect]
 #   --with-libclocale[=DIR] search for libclocale in includedir and libdir or in
 #                           the specified DIR, or no if to use local version
@@ -145,10 +163,13 @@ PREFIX="$(FULL_PATH "./")/opt"
 #   --with-libfcache[=DIR]  search for libfcache in includedir and libdir or in
 #                           the specified DIR, or no if to use local version
 #                           [default=auto-detect]
-#   --with-libfvalue[=DIR]  search for libfvalue in includedir and libdir or in
+#   --with-libfdata[=DIR]   search for libfdata in includedir and libdir or in
 #                           the specified DIR, or no if to use local version
 #                           [default=auto-detect]
-#   --with-libmfdata[=DIR]  search for libmfdata in includedir and libdir or in
+#   --with-libfguid[=DIR]   search for libfguid in includedir and libdir or in
+#                           the specified DIR, or no if to use local version
+#                           [default=auto-detect]
+#   --with-libfvalue[=DIR]  search for libfvalue in includedir and libdir or in
 #                           the specified DIR, or no if to use local version
 #                           [default=auto-detect]
 #   --with-zlib[=DIR]       search for zlib in includedir and libdir or in the
@@ -170,26 +191,29 @@ PREFIX="$(FULL_PATH "./")/opt"
 #   --with-libcaes[=DIR]    search for libcaes in includedir and libdir or in
 #                           the specified DIR, or no if to use local version
 #                           [default=auto-detect]
-#   --with-libcsystem[=DIR] search for libcsystem in includedir and libdir or in
+#   --with-pyprefix[=no]    use `python-config --prefix' to determine the prefix
+#                           of pythondir instead of --prefix [default=no]
+#   --with-pythondir[=no]   use to specify the Python directory (pythondir)
+#                           [default=no]
+#   --with-pythondir2[=no]  use to specify the Python 2 directory (pythondir2)
+#                           [default=no]
+#   --with-pythondir3[=no]  use to specify the Python 3 directory (pythondir3)
+#                           [default=no]
+#   --with-libodraw[=DIR]   search for libodraw in includedir and libdir or in
+#                           the specified DIR, or no if to use local version
+#                           [default=auto-detect]
+#   --with-libsmdev[=DIR]   search for libsmdev in includedir and libdir or in
+#                           the specified DIR, or no if to use local version
+#                           [default=auto-detect]
+#   --with-libsmraw[=DIR]   search for libsmraw in includedir and libdir or in
 #                           the specified DIR, or no if to use local version
 #                           [default=auto-detect]
 #   --with-libuuid[=DIR]    search for libuuid in includedir and libdir or in
 #                           the specified DIR, or no if not to use libuuid
 #                           [default=auto-detect]
-#   --with-libodraw[=DIR]   search for libodraw in includedir and libdir or in
-#                           the specified DIR, or no if to use local version
-#                           [default=auto-detect]
-#   --with-libmsdev[=DIR]   search for libmsdev in includedir and libdir or in
-#                           the specified DIR, or no if to use local version
-#                           [default=auto-detect]
-#   --with-libmsraw[=DIR]   search for libmsraw in includedir and libdir or in
-#                           the specified DIR, or no if to use local version
-#                           [default=auto-detect]
 #   --with-libfuse[=DIR]    search for libfuse in includedir and libdir or in
 #                           the specified DIR, or no if not to use libfuse
 #                           [default=auto-detect]
-#   --with-pyprefix[=no]    use `python-config --prefix' to determine the Python
-#                           directories [default=no]
 # 
 # Some influential environment variables:
 #   CC          C compiler command
@@ -200,23 +224,29 @@ PREFIX="$(FULL_PATH "./")/opt"
 #   CPPFLAGS    (Objective) C/C++ preprocessor flags, e.g. -I<include dir> if
 #               you have headers in a nonstandard directory <include dir>
 #   CPP         C preprocessor
+#   LT_SYS_LIBRARY_PATH
+#               User-defined run-time library search path.
 #   PKG_CONFIG  path to pkg-config utility
 #   PKG_CONFIG_PATH
 #               directories to add to pkg-config's search path
 #   PKG_CONFIG_LIBDIR
 #               path overriding pkg-config's built-in search path
-#   libcstring_CFLAGS
-#               C compiler flags for libcstring, overriding pkg-config
-#   libcstring_LIBS
-#               linker flags for libcstring, overriding pkg-config
 #   libcerror_CFLAGS
 #               C compiler flags for libcerror, overriding pkg-config
 #   libcerror_LIBS
 #               linker flags for libcerror, overriding pkg-config
+#   libcthreads_CFLAGS
+#               C compiler flags for libcthreads, overriding pkg-config
+#   libcthreads_LIBS
+#               linker flags for libcthreads, overriding pkg-config
 #   libcdata_CFLAGS
 #               C compiler flags for libcdata, overriding pkg-config
 #   libcdata_LIBS
 #               linker flags for libcdata, overriding pkg-config
+#   libcdatetime_CFLAGS
+#               C compiler flags for libcdatetime, overriding pkg-config
+#   libcdatetime_LIBS
+#               linker flags for libcdatetime, overriding pkg-config
 #   libclocale_CFLAGS
 #               C compiler flags for libclocale, overriding pkg-config
 #   libclocale_LIBS
@@ -248,14 +278,18 @@ PREFIX="$(FULL_PATH "./")/opt"
 #               C compiler flags for libfcache, overriding pkg-config
 #   libfcache_LIBS
 #               linker flags for libfcache, overriding pkg-config
+#   libfdata_CFLAGS
+#               C compiler flags for libfdata, overriding pkg-config
+#   libfdata_LIBS
+#               linker flags for libfdata, overriding pkg-config
+#   libfguid_CFLAGS
+#               C compiler flags for libfguid, overriding pkg-config
+#   libfguid_LIBS
+#               linker flags for libfguid, overriding pkg-config
 #   libfvalue_CFLAGS
 #               C compiler flags for libfvalue, overriding pkg-config
 #   libfvalue_LIBS
 #               linker flags for libfvalue, overriding pkg-config
-#   libmfdata_CFLAGS
-#               C compiler flags for libmfdata, overriding pkg-config
-#   libmfdata_LIBS
-#               linker flags for libmfdata, overriding pkg-config
 #   zlib_CFLAGS C compiler flags for zlib, overriding pkg-config
 #   zlib_LIBS   linker flags for zlib, overriding pkg-config
 #   bzip2_CFLAGS
@@ -273,12 +307,6 @@ PREFIX="$(FULL_PATH "./")/opt"
 #               C compiler flags for libcaes, overriding pkg-config
 #   libcaes_LIBS
 #               linker flags for libcaes, overriding pkg-config
-#   libcsystem_CFLAGS
-#               C compiler flags for libcsystem, overriding pkg-config
-#   libcsystem_LIBS
-#               linker flags for libcsystem, overriding pkg-config
-#   uuid_CFLAGS C compiler flags for uuid, overriding pkg-config
-#   uuid_LIBS   linker flags for uuid, overriding pkg-config
 #   libodraw_CFLAGS
 #               C compiler flags for libodraw, overriding pkg-config
 #   libodraw_LIBS
@@ -297,6 +325,8 @@ PREFIX="$(FULL_PATH "./")/opt"
 #               C compiler flags for libsmraw, overriding pkg-config
 #   libsmraw_LIBS
 #               linker flags for libsmraw, overriding pkg-config
+#   uuid_CFLAGS C compiler flags for uuid, overriding pkg-config
+#   uuid_LIBS   linker flags for uuid, overriding pkg-config
 #   fuse_CFLAGS C compiler flags for fuse, overriding pkg-config
 #   fuse_LIBS   linker flags for fuse, overriding pkg-config
 # 
