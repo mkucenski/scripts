@@ -1,4 +1,5 @@
 unison/*.prf
+*.swp
 .*.pid
 .bak.*
 test.sh
