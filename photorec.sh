@@ -18,7 +18,7 @@ START "$0" "$LOGFILE" "$*"
 
 pushd "$DEST"
 
-INFO "Starting photorec..." "$LOGFILE"
+INFO "Starting photorec ($IMAGE)..." "$LOGFILE"
 photorec /version >> "$LOGFILE" 2>> "$LOGFILE"
 photorec /log /d "$DEST/" "$IMAGE" 2>> "$LOGFILE"
 mkdir ./recup_dirs
