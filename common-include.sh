@@ -73,6 +73,12 @@ function FULL_PATH() {
 	echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
 }
 
+function EXEC_CMD() {
+	# Evaluate/execute the command given by a string; log the command as well as send to stderr
+	INFO_ERR "$1" "$2"
+	eval "$1"
+}
+
 function LOG_VERSION() {
 	# LOG an executable name (e.g. dig) and it's version string into the given log file for future reference.
 
@@ -140,7 +146,7 @@ function CHECK_ROOT() {
 }
 
 function INFO_ERR() {
-	# Output message to stderr nd LOG (if specified)
+	# Output message to stderr and LOG (if specified)
 
 	_COMMON_INFO_MSG="$1"
 	_COMMON_INFO_LOG="$2"
