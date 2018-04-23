@@ -15,7 +15,7 @@ function NOTIFY() {
 	_COMMON_NOTIFY_OS="$(uname)"
 	if [ "$_COMMON_NOTIFY_OS" = "Darwin" ]; then
 		INFO "$_COMMON_NOTIFY_SRC: $_COMMON_NOTIFY_MSG"
-		"${BASH_SOURCE%/*}/macOS/notification.sh" "$_COMMON_NOTIFY_MSG" "$_COMMON_NOTIFY_SRC" ""
+		"${BASH_SOURCE%/*}/macOS/notification.sh" "$(DATETIME): $_COMMON_NOTIFY_MSG" "$_COMMON_NOTIFY_SRC" ""
 	else
 		INFO "$_COMMON_NOTIFY_SRC: $_COMMON_NOTIFY_MSG"
 	fi

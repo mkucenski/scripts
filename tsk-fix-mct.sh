@@ -3,11 +3,10 @@
 . "${BASH_SOURCE%/*}/tsk-include.sh" || exit 1
 
 MCT="$1"
+IDENTIFIER="$2"
 if [ $# -eq 0 ]; then
-	USAGE "MCT" && exit 1
+	USAGE "MCT" "IDENTIFIER" && exit 1
 fi
 
-IMAGE_NAME="$(STRIP_EXTENSION "$(basename "$MCT")")"
-
-$SEDCMD -r "s/\|(vol[[:digit:]]+[^|]+)\|/|$IMAGE_NAME\/\1|/" "$MCT"
+$SEDCMD -r "s/\|(vol[[:digit:]]+[^|]+)\|/|$IDENTIFIER\/\1|/" "$MCT"
 
