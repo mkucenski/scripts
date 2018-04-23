@@ -11,19 +11,20 @@ SITE_STRIPPED="$(echo "$SITE" | $SEDCMD -r -f "${BASH_SOURCE%/*}/sed/url-strip-t
 
 if [ ! -e "$DESTDIR/$SITE_STRIPPED" ]; then
 	mkdir -p "$DESTDIR/$SITE_STRIPPED"
-	LOG="$(FULL_PATH "$DESTDIR")/$SITE_STRIPPED/$SITE_STRIPPED.log"
-	START "$0" "$LOG" "$*"
+	LOGFILE="$(FULL_PATH "$DESTDIR")/$SITE_STRIPPED/$SITE_STRIPPED.log"
+	START "$0" "$LOGFILE" "$*"
 
 	pushd "$DESTDIR/$SITE_STRIPPED"
 
-	LOG_VERSION "wget" "$(wget --version | grep "GNU Wget")" "$LOG"
+	LOG_VERSION "wget" "$(wget --version | grep "GNU Wget")" "$LOGFILE"
 
 	# Save whois/dig records for specified site
 	${BASH_SOURCE%/*}/whois.sh "$SITE_STRIPPED" ./
 	${BASH_SOURCE%/*}/dig.sh "$SITE_STRIPPED" ./
 
-	# wget --recursive --level=1 --append-output "$LOG" --show-progress -t 3 --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17" --span-hosts --adjust-extension --page-requisites --server-response --convert-links --backup-converted "$SITE"
-	wget --recursive --level=1 --append-output "$LOG" --show-progress -t 3 --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17" --adjust-extension --page-requisites --server-response --convert-links --backup-converted "$SITE"
+	# wget --recursive --level=1 --append-output "$LOGFILE" --show-progress -t 3 --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17" --span-hosts --adjust-extension --page-requisites --server-response --convert-links --backup-converted "$SITE"
+	CMD="wget --recursive --level=1 --append-output \"$LOGFILE\" --show-progress -t 3 --user-agent=\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17\" --adjust-extension --page-requisites --server-response --convert-links --backup-converted \"$SITE\""
+	EXEC_CMD "$CMD" "$LOGFILE"
 
 	# Hash results for retention
 	"${BASH_SOURCE%/*}/fciv_recursive.sh" ./ 0 > "./$SITE_STRIPPED.md5"
@@ -35,7 +36,7 @@ if [ ! -e "$DESTDIR/$SITE_STRIPPED" ]; then
 	7z a "$ARCHIVE" "$DESTDIR/$SITE_STRIPPED"
 	"${BASH_SOURCE%/*}/fciv.sh" "$ARCHIVE" > "$ARCHIVE.md5"
 
-	END "$0" "$LOG"
+	END "$0" "$LOGFILE"
 else
 	ERROR "Site directory ($DESTDIR/$SITE_STRIPPED) already exists!" "$0" && exit 1
 fi

@@ -13,8 +13,8 @@ fi
 LOGFILE="$(STRIP_EXTENSION "$DEST_IMAGE").log"
 START "$0" "$LOGFILE" "$*"
 
-CMD="ewfexport -q -u -f ewf -t "$DEST_IMAGE" -l "$LOGFILE" -o $(($SECTOR_SIZE * $OFFSET)) -B $(($SECTOR_SIZE * $COUNT)) "$IMAGE""
-EXEC_CMD "$CMD"
+CMD="ewfexport -q -u -f ewf -t \"$DEST_IMAGE\" -l \"$LOGFILE\" -o $(($SECTOR_SIZE * $OFFSET)) -B $(($SECTOR_SIZE * $COUNT)) \"$IMAGE\""
+EXEC_CMD "$CMD" "$LOGFILE"
 
 END "$0" "$LOGFILE"
 

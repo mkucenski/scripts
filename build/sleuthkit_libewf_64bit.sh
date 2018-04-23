@@ -1,10 +1,25 @@
 #!/usr/bin/env bash
 . "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
+# I'm not sure why TSK isn't keeping up more closely with libewf, despite it's "beta" status. In any
+# case, to compile TSK you have to use the last "stable" release of libewf dated 20130416. It can be
+# downloaded here:
+#
+#		https://github.com/sleuthkit/libewf_64bit
+# 
+# This script is meant to get things working on macOS. I found that the build process can sometimes
+# find other versions of various libyal libraries--setting --with-...=no causes this build to use
+# local copies of those libraries that specifically work with this version of libewf. Again, not
+# sure why TSK isn't keeping up... it just makes things more complicated...
+
 PREFIX="$(FULL_PATH "./")/opt"
-./configure --prefix="$PREFIX" --with-openssl=/opt/local --with-libcstring=no &&
+if [ ! -e "$PREFIX" ]; then
+	mkdir -p "$PREFIX"
+fi
+./configure --prefix="$PREFIX" --with-openssl=/opt/local --with-libcstring=no --with-libcerror=no &&
 		  make &&
-		  make install
+		  make install &&
+		  echo; ./opt/bin/ewfinfo -V
 
 # `configure' configures libewf 20130416 to adapt to many kinds of systems.
 # 

@@ -75,7 +75,7 @@ function FULL_PATH() {
 
 function EXEC_CMD() {
 	# Evaluate/execute the command given by a string; log the command as well as send to stderr
-	INFO_ERR "$1" "$2"
+	INFO_ERR "CMD: $1" "$2"
 	eval "$1"
 }
 

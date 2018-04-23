@@ -16,7 +16,8 @@ INFO "Original MD5: $ORIGINAL_HASH" "$LOGFILE"
 
 INFO "Exporting raw data to device ($DEVICE)..."
 BS=$("${BASH_SOURCE%/*}/blocksize.sh" "$DEVICE")
-ewfexport -l "$LOGFILE" -q -u -t - "$IMAGE" | dd of="$DEVICE" bs="$BS" 2> >(tee -a "$LOGFILE" >&2)
+CMD="ewfexport -l \"$LOGFILE\" -q -u -t - \"$IMAGE\" | dd of=\"$DEVICE\" bs=\"$BS\" 2> >(tee -a \"$LOGFILE\" >&2)"
+EXEC_CMD "$CMD" "$LOGFILE"
 
 INFO "Hashing Target Device..."
 DEVICE_HASH=$("${BASH_SOURCE%/*}/diskmd5.sh" "$DEVICE" | tr A-F a-f)

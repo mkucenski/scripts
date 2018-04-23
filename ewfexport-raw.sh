@@ -9,7 +9,7 @@ if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "SECTOR_SIZE" "OFFSET" "COUNT" && exit 1
 fi
 
-ewfexport -q -u -t - -o $(($SECTOR_SIZE * $OFFSET)) -B $(($SECTOR_SIZE * $COUNT)) "$IMAGE" 
+EXEC_CMD "ewfexport -q -u -f raw -t - -o $(($SECTOR_SIZE * $OFFSET)) -B $(($SECTOR_SIZE * $COUNT)) \"$IMAGE\""
 
 # ewfexport 20140608
 # 
