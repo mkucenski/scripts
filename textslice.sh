@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 COUNT=$1
-IT=$2
+ITERATION=$2
+if [ $# -eq 0 ]; then
+	USAGE "COUNT" "ITERATION" "< (STDIN)" && exit 1
+fi
 
-cat /dev/stdin | head -n $(($IT * $COUNT)) | tail -n $COUNT
+head -n $((ITERATION * COUNT)) < /dev/stdin | tail -n "$COUNT"
+
