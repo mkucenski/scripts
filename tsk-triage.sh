@@ -25,6 +25,7 @@ if [ ! -f "$DISK" ]; then
 	INFO "Display forensic operating system disk information (diskutil)..." "$LOG"
 	INFO "-----------------------------------------------------------------------" "$LOG"
 	INFO "$(diskutil info "$DISK")" "$LOG" | tee "$OUTPUTDIR/$NAME-diskutil.txt"
+	INFO "" "$LOG"
 	INFO "$(diskutil list "$DISK")" "$LOG" | tee -a "$OUTPUTDIR/$NAME-diskutil.txt"
 	INFO "" "$LOG"
 else
