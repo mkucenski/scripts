@@ -28,6 +28,7 @@ if [ ! -f "$DISK" ]; then
 	INFO "" "$LOG"
 	INFO "$(diskutil list "$DISK")" "$LOG" | tee -a "$OUTPUTDIR/$NAME-diskutil.txt"
 	INFO "" "$LOG"
+	# TODO - diskutil apfs list/listUsers...; diskutil corestorage list/info...
 else
 	INFO "-----------------------------------------------------------------------" "$LOG"
 	INFO "Show meta data stored in EWF files (ewfinfo)..." "$LOG"
