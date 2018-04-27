@@ -5,7 +5,7 @@ if [ $(CHECK_ROOT) != true ]; then
 	ERROR "MacPorts *MUST* be run as 'root'!" && exit 1
 fi
 
-LOGFILE="$(echo ~)/Logs/macports-reinstall.log"
+LOGFILE="$(echo ~)/Logs/macports-reinstall-$(HOSTNAME).log"
 
 START "$0" "$LOGFILE" "$*"
 
