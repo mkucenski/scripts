@@ -278,3 +278,8 @@ function UNLOCK {
 
 	rm -f "$_COMMON_LOCK"
 }
+
+function HOSTNAME {
+	hostname | "$SEDCMD" -r 's/\.local//'
+}
+
