@@ -18,7 +18,7 @@ if [ ! -f "$DISK" ]; then
 	INFO "-----------------------------------------------------------------------" "$LOG"
 	INFO "Display forensic operating system disk information (system_profiler)..." "$LOG"
 	INFO "-----------------------------------------------------------------------" "$LOG"
-	INFO "$(system_profiler SPUSBDataType SPParallelATADataType SPCardReaderDataType SPFireWireDataType SPHardwareRAIDDataType SPNVMeDataType SPParallelSCSIDataType SPSASDataType SPSerialATADataType SPThunderboltDataType | grep -B 14 -A 4 "BSD Name: $(basename "$DISK" | $SEDCMD -r 's/^r//')$" | $SEDCMD -r 's/^[[:space:]]*//; /^$/d')" "$LOG" | tee "$OUTPUTDIR/$NAME-system_profiler.txt"
+	INFO "$(system_profiler SPUSBDataType SPParallelATADataType SPCardReaderDataType SPFireWireDataType SPHardwareRAIDDataType SPNVMeDataType SPParallelSCSIDataType SPSASDataType SPSerialATADataType SPThunderboltDataType | grep -B 14 -A 4 "BSD Name: $(basename "$DISK" | $SEDCMD -r 's/^r//')" | $SEDCMD -r 's/^[[:space:]]*//; /^$/d')" "$LOG" | tee "$OUTPUTDIR/$NAME-system_profiler.txt"
 	INFO "" "$LOG"
 
 	INFO "-----------------------------------------------------------------------" "$LOG"
@@ -68,12 +68,16 @@ INFO "Collect MAC times from a disk image into a body file (tsk_gettimes)..." "$
 INFO "-----------------------------------------------------------------------" "$LOG"
 LOG_VERSION "tsk_gettimes" "$(tsk_gettimes -V)" "$LOG"
 LOG_VERSION "datatime" "$(datatime --version)" "$LOG"
-tsk_gettimes "$DISK" > "$OUTPUTDIR/$NAME.mct.tmp"
-"${BASH_SOURCE%/*}/tsk-fix-mct.sh" "$OUTPUTDIR/$NAME.mct.tmp" "$NAME" | tee "$OUTPUTDIR/$NAME.mct" | datatime > "$OUTPUTDIR/$NAME-mct.txt"
-if [ -e "$OUTPUTDIR/$NAME.mct" ]; then
-	# Only delete the .mct.tmp file if the reprocessing was successful.
-	rm "$OUTPUTDIR/$NAME.mct.tmp"
-fi
+tsk_gettimes "$DISK" > "$OUTPUTDIR/$NAME.mct"
+datatime "$OUTPUTDIR/$NAME.mct" > "$OUTPUTDIR/$NAME-mct.txt"
+# TODO Somewhere along the line, for an exceptionally large MCT file (46GB), this section failed. The fixer script and/or datatime 
+# crashed, but since the new MCT file was partially creted, the originally created mct.tmp file was deleted.
+# 
+# "${BASH_SOURCE%/*}/tsk-fix-mct.sh" "$OUTPUTDIR/$NAME.mct.tmp" "$NAME" | tee "$OUTPUTDIR/$NAME.mct" | datatime > "$OUTPUTDIR/$NAME-mct.txt"
+# if [ -e "$OUTPUTDIR/$NAME.mct" ]; then
+# 	# Only delete the .mct.tmp file if the reprocessing was successful.
+# 	rm "$OUTPUTDIR/$NAME.mct.tmp"
+# fi
 head-tail.sh "$OUTPUTDIR/$NAME-mct.txt" 50
 INFO "" "$LOG"
 
