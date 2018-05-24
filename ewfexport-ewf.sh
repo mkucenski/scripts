@@ -2,32 +2,19 @@
 . "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 IMAGE="$1"
-DEVICE="$2"
-LOGFILE="$3"
+SECTOR_SIZE="$2"
+OFFSET="$3"
+COUNT="$4"
+DEST_IMAGE="$5"
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "DEVICE" "LOGFILE" && exit 1
+	USAGE "IMAGE" "SECTOR_SIZE" "OFFSET" "COUNT" "DEST_IMAGE" && exit 1
 fi
 
+LOGFILE="$(STRIP_EXTENSION "$DEST_IMAGE").log"
 START "$0" "$LOGFILE" "$*"
 
-INFO "Locating Original Hash Value..."
-ORIGINAL_HASH=$(ewfinfo "$IMAGE" | grep "MD5:" | $SEDCMD -r 's/.*MD5:[[:space:]]+(.+)/\1/')
-INFO "Original MD5: $ORIGINAL_HASH" "$LOGFILE"
-
-INFO "Exporting raw data to device ($DEVICE)..."
-BS=$("${BASH_SOURCE%/*}/blocksize.sh" "$DEVICE")
-CMD="ewfexport -l \"$LOGFILE\" -q -u -t - \"$IMAGE\" | dd of=\"$DEVICE\" bs=\"$BS\" 2> >(tee -a \"$LOGFILE\" >&2)"
+CMD="ewfexport -q -u -f ewf -t \"$DEST_IMAGE\" -l \"$LOGFILE\" -o $(($SECTOR_SIZE * $OFFSET)) -B $(($SECTOR_SIZE * $COUNT)) \"$IMAGE\""
 EXEC_CMD "$CMD" "$LOGFILE"
-
-INFO "Hashing Target Device..."
-DEVICE_HASH=$("${BASH_SOURCE%/*}/diskmd5.sh" "$DEVICE" | tr A-F a-f)
-INFO "Device MD5: $DEVICE_HASH" "$LOGFILE"
-
-if [ "$ORIGINAL_HASH" == "$DEVICE_HASH" ]; then
-	INFO "SUCCESS! Hash Match!" "$LOGFILE"
-else
-	ERROR "FAILURE! Hash Mismatch!" "$0" "$LOGFILE" && exit 1
-fi
 
 END "$0" "$LOGFILE"
 

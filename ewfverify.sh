@@ -12,11 +12,6 @@ if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "LOGFILE (optional - defaults to \$IMAGE-ewfverify.log)" && exit 1
 fi
 
-ulimit -n 10240
-if [ $? -ne 0 ]; then 
-	ERROR "Unable to set increased ulimit value! Try execution as 'root'." "$0" "$LOGFILE" && exit 1
-fi
-
 START "$0" "$LOGFILE" "$*"
 
 FULL_IMAGE_PATH="$(cd "$(dirname "$IMAGE")"; pwd)/$(basename "$IMAGE")"

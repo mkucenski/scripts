@@ -4,3 +4,5 @@
 \.jpeg\W
 \.jpg\W
 \.png\W
+\.tif\W
+\.tiff\W

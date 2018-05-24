@@ -15,7 +15,7 @@ function NOTIFY() {
 	_COMMON_NOTIFY_OS="$(uname)"
 	if [ "$_COMMON_NOTIFY_OS" = "Darwin" ]; then
 		INFO "$_COMMON_NOTIFY_SRC: $_COMMON_NOTIFY_MSG"
-		"${BASH_SOURCE%/*}/macOS/notification.sh" "$_COMMON_NOTIFY_MSG" "$_COMMON_NOTIFY_SRC" ""
+		"${BASH_SOURCE%/*}/macOS/notification.sh" "$(DATETIME): $_COMMON_NOTIFY_MSG" "$_COMMON_NOTIFY_SRC" ""
 	else
 		INFO "$_COMMON_NOTIFY_SRC: $_COMMON_NOTIFY_MSG"
 	fi
@@ -71,6 +71,12 @@ function SUDO_USER() {
 function FULL_PATH() {
 	# Return the full/absolute path
 	echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
+}
+
+function EXEC_CMD() {
+	# Evaluate/execute the command given by a string; log the command as well as send to stderr
+	INFO_ERR "CMD: $1" "$2"
+	eval "$1"
 }
 
 function LOG_VERSION() {
@@ -140,7 +146,7 @@ function CHECK_ROOT() {
 }
 
 function INFO_ERR() {
-	# Output message to stderr nd LOG (if specified)
+	# Output message to stderr and LOG (if specified)
 
 	_COMMON_INFO_MSG="$1"
 	_COMMON_INFO_LOG="$2"

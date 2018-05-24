@@ -1,0 +1,9 @@
+\/vol[[:digit:]]+\/\.Spotlight-V100
+\/vol[[:digit:]]+\/Applications
+\/vol[[:digit:]]+\/System\/Library
+\/vol[[:digit:]]+\/Library
+\/vol[[:digit:]]+\/usr
+\/vol[[:digit:]]+\/private
+\/vol[[:digit:]]+\/\^\^\^\^HFS\+ Private Data
+\/vol[[:digit:]]+\/Users.+\/Library\/Mail
+\/vol[[:digit:]]+\/Incompatible Software

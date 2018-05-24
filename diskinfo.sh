@@ -9,7 +9,7 @@ fi
 OS=`uname`
 if [ $OS = "Darwin" ]; then
 
-	HWPROFILE="$(system_profiler SPUSBDataType SPParallelATADataType SPCardReaderDataType SPFireWireDataType SPHardwareRAIDDataType SPNVMeDataType SPParallelSCSIDataType SPSASDataType SPSerialATADataType SPThunderboltDataType | grep -B 14 -A 4 "BSD Name: $(basename "$DEVICE" | $SEDCMD -r 's/^r//')$" | $SEDCMD -r 's/^[[:space:]]*//; /^$/d')"
+	HWPROFILE="$(system_profiler SPUSBDataType SPParallelATADataType SPCardReaderDataType SPFireWireDataType SPHardwareRAIDDataType SPNVMeDataType SPParallelSCSIDataType SPSASDataType SPSerialATADataType SPThunderboltDataType | grep -B 14 -A 4 "BSD Name: $(basename "$DEVICE" | $SEDCMD -r 's/^r//')" | $SEDCMD -r 's/^[[:space:]]*//; /^$/d')"
 	VENDOR="$(echo "$HWPROFILE" | grep "Vendor ID:" | $SEDCMD -r 's/Vendor ID:[[:space:]]+0x[a-f0-9]+[[:space:]]+\((.+)\)/\1/')"
 	SERIAL="$(echo "$HWPROFILE" | grep "Serial Number:" | $SEDCMD -r 's/Serial Number:[[:space:]]+(.+)/\1/')"
 	INFO "macOS 'system_profiler' reported vendor: '$VENDOR', serial number: '$SERIAL'."

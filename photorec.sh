@@ -10,11 +10,6 @@ if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "DEST" && exit 1
 fi
 
-ulimit -n 10240
-if [ $? -ne 0 ]; then 
-	ERROR "Unable to set increased ulimit value! Try execution as 'root'." "$0" "$LOGFILE" && exit 1
-fi
-
 if [ ! -e "$DEST" ]; then
 	mkdir -p "$DEST"
 fi
@@ -23,9 +18,10 @@ START "$0" "$LOGFILE" "$*"
 
 pushd "$DEST"
 
-INFO "Starting photorec..." "$LOGFILE"
-photorec /version >> "$LOGFILE" 2>> "$LOGFILE"
-photorec /log /d "$DEST/" "$IMAGE" 2>> "$LOGFILE"
+INFO "Starting photorec ($IMAGE)..." "$LOGFILE"
+LOG_VERSION "photorec" "$(photorec /version)" "$LOGFILE"
+CMD="photorec /log /d \"$DEST/\" \"$IMAGE\""
+EXEC_CMD "$CMD" "$LOGFILE"
 mkdir ./recup_dirs
 mv recup_dir.* recup_dirs/
 
