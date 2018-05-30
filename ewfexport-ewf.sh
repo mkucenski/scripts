@@ -9,11 +9,13 @@ DEST_IMAGE="$5"
 if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "SECTOR_SIZE" "OFFSET" "COUNT" "DEST_IMAGE" && exit 1
 fi
+DEST_NAME="$(STRIP_EXTENSION "$DEST_IMAGE")"
 
-LOGFILE="$(STRIP_EXTENSION "$DEST_IMAGE").log"
+LOGFILE="$DEST_NAME.log"
 START "$0" "$LOGFILE" "$*"
 
-CMD="ewfexport -q -u -f ewf -t \"$DEST_IMAGE\" -l \"$LOGFILE\" -o $(($SECTOR_SIZE * $OFFSET)) -B $(($SECTOR_SIZE * $COUNT)) \"$IMAGE\""
+SEGMENT_SIZE=$(((10**9*4)-2))
+CMD="ewfexport -q -u -f encase6 -c best -S $SEGMENT_SIZE -t \"$DEST_NAME\" -l \"$LOGFILE\" -o $(($SECTOR_SIZE * $OFFSET)) -B $(($SECTOR_SIZE * $COUNT)) \"$IMAGE\""
 EXEC_CMD "$CMD" "$LOGFILE"
 
 END "$0" "$LOGFILE"
