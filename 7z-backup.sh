@@ -21,8 +21,8 @@ else
 	7z u "$FULLBACKUP" "$SRCDIR" -u- -up0q3r2x2y2z0w2!"$(STRIP_EXTENSION "$FULLBACKUP") $(DATE) $(TIME).7z"
 fi
 
+UNLOCK "$DSTDIR/$DSTNAME.pid"
+
 echo "Press any key to continue..."
 read
-
-UNLOCK "$DSTDIR/$DSTNAME.pid"
 
