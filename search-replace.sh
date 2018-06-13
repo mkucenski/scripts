@@ -13,7 +13,7 @@ fi
 
 if [ -e "$BACKUPDIR" ]; then
 	while read -r FILE; do 
-		INFO "Copying <$FILE> to <$BACKUPDIR>..."
+		INFO "$FILE"
 		cp "$FILE" "$BACKUPDIR/"
 		cat "$BACKUPDIR/$FILE" | $SEDCMD -r "s/$SEARCH/$REPLACE/g" > "$FILE"
 	done < /dev/stdin

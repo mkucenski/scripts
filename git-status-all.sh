@@ -16,7 +16,7 @@ find "$BASEDIR" -type d -depth 1 -print0 |
 while IFS= read -r -d $'\0' DIR; do
 	echo "$DIR:"
 	pushd "$DIR" > /dev/null
-	git status | egrep -vi "$A|$B|$C|$D|$E|$F|$G|$H|$I" | egrep -vi "^$"
+	git status --short | egrep -vi "$A|$B|$C|$D|$E|$F|$G|$H|$I" | egrep -vi "^$"
 	popd > /dev/null
 done
 

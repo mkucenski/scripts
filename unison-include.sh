@@ -1,5 +1,5 @@
 #!bin/bash
-. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 _UNISON_PRFDIR="$HOME/.unison/sync"
 _UNISON_LOGDIR="$HOME/.unison/log"
@@ -27,7 +27,7 @@ function setup() {
 		createDir "$_UNISON_LOGDIR"
 	fi
 
-	cp "$(dirname "$0")/common" "$_UNISON_PRFDIR/"
+	cp "$(dirname "$0")/unison-common" "$_UNISON_PRFDIR/common"
 }
 
 function buildprf() {
