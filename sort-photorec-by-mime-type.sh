@@ -11,7 +11,8 @@ fi
 
 START "$0" "$LOGFILE" "$*"
 
-ls -d "$SOURCE"/recup_dir.* | xargs -L 1 -I {} ${BASH_SOURCE%/*}/sort-copy-by-mime-type.sh {} "$DEST"
+# ls -d "$SOURCE"/recup_dir.* | xargs -0 -L 1 -I {} ${BASH_SOURCE%/*}/sort-copy-by-mime-type.sh {} "$DEST"
+find "$SOURCE" -type d -name "recup_dir.*" -exec ${BASH_SOURCE%/*}/sort-copy-by-mime-type.sh {} "$DEST" \;
 find "$DEST" -type f -name "report.xml" -exec rm {} \;
 
 END "$0" "$LOGFILE"
