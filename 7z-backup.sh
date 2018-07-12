@@ -23,6 +23,6 @@ fi
 
 UNLOCK "$DSTDIR/$DSTNAME.pid"
 
-echo "Press any key to continue..."
-read
+# echo "Press any key to continue..."
+# read
 
