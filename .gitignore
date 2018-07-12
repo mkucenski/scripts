@@ -1,11 +1,5 @@
-unison/*.prf
 .*.swp
 *.swp
 .*.pid
 .bak.*
-test.sh
-easylist/
-windows/fciv.exe
-windows/fciv
-windows/unison
-windows/sysinternals
+custom
