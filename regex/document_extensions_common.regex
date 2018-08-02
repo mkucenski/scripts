@@ -1,7 +1,4 @@
-\.doc\W
-\.docx\W
-\.xls\W
-\.xlsx\W
-\.ppt\W
-\.pptx\W
+\.docx?\W
+\.xlsx?\W
+\.pptx?\W
 \.pdf\W
