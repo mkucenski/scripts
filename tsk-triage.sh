@@ -35,8 +35,16 @@ LOG_VERSION "fsstat" "$(fsstat -V)" "$LOG"
 for PARTITION in $(_tsk_mmls_partitions "$DISK"); do
 	OFFSET="$(_tsk_mmls_offset "$DISK" "$PARTITION")"
 	INFO "$PARTITION ($OFFSET):" "$LOG"
-	INFO "$(fsstat -o $OFFSET "$DISK")" "$LOG" | tee "$OUTPUTDIR/$NAME-$PARTITION-fsstat.txt"
+	INFO "$(fsstat -o $OFFSET "$DISK")" "$LOG" | tee "$OUTPUTDIR/$NAME-fsstat-$PARTITION.txt"
 done
+INFO "" "$LOG"
+
+INFO "-----------------------------------------------------------------------" "$LOG"
+INFO "Collect MAC times from a disk image into a body file (tsk_gettimes)..." "$LOG"
+INFO "-----------------------------------------------------------------------" "$LOG"
+LOG_VERSION "tsk_gettimes" "$(tsk_gettimes -V)" "$LOG"
+tsk_gettimes "$DISK" | bzip2 -c > "$OUTPUTDIR/$NAME.mct.bz2"
+bunzip2 -c "$OUTPUTDIR/$NAME.mct.bz2" | head -n 25 | datatime
 INFO "" "$LOG"
 
 NOTIFY "Finished triage for $NAME ($DISK)!" "$0"
