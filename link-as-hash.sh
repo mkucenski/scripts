@@ -12,7 +12,7 @@ if [ $# -eq 0 ]; then
 	USAGE "FILE" "DEST" "EXT" && exit $COMMON_ERROR
 fi
 if [ -z "$EXT" ]; then
-	EXT="$(SAVE_EXTENSION "$FILE")"
+	EXT="$(GET_EXTENSION "$FILE")"
 fi
 
 RV=$COMMON_SUCCESS
