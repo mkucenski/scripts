@@ -1,5 +1,5 @@
-#!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh || exit 1
+#!/usr/bin/env bash
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 FILE=$1
 REPL=$2
@@ -10,16 +10,9 @@ if [ $# -eq 0 ]; then
 	exit $COMMON_ERROR
 fi
 
-RV=$COMMON_SUCCESS
-
 NEW=$(echo "$FILE" | $SEDCMD -r "s/$REPL/$WITH/g")
-echo "$NEW"
-
 if [ "$FILE" != "$NEW" ]; then
 	echo "Moving:" "$FILE" "$NEW"
 	ln -s "$FILE" "$NEW"
-	RV=$((RV+$?))
 fi
-
-exit $RV
 

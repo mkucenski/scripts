@@ -4,9 +4,10 @@
 IMAGE="$1"
 OFFSET="$2"
 DEST="$3"
-LOGFILE="$4"
+MCT="$4"
+LOGFILE="$5"
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "OFFSET" "DEST" "LOGFILE" && exit 1
+	USAGE "IMAGE" "OFFSET" "DEST" "MCT" "LOGFILE" && exit 1
 fi
 
 while read LINE; do
@@ -15,5 +16,5 @@ while read LINE; do
 	else
 		ERROR "Read invalid line!" "$0" && exit 1
 	fi
-done
+done < "$MCT"
 

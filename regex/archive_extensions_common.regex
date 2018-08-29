@@ -1,0 +1,10 @@
+\.rar\W
+\.z(ip)?\W
+\.7z(ip)?\W
+\.iso\W
+\.t(ar|gz)\W
+\.gz\W
+\.bz2\W
+\.dmg\W
+\.sit(x)?\W
+\.arj\W

@@ -1,2 +1,2 @@
 #20160119 https://search.yahoo.com/search;_ylt=AwrBT7l5f55WJeUADUul87UF?p=this+is+a+test&fr=sfp&fr2=&iscqry=
-search\.yahoo\.com/[^[:space:]]*(&|\?)p=
+search\.yahoo\.com/.*?p=

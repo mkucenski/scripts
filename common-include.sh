@@ -284,3 +284,11 @@ function HOSTNAME {
 	hostname | "$SEDCMD" -r 's/\.local//'
 }
 
+function MD5HASH_STRING() {
+	echo "$1" | openssl md5 -r | cut -d " " -f 1 | tr "[:lower:]" "[:upper:]"
+}
+
+function MD5HASH_FILE() {
+	openssl md5 -r "$1" | cut -d " " -f 1 | tr "[:lower:]" "[:upper:]"
+}
+	
