@@ -121,11 +121,6 @@ function MKTEMPUNIQ() {
 	mktemp "$1.XXXXXX"
 }	
 
-function SAVE_EXTENSION() {
-	_COMMON_FILENAME="$1"
-	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/.*\.(..?.?.?)$/\1/'
-}
-
 function STRIP_EXTENSION() {
 	_COMMON_FILENAME="$1"
 	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/\...?.?.?$//'
