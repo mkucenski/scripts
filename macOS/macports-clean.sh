@@ -5,6 +5,6 @@ if [ $(CHECK_ROOT) != true ]; then
 	ERROR "This script *MUST* be run as 'root'!" && exit 1
 fi
 
-${BASH_SOURCE%/*}/macOS/macports-wrapper.sh -f clean --all all
-${BASH_SOURCE%/*}/macOS/macports-wrapper.sh -f uninstall inactive
+${BASH_SOURCE%/*}/macports-wrapper.sh -f clean --all all
+${BASH_SOURCE%/*}/macports-wrapper.sh -f uninstall inactive
 
