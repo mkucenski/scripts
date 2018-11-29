@@ -11,8 +11,11 @@ fi
 
 for IT in $(seq 1 $COLUMNS); do
 	echo "---------- Column $IT ----------"
-	cat "$CSV" | cut -d "$DELIM" -f "$IT" | head -n "$ROWS"
-	echo
+	if [ -n $(which csvquote) ]; then
+		csvquote -d "$DELIM" "$CSV" | cut -d "$DELIM" -f "$IT" | head -n "$ROWS" | egrep -v "^$" | csvquote -d "$DELIM" -u
+	else
+		cat "$CSV" | cut -d "$DELIM" -f "$IT" | head -n "$ROWS"
+	fi
 done
 
 
