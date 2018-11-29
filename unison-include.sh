@@ -93,16 +93,3 @@ function execUnison() {
 	fi
 }
 
-function execRsync() {
-	_UNISON_SRCDIR="$1"
-	_UNISON_DSTBASEDIR="$2"
-	_UNISON_SRCSUBDIR="$3"
-
-	if [ -n "$_UNISON_SRCSUBDIR" ]; then
-		_UNISON_SRCDIR="$_UNISON_SRCDIR/$_UNISON_SRCSUBDIR"
-	fi
-
-	# rsync -av --fileflags "$_UNISON_SRCDIR" "$_UNISON_DSTBASEDIR/"
-	rsync -av "$(NORMALIZEDIR "$_UNISON_SRCDIR")" "$(NORMALIZEDIR "$_UNISON_DSTBASEDIR")/"
-}
-
