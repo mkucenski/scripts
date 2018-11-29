@@ -10,6 +10,12 @@ if [ $# -eq 0 ]; then
 	USAGE "IMAGE" "DEST" && exit 1
 fi
 
+# TODO The locations on this script need to be tweaked:
+# 			The TAR will end up in the current directory, not the DEST
+# 			However, the TAR can't go to the DEST directory or it will try to archive itself
+
+# TODO TAR is also storing too much of the directory path--it's getting the full path instead of just the local, photorec output.
+
 if [ ! -e "$DEST" ]; then
 	mkdir -p "$DEST"
 fi
@@ -26,13 +32,16 @@ mkdir ./recup_dirs
 mv recup_dir.* recup_dirs/
 
 INFO "Starting hashing on all files..." "$LOGFILE"
-${BASH_SOURCE%/*}/fciv_recursive.sh ./ 0 > "$(basename "$DEST").md5"
+${BASH_SOURCE%/*}/fciv_recursive.sh ./ 0 > "photorec.md5"
 
 popd
 
+# Copy/save configuration file
+cp "~/.photorec.cfg" "$DEST/photorec.cfg"
+
 INFO "Archiving and hashing all files..." "$LOGFILE"
 TAR="$(basename "$DEST").tgz"
-tar czvf "$TAR" "$DEST"
+tar czf "$TAR" "$DEST"
 TAR_MD5=$(openssl md5 "$TAR")
 echo "$TAR_MD5" > "$TAR.md5"
 INFO "$TAR_MD5" "$LOGFILE"
