@@ -3,3 +3,5 @@
 .*.pid
 .bak.*
 custom
+windows/sysinternals/*
+windows/fciv/*
