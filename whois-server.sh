@@ -24,7 +24,7 @@ if [ -e "$DEST" ]; then
 	INFO "$SITE -> $DEST"
 	LOG "Whois Query for: $SITE" "$DEST"
 
-	whois -h "$SERVER" "$SITE" | egrep -v "^$" | egrep -v "^#" | tee -a "$DEST"
+	EXEC_CMD "whois -h \"$SERVER\" \"$SITE\" | egrep -v \"^$\" | egrep -v \"^#\" | tee -a \"$DEST\"" "$DEST"
 
 	END "$0" "$DEST"
 else

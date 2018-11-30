@@ -18,23 +18,18 @@ if [ ! -e "$DESTDIR/$SITE_STRIPPED" ]; then
 
 	LOG_VERSION "wget" "$(wget --version | grep "GNU Wget")" "$LOGFILE"
 
-	# Save whois/dig records for specified site
-	${BASH_SOURCE%/*}/whois.sh "$SITE_STRIPPED" ./
-	${BASH_SOURCE%/*}/dig.sh "$SITE_STRIPPED" ./
+	# This script needs constant adjustment, largely around "--span-hosts" and "--level"
+	# 		In many cases, you really can't leave level off while also doing --span-hosts or it will download forever...
+	# 		W/o span-hosts, you can skip level, but you run the risk of not downloading hosted images/content that are integral to the site...
+	# 		The two options have to be balanced appropriately for the given site and your download needs.
 
-	# wget --recursive --level=1 --append-output "$LOGFILE" --show-progress -t 3 --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17" --span-hosts --adjust-extension --page-requisites --server-response --convert-links --backup-converted "$SITE"
-	CMD="wget --recursive --level=1 --append-output \"$LOGFILE\" --show-progress -t 3 --user-agent=\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17\" --adjust-extension --page-requisites --server-response --convert-links --backup-converted \"$SITE\""
+	CMD="wget --recursive --level=1 --span-hosts --append-output \"$LOGFILE\" --show-progress -t 3 --user-agent=\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17\" --adjust-extension --page-requisites --server-response --convert-links --backup-converted \"$SITE\""
 	EXEC_CMD "$CMD" "$LOGFILE"
 
 	# Hash results for retention
 	"${BASH_SOURCE%/*}/fciv_recursive.sh" ./ 0 > "./$SITE_STRIPPED.md5"
 
 	popd
-
-	# Archive results
- 	ARCHIVE="$DESTDIR/${SITE_STRIPPED}_$(DATE).7z"
-	7z a "$ARCHIVE" "$DESTDIR/$SITE_STRIPPED"
-	"${BASH_SOURCE%/*}/fciv.sh" "$ARCHIVE" > "$ARCHIVE.md5"
 
 	END "$0" "$LOGFILE"
 else

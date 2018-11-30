@@ -33,3 +33,4 @@ contactquietly = true
 # allow the synchronization of symbolic links (true/false/default)
 links = true
 
+ui = text

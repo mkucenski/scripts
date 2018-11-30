@@ -2,13 +2,6 @@
 ENABLE_DEBUG=0
 IFS=$(echo -en "\n\b")
 
-function NORMALIZEDIR() {
-	# rsync in particular operates differently depending on whether the source has a trailing '/';
-	# this function normalizes directory names to not include the trailing '/'
-	DIR="$(dirname "$1")/$(basename "$1")"
-	echo "$DIR"
-}
-
 function NOTIFY() {
 	_COMMON_NOTIFY_MSG="$1"
 	_COMMON_NOTIFY_SRC="$(basename "$2")"
@@ -101,6 +94,11 @@ function LOG_SCRIPT_BASE64() {
 	fi
 }
 
+function ROT13() {
+	# Decode/encode the passed string
+	echo "$1" | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+}
+
 function BASE64_STRING() {
 	echo "$1" | base64
 }
@@ -120,11 +118,6 @@ function MKTEMPDIR() {
 function MKTEMPUNIQ() {
 	mktemp "$1.XXXXXX"
 }	
-
-function SAVE_EXTENSION() {
-	_COMMON_FILENAME="$1"
-	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/.*\.(..?.?.?)$/\1/'
-}
 
 function STRIP_EXTENSION() {
 	_COMMON_FILENAME="$1"

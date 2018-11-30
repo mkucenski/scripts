@@ -37,7 +37,7 @@ ${BASH_SOURCE%/*}/fciv_recursive.sh ./ 0 > "photorec.md5"
 popd
 
 # Copy/store the configuration file used
-cp ~/.photorec.cfg "$DEST"/photorec.cfg
+cp "~/.photorec.cfg" "$DEST/photorec.cfg"
 
 INFO "Archiving and hashing all files..." "$LOGFILE"
 TAR="$(basename "$DEST").tgz"

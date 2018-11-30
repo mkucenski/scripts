@@ -14,7 +14,7 @@ fi
 if [ -e "$FILE" ]; then
 	HASH="$(md5 -r "$FILE" | gsed -r 's/([^[:space:]]+).*/\1/')"
 	mkdir -p "$DEST"
-	cp -v "$FILE" "$DEST/$HASH.$(SAVE_EXTENSION "$FILE")"
+	cp -v "$FILE" "$DEST/$HASH.$(GET_EXTENSION "$FILE")"
 else
 	ERROR "File <$FILE> does not exist!" "$0" && exit 1
 fi

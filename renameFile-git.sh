@@ -6,13 +6,13 @@ REPL=$2
 WITH=$3
 if [ $# -eq 0 ]; then
 	USAGE "FILE" "REPLACE" "WITH"
-	USAGE_EXAMPLE "ls * | xargs -L 1 -I {} $(basename "$0") {} \".kung\" \".foo\" (will replace '.kung' in all files with '.foo' and *copy* the old file to the new name)"
+	USAGE_EXAMPLE "ls * | xargs -L 1 -I {} $(basename "$0") {} \".kung\" \".foo\" (will replace '.kung' in all files with '.foo' and *git mv* the old file to the new name)"
 	exit $COMMON_ERROR
 fi
 
 NEW=$(echo "$FILE" | $SEDCMD -r "s/$REPL/$WITH/g")
 if [ "$FILE" != "$NEW" ]; then
-	echo "Copying:" "$FILE" "$NEW"
-	cp "$FILE" "$NEW"
+	echo "git mv:" "$FILE" "$NEW"
+	git mv "$FILE" "$NEW"
 fi
 

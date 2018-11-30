@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SED=${BASH_SOURCE%/*}/sed/html_ascii_encoding.sed
+SED=${BASH_SOURCE%/*}/sed/html_ascii_decode.sed
 cat /dev/stdin | gsed -f "$SED" | gsed -f "$SED" | gsed -f "$SED"
 
 exit 0
