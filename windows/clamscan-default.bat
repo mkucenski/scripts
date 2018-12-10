@@ -16,7 +16,7 @@ echo ---------------------------------------------------------------------------
 sigtool --info="C:\Program Files\ClamAV\database\main.cvd" >> %log%
 echo ------------------------------------------------------------------------------- >> %log%
 echo Initiating scan on "%scandir%": >> %log%
-clamscan --bell --log=%log% --recursive --allmatch=yes %scandir%
+clamscan --bell --log=%log% --recursive --allmatch=yes --infected --stdout %scandir%
 echo ------------------------------------------------------------------------------- >> %log%
 date /t >> %log%
 time /t >> %log%

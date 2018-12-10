@@ -11,12 +11,14 @@ fi
 START "$0" "$LOGFILE" "$*"
 
 INFO "Locating Original Hash Value..."
+LOG_VERSION "ewfinfo" "$(ewfinfo -V | head -n 1)" "$LOGFILE"
 ORIGINAL_HASH=$(ewfinfo "$IMAGE" | grep "MD5:" | $SEDCMD -r 's/.*MD5:[[:space:]]+(.+)/\1/')
 INFO "Original MD5: $ORIGINAL_HASH" "$LOGFILE"
 
 INFO "Exporting raw data to device ($DEVICE)..."
 BS=$("${BASH_SOURCE%/*}/blocksize.sh" "$DEVICE")
 CMD="ewfexport -l \"$LOGFILE\" -q -u -t - \"$IMAGE\" | dd of=\"$DEVICE\" bs=\"$BS\" 2> >(tee -a \"$LOGFILE\" >&2)"
+LOG_VERSION "ewfexport" "$(ewfexport -V | head -n 1)" "$LOGFILE"
 EXEC_CMD "$CMD" "$LOGFILE"
 
 INFO "Hashing Target Device..."

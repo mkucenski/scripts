@@ -16,6 +16,7 @@ START "$0" "$LOGFILE" "$*"
 
 SEGMENT_SIZE=$(((10**9*4)-2))
 CMD="ewfexport -q -u -f encase6 -c best -S $SEGMENT_SIZE -t \"$DEST_DIR/$DEST_NAME\" -l \"$LOGFILE\" -o $(($SECTOR_SIZE * $OFFSET)) -B $(($SECTOR_SIZE * $COUNT)) \"$IMAGE\""
+LOG_VERSION "ewfexport" "$(ewfexport -V | head -n 1)" "$LOGFILE"
 EXEC_CMD "$CMD" "$LOGFILE"
 
 END "$0" "$LOGFILE"
