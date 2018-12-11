@@ -69,7 +69,8 @@ function FULL_PATH() {
 function EXEC_CMD() {
 	# Evaluate/execute the command given by a string; log the command as well as send to stderr
 	INFO_ERR "CMD: $1" "$2"
-	eval "$1"
+	# Redirect stdout/stderr to the logfile, but still report back to the console on stdout/stderr
+	eval "$1" > >(tee -a "$2") 2> >(tee -a "$2" >&2)
 }
 
 function LOG_VERSION() {
