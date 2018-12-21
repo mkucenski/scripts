@@ -43,8 +43,7 @@ INFO "-----------------------------------------------------------------------" "
 INFO "Collect MAC times from a disk image into a body file (tsk_gettimes)..." "$LOG"
 INFO "-----------------------------------------------------------------------" "$LOG"
 LOG_VERSION "tsk_gettimes" "$(tsk_gettimes -V)" "$LOG"
-tsk_gettimes "$DISK" | bzip2 -c > "$OUTPUTDIR/$NAME.mct.bz2"
-bunzip2 -c "$OUTPUTDIR/$NAME.mct.bz2" | head -n 25 | datatime
+tsk_gettimes "$DISK" | gzip -c > "$OUTPUTDIR/$NAME.mct.gz"
 INFO "" "$LOG"
 
 NOTIFY "Finished triage for $NAME ($DISK)!" "$0"
