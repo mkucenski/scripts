@@ -19,15 +19,17 @@ CMD="grep -v \"|d/d\" \"$MCT_FILE\" | cut -d \"|\" -f 3 | sort -un > \"$INODES\"
 EXEC_CMD "$CMD" "$LOGFILE"
 
 mkdir -p "$DEST/_inodes"
-mkdir -p "$DEST/_links"
 while read INODE; do
 	INFO "Extracting unique inode/file ($INODE)..." "$LOGFILE"
 	ORIGINAL="$DEST/_inodes/$INODE"
 	CMD="icat -o $OFFSET \"$IMAGE\" \"$INODE\" > \"$ORIGINAL\""
 	EXEC_CMD "$CMD" "$LOGFILE"
+done < "$INODES"
 
+mkdir -p "$DEST/_links"
+MCT_ENTRIES="$(MKTEMP)"
+while read INODE; do
 	INFO "Finding MCT entries associated with inode ($INODE)..." "$LOGFILE"
-	MCT_ENTRIES="$(MKTEMP)"
 	REGEX="^[^|]*\|[^|]+\|$INODE\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|[^|]*$"
 	egrep "$REGEX" "$MCT_FILE" > "$MCT_ENTRIES"
 
@@ -39,13 +41,13 @@ while read INODE; do
 		DIR="$(dirname "$FILEPATH")"
 		mkdir -p "$DEST/_links/$DIR"
 
+		#TODO Should this be a symbolic or hard link; you can't do hard links on an SMB share, but once tar'd/zip'd which way makes it most functional on import into a forensic analysis tool?
+		# CMD="ln -s \"$ORIGINAL\" \"$LINK\""
 		CMD="ln \"$ORIGINAL\" \"$LINK\""
 		EXEC_CMD "$CMD" "$LOGFILE"
 	done < "$MCT_ENTRIES"
-
-	rm "$MCT_ENTRIES"
-	echo
 done < "$INODES"
+rm "$MCT_ENTRIES"
 
 rm "$INODES"
 END "$0" "$LOGFILE"
