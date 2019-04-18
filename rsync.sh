@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 . "${BASH_SOURCE%/*}/common-include.sh" || exit 1
-. "${BASH_SOURCE%/*}/unison/unison-include.sh" || exit 1
+. "${BASH_SOURCE%/*}/unison-include.sh" || exit 1
 
 SRCDIR="$1"
 DSTBASEDIR="$2"
