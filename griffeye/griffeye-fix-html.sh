@@ -16,7 +16,7 @@ for HTML_FILE in $HTML_DIR/*.html; do
 	if [ ! -e "./bak/$HTML_FILE.bak" ]; then
 		cp "$HTML_FILE" "./bak/$HTML_FILE.bak"
 	fi
-	gsed -r 's/height="[[:digit:]]+"/height="128"/g; s/max-height: 64px; //g;' "$HTML_FILE" > "$TEMP"
+	gsed -r 's/height="[[:digit:]]+"/height="128"/g; s/max-height: 64px; //g; s/(href|src)="\.\\Files/\1="..\\Files/g' "$HTML_FILE" > "$TEMP"
 	cp "$TEMP" "$HTML_FILE"
 done
 
