@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 . "${BASH_SOURCE%/*}/tsk-include.sh" || exit 1
 
 IMAGE="$1"

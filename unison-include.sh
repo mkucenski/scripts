@@ -40,8 +40,6 @@ function buildprf() {
 	{
 		echo "root = $_UNISON_ROOT1/"
 		echo "root = $_UNISON_ROOT2/"
-		echo "backuploc = local"
-		echo "backup = Name *"
 		echo "log = true"
 		echo "logfile = $_UNISON_LOGFILE"
 	} >> "$_UNISON_PRF"
@@ -85,24 +83,11 @@ function execUnison() {
 		LOG_VERSION "unison" "$(unison -version)" "$_UNISON_LOG"
 
 		LOG "$_UNISON_ROOT1 <-> $_UNISON_ROOT2" "$_UNISON_LOG"
-		unison "$(basename "$(dirname "$_UNISON_PRF")")/$(basename "$_UNISON_PRF")"
+		unison -ui text "$(basename "$(dirname "$_UNISON_PRF")")/$(basename "$_UNISON_PRF")"
 		cat "$_UNISON_PRF" >> "$_UNISON_LOG"
 		rm "$_UNISON_PRF"
 
 		END "$0" "$_UNISON_LOG"
 	fi
-}
-
-function execRsync() {
-	_UNISON_SRCDIR="$1"
-	_UNISON_DSTBASEDIR="$2"
-	_UNISON_SRCSUBDIR="$3"
-
-	if [ -n "$_UNISON_SRCSUBDIR" ]; then
-		_UNISON_SRCDIR="$_UNISON_SRCDIR/$_UNISON_SRCSUBDIR"
-	fi
-
-	# rsync -av --fileflags "$_UNISON_SRCDIR" "$_UNISON_DSTBASEDIR/"
-	rsync -av "$(NORMALIZEDIR "$_UNISON_SRCDIR")" "$(NORMALIZEDIR "$_UNISON_DSTBASEDIR")/"
 }
 

@@ -3,5 +3,6 @@
 .*.pid
 .bak.*
 custom
-windows/fciv
-windows/sysinternals
+windows/sysinternals/*
+windows/fciv/*
+macOS/restore_ports.tcl

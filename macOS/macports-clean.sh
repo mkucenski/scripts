@@ -5,13 +5,6 @@ if [ $(CHECK_ROOT) != true ]; then
 	ERROR "This script *MUST* be run as 'root'!" && exit 1
 fi
 
-LOGFILE="`echo ~`/Logs/macports-update-$(HOSTNAME).log"
-
-START "$0" "$LOGFILE" "$*"
-LOG "Args: $@" "$LOGFILE"
-
-port -f clean --all all | tee -a "$LOGFILE"
-port -f uninstall inactive | tee -a "$LOGFILE"
-
-END "$0" "$LOGFILE"
+${BASH_SOURCE%/*}/macports-wrapper.sh -f clean --all all
+${BASH_SOURCE%/*}/macports-wrapper.sh -f uninstall inactive
 

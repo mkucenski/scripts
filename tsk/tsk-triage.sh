@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 . "${BASH_SOURCE%/*}/tsk-include.sh" || exit 1
 
 DISK="$1"
@@ -35,8 +35,15 @@ LOG_VERSION "fsstat" "$(fsstat -V)" "$LOG"
 for PARTITION in $(_tsk_mmls_partitions "$DISK"); do
 	OFFSET="$(_tsk_mmls_offset "$DISK" "$PARTITION")"
 	INFO "$PARTITION ($OFFSET):" "$LOG"
-	INFO "$(fsstat -o $OFFSET "$DISK")" "$LOG" | tee "$OUTPUTDIR/$NAME-$PARTITION-fsstat.txt"
+	INFO "$(fsstat -o $OFFSET "$DISK")" "$LOG" | tee "$OUTPUTDIR/$NAME-fsstat-$PARTITION.txt"
 done
+INFO "" "$LOG"
+
+INFO "-----------------------------------------------------------------------" "$LOG"
+INFO "Collect MAC times from a disk image into a body file (tsk_gettimes)..." "$LOG"
+INFO "-----------------------------------------------------------------------" "$LOG"
+LOG_VERSION "tsk_gettimes" "$(tsk_gettimes -V)" "$LOG"
+tsk_gettimes "$DISK" | gzip -c > "$OUTPUTDIR/$NAME.mct.gz"
 INFO "" "$LOG"
 
 NOTIFY "Finished triage for $NAME ($DISK)!" "$0"

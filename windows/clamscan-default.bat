@@ -9,14 +9,14 @@ time /t >> %log%
 echo ------------------------------------------------------------------------------- >> %log%
 clamscan --version >> %log%
 echo ------------------------------------------------------------------------------- >> %log%
-sigtool --info="C:\Program Files\ClamAV-x64\database\bytecode.cvd" >> %log%
+sigtool --info="C:\Program Files\ClamAV\database\bytecode.cvd" >> %log%
 echo ------------------------------------------------------------------------------- >> %log%
-sigtool --info="C:\Program Files\ClamAV-x64\database\daily.cvd" >> %log%
+sigtool --info="C:\Program Files\ClamAV\database\daily.cvd" >> %log%
 echo ------------------------------------------------------------------------------- >> %log%
-sigtool --info="C:\Program Files\ClamAV-x64\database\main.cvd" >> %log%
+sigtool --info="C:\Program Files\ClamAV\database\main.cvd" >> %log%
 echo ------------------------------------------------------------------------------- >> %log%
 echo Initiating scan on "%scandir%": >> %log%
-clamscan --bell --log=%log% --recursive %scandir%
+clamscan --bell --log=%log% --recursive --allmatch=yes --stdout %scandir%
 echo ------------------------------------------------------------------------------- >> %log%
 date /t >> %log%
 time /t >> %log%

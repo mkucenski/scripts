@@ -2,13 +2,6 @@
 ENABLE_DEBUG=0
 IFS=$(echo -en "\n\b")
 
-function NORMALIZEDIR() {
-	# rsync in particular operates differently depending on whether the source has a trailing '/';
-	# this function normalizes directory names to not include the trailing '/'
-	DIR="$(dirname "$1")/$(basename "$1")"
-	echo "$DIR"
-}
-
 function NOTIFY() {
 	_COMMON_NOTIFY_MSG="$1"
 	_COMMON_NOTIFY_SRC="$(basename "$2")"
@@ -76,7 +69,8 @@ function FULL_PATH() {
 function EXEC_CMD() {
 	# Evaluate/execute the command given by a string; log the command as well as send to stderr
 	INFO_ERR "CMD: $1" "$2"
-	eval "$1"
+	# Redirect stdout/stderr to the logfile, but still report back to the console on stdout/stderr
+	eval "$1" > >(tee -a "$2") 2> >(tee -a "$2" >&2)
 }
 
 function LOG_VERSION() {
@@ -99,6 +93,11 @@ function LOG_SCRIPT_BASE64() {
 	else
 		ERROR "File does not exist!" "$0" "$_COMMON_LOG_SCRIPT_BASE64_LOG"
 	fi
+}
+
+function ROT13() {
+	# Decode/encode the passed string
+	echo "$1" | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 }
 
 function BASE64_STRING() {
