@@ -5,3 +5,4 @@
 custom
 windows/sysinternals/*
 windows/fciv/*
+macOS/restore_ports.tcl
