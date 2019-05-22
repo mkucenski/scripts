@@ -9,6 +9,7 @@ if [ $# -eq 0 ]; then
 	USAGE "BASEDIR" "ALL_LOGFILE (optional)" && exit 1
 fi
 
+RV=0
 START "$0" "$ALL_LOGFILE" "$*"
 
 find "$BASEDIR" -type f -iname "*.E01" -print0 | 
@@ -18,19 +19,12 @@ while IFS= read -r -d $'\0' FOUND_IMAGE; do
 	RESULT=$("${BASH_SOURCE%/*}/ewfverify.sh" "$FOUND_IMAGE")
 	SUCCESS=$(echo "$RESULT" | grep "Successfully Verified!")
 	if [ -n "$SUCCESS" ]; then
-		if [ -n "$ALL_LOGFILE" ]; then
-			INFO "SUCCESS! ($FULL_FOUND_IMAGE_PATH)" "$ALL_LOGFILE"
-		else
-			INFO "SUCCESS! ($FULL_FOUND_IMAGE_PATH)"
-		fi
+		INFO "SUCCESS! ($FULL_FOUND_IMAGE_PATH)" "$ALL_LOGFILE"
 	else
-		if [ -n "$ALL_LOGFILE" ]; then
-			ERROR "$FULL_FOUND_IMAGE_PATH" "$0" "$ALL_LOGFILE" && exit 1
-		else
-			ERROR "$FULL_FOUND_IMAGE_PATH" "$0" && exit 1
-		fi
+		ERROR "$FULL_FOUND_IMAGE_PATH" "$0" "$ALL_LOGFILE" && RV=1
 	fi
 done
 
 END "$0" "$ALL_LOGFILE"
+exit $RV
 
