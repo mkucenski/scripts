@@ -1,33 +1,28 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
-. ${BASH_SOURCE%/*}/unison/unison-sync-inc.sh
+. "${BASH_SOURCE%/*}/unison-include.sh" || exit 1
 
-SRC="$1"
-DST="$2"
+ROOT1="$1"
+ROOT2="$2"
 if [ $# -eq 0 ]; then
-	USAGE "SRC" "DST" && exit $COMMON_ERROR
+	USAGE "ROOT1" "ROOT2" && exit 1
 fi
 
-RV=$COMMON_SUCCESS
-
-if [ -e "$SRC" ]; then
-	if [ -e "$DST" ]; then
-		INFO "--- $SRC -> $DST ---"
-		RESULT=$(execUnison2 "$SRC" "$DST")
+if [ -e "$ROOT1" ]; then
+	if [ ! -e "$ROOT2" ]; then
+		mkdir -p "$ROOT2"
+	fi
+	if [ -e "$ROOT2" ]; then
+		INFO "--- $ROOT1 <-> $ROOT2 ---"
+		RESULT=$(execUnison "$ROOT1" "$ROOT2")
 		if [ $? -ne 0 ]; then
-			ERROR "$RESULT ($?)" "$0"
-			RV=$?
+			ERROR "$RESULT ($?)" "$0" && exit 1
 		else
 			INFO "Success!"
 		fi
 	else
-		ERROR "<$DSTBASEDIR> Not Available!" "$0"
-		RV=$COMMON_ERROR
+		ERROR "<$ROOT2> Not Available!" "$0" && exit 1
 	fi
 else
-	ERROR "<$SRCDIR> Not Available!" "$0"
-	RV=$COMMON_ERROR
+	ERROR "<$ROOT1> Not Available!" "$0" && exit 1
 fi
-
-exit $RV
 

@@ -1,19 +1,11 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/../common-include.sh || exit 0
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
-if [ $(CHECK_ROOT) != true ]; then
-	ERROR "MacPorts *MUST* be run as 'root'!" && exit 0
-fi
-
-LOGFILE="`echo ~`/Logs/macports-wrapper.log"
-
+LOGFILE="$HOME/Logs/macports-wrapper-$(HOSTNAME).log"
 ERR=-1
-START "$0" "$LOGFILE"
-
-LOG "Args: $@" "$LOGFILE"
-
-INFO "$(port "$@" 2>&1)" "$LOGFILE"
-
+START "$0" "$LOGFILE" "$*"
+LOG "Args: $(ECHO_ARGS $@)" "$LOGFILE"
+port "$@" | tee -a "$LOGFILE"
 END "$0" "$LOGFILE"
 exit $ERR
 

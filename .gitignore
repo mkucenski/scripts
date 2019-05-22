@@ -1,7 +1,8 @@
-unison/unison-sync.sh
-unison/unison-sync-images.sh
-unison/unison-sync-data.sh
-unison/*.prf
-test.sh
-easylist/
-windows/*.exe
+.*.swp
+*.swp
+.*.pid
+.bak.*
+custom
+windows/sysinternals/*
+windows/fciv/*
+macOS/restore_ports.tcl

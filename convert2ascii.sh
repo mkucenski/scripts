@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # useful in processing text data that includes non-standard characters; '-c' silently discards non-convertable characters.
 

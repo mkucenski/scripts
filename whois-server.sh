@@ -1,10 +1,33 @@
-#!/bin/bash
+#!/usr/bin/env bash
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
-# Run whois records with the given server and consistently store the results in a specific directory
+# Run whois records consistently store the results in a specific directory
 
 SITE="$1"
 SERVER="$2"
-DEST="$3"
+DESTDIR="$3"
+if [ $# -eq 0 ]; then
+	USAGE "SITE" "SERVER" "DESTDIR" && exit 1
+fi
+if [ -z "$DESTDIR" ]; then
+	DESTDIR="./"
+fi
 
-whois -h "$SERVER" "$SITE" | tee -a "$DEST/$SITE-whois.txt"
+DEST="$DESTDIR/$SITE-whois.txt"
+if [ ! -e "$DEST" ]; then
+	mkdir -p "$DESTDIR"
+	touch "$DEST"
+fi
+
+if [ -e "$DEST" ]; then
+	START "$0" "$DEST" "$*"
+	INFO "$SITE -> $DEST"
+	LOG "Whois Query for: $SITE" "$DEST"
+
+	EXEC_CMD "whois -h \"$SERVER\" \"$SITE\" | egrep -v \"^$\" | egrep -v \"^#\" | tee -a \"$DEST\"" "$DEST"
+
+	END "$0" "$DEST"
+else
+	ERROR "Unable to create destination file!" "$0" && exit 1
+fi
 

@@ -1,13 +1,11 @@
-#!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
+#!/usr/bin/env bash
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 EWF="$1"
 VMDK="$2"
 if [ $# -eq 0 ]; then
-	USAGE "EWF" "VMDK" && exit $COMMON_ERROR
+	USAGE "EWF" "VMDK" && exit 1
 fi
-
-RV=$COMMON_SUCCESS
 
 DEBUG=0
 LOG="$VMDK.log"
@@ -24,16 +22,11 @@ if [ ! -e "$VMDK" ]; then
 
 	if [ $BYTES -gt 0 ]; then
 		ewfexport -u -o 0 -B $BYTES -f raw -t - "$EWF" | /Applications/VirtualBox.app/Contents/MacOS/VBoxManage convertfromraw stdin "$VMDK" $BYTES --format VMDK --variant Standard 2>&1 | tee -a "$LOG"
-		RV=$?
 		INFO "EWF-Stored MD5:				$EWFMD5" "$LOG"
 	else
-		ERROR "ewfinfo unable to retrieve bytes value!" "$0" "$LOG"
-		RV=$COMMON_ERROR
+		ERROR "ewfinfo unable to retrieve bytes value!" "$0" "$LOG" && exit 1
 	fi
 else
-	ERROR "Destination VMDK already exists!" "$0" "$LOG"
-	RV=$COMMON_ERROR
+	ERROR "Destination VMDK already exists!" "$0" "$LOG" && exit 1
 fi
-
-exit $RV
 

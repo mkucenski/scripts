@@ -1,0 +1,281 @@
+.custom|Own custom signatures
+.1cd|Russian Finance 1C:Enterprise 8
+.3dm|Rhino / openNURBS
+.7z|7zip archive file
+.DB
+.a|Unix Archive/Debian package
+.abr|Adobe Brush
+.acb|Adobe Color Book
+.accdb|Access Data Base
+.ace|ACE archive
+.ab|MAC Address Book
+.ado|Adobe Duotone Options
+.ahn|Ahnenblatt
+.aif|Audio Interchange File Format
+.all|Cubase Song file: .all
+.als|Ableton Live Sets
+.amd|AlphaCAM (amd/amt/atd/att)
+.amr|Adaptive Multi-Rate
+.apa|APA Style Helper
+.ape|Monkey's Audio compressed format
+.apple|AppleSingle/AppleDouble
+.ari|ARRI Raw Video
+.arj|ARJ archive
+.asf|ASF, WMA, WMV: Advanced Streaming Format used for Audio/Video
+.asl|Adobe Layer Style
+.asm|Pro/ENGINEER Assembly
+.atd|Agelong Tree Database/Abs0luteDatabase
+.au|Sun/NeXT audio data
+.axx|AxCrypt
+.bac|Bacula backup
+.db|Berkeley DB (Little Endian)
+.bim|Broadcast Interface Module
+.binvox|Binvox Voxel File
+.bkf|MS Backup file
+.blend|blender
+.bmp|BMP bitmap image
+.bz2|bzip2 compressed data
+.cab|Microsoft Cabinet archive
+.caf|Core Audio Format
+.cam|Casio QV Digital Camera Image
+.catdrawing|CATIA
+.cdt|cdl/cdt/cdd Concept Draw
+.chm|MS Windows HtmlHelp Data
+.class|Java Class
+.comicdoc|Comic Life
+.cp_|MS compress file (SZDD)
+.cow|Qemu Image
+.crw|Canon Raw picture
+.csh|Adobe Custom shapes
+.ctg|Canon catalog
+.cwk|AppleWorks
+.d2s|Diablo II
+.dad|Micae DVR
+.dar|dar archive
+.dat|IE History, Glavna Knjiga account data
+.dbf|DBase 3, prone to false positive
+.dbn|DriftBox
+.dcm|Digital Imaging and Communications in Medicine (DICOM)
+.ddf|Didson Data File
+.dex|Dalvik
+.diskimage|SunPCI Disk Image
+.fat|FAT subdirectory
+.djv|DjVu
+.dmp|Oracle Dump (export)
+.drw|Pro/ENGINEER Drawing
+.doc|Microsoft Office Document (doc/xls/ppt/vsd/...), 3ds Max, MetaStock, Wilcom ES
+.dpx|Cineon image file/SMTPE DPX
+.ds2|Digital Speech Standard v2
+.dsc|Nikon dsc
+.dss|Digital Speech Standard
+.dta|SPSS
+.dump|Dump/Restore archive
+.dv|DIF Digital Video
+.dwg|AutoCAD
+.dxf|Drawing Interchange File
+.e01|Encase
+.eCryptfs|Encrypted file by eCryptfs
+.edb|Exchange Database
+.elf|Executable and Linking Format
+.emf|Windows Enhanced MetaFile
+.evt|Windows Event Log
+.exe|MS Windows executable
+.exs|Apple Logic
+.ext|ext2/ext3/ext4 Superblock
+.ext|ext2/ext3/ext4 Filesystem
+.fat|FAT
+.fbf|SymBackup
+.fbk|Microsoft Dynamics NAV (MS Navision)
+.fcp|Final Cut Pro
+.fcs|Flow Cytometry Standard 3.0
+.fdb|Microsoft Dynamics NAV (MS Navision)
+.fds|fwNES Disk Image (with header)
+.fh10|Macromedia Freehand 10
+.fh5|Macromedia Freehand 5
+.sparseimage|Filevault
+.fits|Flexible Image Transport System
+.flac|FLAC audio
+.flp|Fruity Loop
+.flv|Macromedia
+.fob|Microsoft Dynamics NAV (MS Navision)
+.fp5|File Maker Pro
+.fp7|File Maker Pro
+.freeway|Freeway 5 Pro
+.frm|Pro/ENGINEER Drawing Form
+.fs|Zope
+.fwd|FRWD Sports Computer
+.gam|Games Factory
+.gct|XFI Electronic Fuel Injection Systems
+.gho|Ghost
+.gif|Graphic Interchange Format
+.gm6|Game Maker
+.gp5|Guitar Pro 5
+.gpg|OpenPGP/GPG (Partial support)
+.gsm|Group Speciale Mobile GSM 06.10
+.gz|gzip compressed data
+.hdf|Hierarchical Data Format 4
+.hds|Parallels disk image
+.hfsp|HFS+/HFSX
+.hr9|Heredis - Genealogy
+.http|HTTP Cache
+.icc|Color profiles
+.ico|Windows Icon
+.idx|RT60
+.ifo|DVD Video manager or title set
+.imb|Incredimail
+.indd|InDesign File
+.info|ZoomBrowser Thumbnail info
+.iso|ISO
+.it|Impulse Tracker
+.itu|iTunes
+.jpg|JPG picture
+.kdb|KeePassX
+.kdbx|KeePassX
+.ldf|Microsoft SQL Server Log Data File
+.lit|Microsoft ITOL/ITLS
+.logic|Apple Logic Studio
+.lnk|MS Windows Link
+.lso|Logic Platinum File
+.luks|LUKS encrypted file
+.lxo|lxo/lwo 3d model
+.lzh|lzh/LArc archive
+.lzo|lzo archive
+.m2ts|Blu-ray MPEG-2
+.mat|Matlab
+.max|PaperPort
+.mb|Maya
+.mcd|VectorWorks
+.mdb|Access Data Base
+.mdf|Microsoft SQL Server Master Database File
+.mfa|The Games Factory Multimedia Fusion Files
+.mfg|Pro/ENGINEER Manufacturing
+.mft|NTFS MFT record
+.mid|MIDI Musical Instrument Digital Interface
+.mig|Windows Migration Backup
+.mk5|Custom CAD-CAM
+.mkv|Matroska
+.mlv|Magic Lantern Video
+.mobi|Mobi e-book
+.mov|mov/mp4/3gp/3g2/jp2
+.mp3|MP3 audio (MPEG ADTS, layer III, v1)
+.mpg|Moving Picture Experts Group video
+.mrw|Minolta Raw picture
+.mus|Finale Music Score
+.myo|Mind Your Own Business
+.MYI|MySQL (myi/frm)
+.mxf|Material Exchange Format
+.nds|Nintendo DS Game ROM Image
+.nes|iNES/iNES 2.0 ROM image
+.njx|NJStar Document
+.nk2|Outlook Nickfile
+.nsf|Lotus Notes
+.oci|OpenCanvas Image
+.ogg|OGG audio
+.one|Microsoft OneNote
+.orf|Olympus Raw Format picture
+.paf|Personal Ancestral File
+.pap|Papyrus word file
+.par2|parchive
+.pcap|tcpdump capture file
+.pct|Macintosh Picture
+.pcx|PCX bitmap image
+.pdf|Portable Document Format, Adobe Illustrator
+.pds|Reson - Sonar Data
+.pfx|PKCS#12 keys
+.plist|Apple binary property list
+.plt|Gerber Graphix Advantage
+.png|Portable/JPEG/Multiple-Image Network Graphics
+.pnm|Netpbm (PBM/PGM/PPM)
+.prc|PalmOS application
+.prt|Pro/ENGINEER Model
+.ps|PostScript or Encapsulated PostScript document
+.psb|Adobe Photoshop Image
+.psd|Adobe Photoshop Image
+.psf|Print Shop
+.psp|Paint Shop Pro Image File
+.pst|Outlook (pst/wab/dbx)
+.ptb|PowerTab
+.ptf|Pro Tools session File
+.pyc|Python Compiled Script
+.pzf|GraphPrism 4
+.pzh|Presto
+.qbb|Quickbooks (qbb/qbw)
+.qdf|Quicken
+.qkt|Apple QuickTake 100
+.qxd|QuarkXpress Document
+.r3d|RED r3d camera
+.ra|Real Audio
+.raf|Raw Fujifilm picture
+.rar|Rar archive
+.raw|Contax picture RAW
+.rdc|Rollei picture
+.reg|Windows Registry
+.res|Microsoft Visual Studio Resource file
+.rfp|RoboForm
+.riff|RIFF audio/video: wav, cdr, avi
+.rlv|Revelation password
+.rm|Real Audio
+.rns|Reason Audio File
+.rpm|RPM package
+.rw2|Panasonic/Leica RAW
+.rx2|Zotope RX 2, Audio Repair Software file
+.save|Assassin's Creed II
+.ses|Cool Edit/Adobe Audition session
+.sgcta|Ciel
+.shn|Shorten audio file
+.sib|Sibelius
+.sit|Mikron image
+.skd|AutoSketch drawing
+.skp|SketchUp
+.sp3|Sisporto SP3/SPM
+.spe|WinSpec bitmap image
+.spf|ShadowProtect
+.sav|SPSS (Statistical Package for the Social Sciences) saved data
+.sqlite|SQLite
+.sqm|Windows Live Messenger Log File
+.stl|Stereolithography CAD (Binary format)
+.sit|StuffIt Archive
+.swf|Macromedia Flash (Compiled)
+.tar|tar archive
+.tax|Turbo Tax
+.tib|Acronis True Image
+.tif|Tag Image File Format and some raw file formats (pef/nef/dcr/sr2/cr2)
+.TiVo|TiVo video record
+.torrent|Torrent
+.tph|Pro/ENGINEER ToolPath
+.tpl|Adobe Tool Preset
+.ts|MPEG transport stream (TS)
+.ttf|TrueType Font
+.tx?|Text files with header: rtf,xml,xhtml,mbox/imm,pm,ram,reg,sh,slk,stp,jad,url
+.txt|Other text files: txt,html,asp,bat,C,jsp,perl,php,py/emlx... scripts
+.tz|Timezone info
+.v2i|v2i backup
+.vault|McAfee Anti-Theft/FileVault
+.vfb|FontLab
+.vdi|Virtual desktop infrastructure 1.1
+.veg|Sony Vegas
+.vmdk|VMWare
+.vmg|Nokia Text Message
+.wallet|Armory bitcoin wallet
+.wdp|JPEG XR
+.wim|Windows imaging (WIM) image
+.win|Opera preferences
+.wks|Lotus 1-2-3
+.wmf|Microsoft Windows Metafile
+.wnk|Wink
+.woff|Web Open Font Format
+.wpb|OpenCanvas
+.wpd|Corel Documents
+.wtv|Windows Media Center TV
+.wv|WavPack, Hybrid Lossless Wavefile Compressor
+.x3f|Sigma/Foveon X3 raw picture
+.xcf|Gimp XCF File
+.xfi|XFI Electronic Fuel Injection Systems
+.xfs|xfs structure
+.xm|FastTrackerII Extended Module
+.xsv|XBOX GTA San Andreas Save File
+.xpt|Mozilla XPCOM Type Library
+.xv|XV thumbnail image
+.xz|xz Archive
+.z2d|ZeroCad
+.zip|zip archive including OpenOffice and MSOffice 2007

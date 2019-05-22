@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #Works with quoted csv (see csvMacro.xls) from WebHistorian (mandiant.com) Excel file.
 
 UNAME=`uname`

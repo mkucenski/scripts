@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 SRCROOT="$1"
 DESTROOT="$2"

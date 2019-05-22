@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #  Changer Command = "path-to-this-script/mtx-pseudo-changer %o %a %v %j %f %S"
 

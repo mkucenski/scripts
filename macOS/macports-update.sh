@@ -1,30 +1,27 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/../common-include.sh || exit 0
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 if [ $(CHECK_ROOT) != true ]; then
-	ERROR "MacPorts *MUST* be run as 'root'!" && exit 0
+	ERROR "This script *MUST* be run as 'root'!" && exit 1
 fi
 
-LOGFILE="`echo ~`/Logs/macports-update.log"
+LOGFILE="`echo ~`/Logs/macports-update-$(HOSTNAME).log"
 
-ERR=-1
-START "$0" "$LOGFILE"
-
+START "$0" "$LOGFILE" "$*"
 LOG "Args: $@" "$LOGFILE"
 
-PRE=$(mktemp)
-POST=$(mktemp)
+PRE=$(MKTEMP "$0" || exit 1)
+POST=$(MKTEMP "$0" || exit 1)
 
-${BASH_SOURCE%/*}/macports-wrapper.sh installed > "$PRE"
+port installed > "$PRE"
 
-INFO "$(${BASH_SOURCE%/*}/macports-wrapper.sh -d selfupdate)" "$LOGFILE"
-INFO "$(${BASH_SOURCE%/*}/macports-wrapper.sh fetch outdated)" "$LOGFILE"
-INFO "$(${BASH_SOURCE%/*}/macports-wrapper.sh -ucp upgrade outdated)" "$LOGFILE"
+port -d selfupdate | tee -a "$LOGFILE"
+port fetch outdated | tee -a "$LOGFILE"
+port -ucp upgrade outdated | tee -a "$LOGFILE"
 
-${BASH_SOURCE%/*}/macports-wrapper.sh installed > "$POST"
-INFO $(diff --side-by-side --suppress-common-lines "$PRE" "$POST") "$LOGFILE"
+port installed > "$POST"
+diff --side-by-side --suppress-common-lines "$PRE" "$POST" | tee -a "$LOGFILE"
 rm "$PRE" "$POST"
 
 END "$0" "$LOGFILE"
-exit $ERR
 

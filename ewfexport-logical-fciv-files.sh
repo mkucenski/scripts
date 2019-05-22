@@ -1,29 +1,25 @@
-#!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
+#!/usr/bin/env bash
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 LOGICAL_IMAGE="$1"
 LOGFILE="$2"
 DOSHA1="$3"
 if [ $# -eq 0 ]; then
-	USAGE "LOGICAL_IMAGE" "LOGFILE" "DOSHA1" && exit $COMMON_ERROR
+	USAGE "LOGICAL_IMAGE" "LOGFILE" "DOSHA1" && exit 1
 fi
 
-RV=$COMMON_SUCCESS
-TMPDIR=$(mktemp -d -t $(basename "$0") || exit $COMMON_ERROR)
+_TMPDIR=$(MKTEMPDIR "$0" || exit 1)
 
-INFO "Exporting All Logical Files Found in Image... ($TMPDIR)"
-ewfexport -f files -l "$LOGFILE" -t "$TMPDIR/ewfexport" -q -u "$LOGICAL_IMAGE" 2>/dev/null
+INFO "Exporting All Logical Files Found in Image... ($_TMPDIR)"
+ewfexport -f files -l "$LOGFILE" -t "$_TMPDIR/ewfexport" -q -u "$LOGICAL_IMAGE" 2>/dev/null
 
 INFO "Hashing All Logical Files..."
-pushd "$TMPDIR/ewfexport/LogicalEntries"
-${BASH_SOURCE%/*}/fciv_recursive.sh ./ "$DOSHA1"
-RV=$?
-popd "$TMPDIR"
+pushd "$_TMPDIR/ewfexport/LogicalEntries"
+"${BASH_SOURCE%/*}/fciv_recursive.sh" ./ "$DOSHA1"
+popd "$_TMPDIR"
 
 INFO "Deleting Temp. Directory..."
-rm -R "$TMPDIR"
-
-exit $RV
+rm -R "$_TMPDIR"
 
 # ewfexport 20140608
 # 

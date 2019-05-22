@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 if [ "$1" = "-d" ]; then
 	DEVICE=$2

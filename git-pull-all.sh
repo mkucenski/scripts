@@ -1,14 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 BASEDIR="./"
 
-# Adjust field separators for for loop to support whitespace in filenames
-IFS=$(echo -en "\n\b")
-
-for DIR in `find "$BASEDIR" -type d -depth 1`; do
+find "$BASEDIR" -type d -depth 1 -print0 |
+while IFS= read -r -d $'\0' DIR; do
 	echo "$DIR:"
 	pushd "$DIR" > /dev/null
-	git pull | egrep -vi "^$"
+	git pull 2>/dev/null | egrep -vi "^$"
 	popd > /dev/null
 done
 

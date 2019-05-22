@@ -1,14 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
+# ENABLE_DEBUG=1
 
-PST="$1"
-DST="$2"
+PST="$(FULL_PATH "$1")"
+DEST="$2"
+PST_BASE_NAME="$(STRIP_EXTENSION "$(basename "$PST")")"
+INFOFILE="$(FULL_PATH "$DEST/$PST_BASE_NAME.txt")"
+LOGFILE="$(FULL_PATH "$DEST/$PST_BASE_NAME.log")"
+if [ $# -eq 0 ]; then
+	USAGE "PST" "DEST" && exit 1
+fi
+DEBUG "PST=$PST, DEST=$DEST, PST_BASE_NAME=$PST_BASE_NAME, INFOFILE=$INFOFILE, LOGFILE=$LOGFILE" "$0"
 
-PST_BASE=$(basename "$PST")
+START "$0" "$LOGFILE" "$*"
 
-pushd "$DST"
-pffinfo "$PST" | tee "./$PST_BASE.txt"
-pffexport -f text -m items -l "./$PST_BASE.log" -q "$PST"
+if [ ! -e "$DEST" ]; then
+	mkdir -p "$DEST"
+fi
+
+pushd "$DEST"
+pffinfo "$PST" | tee "$INFOFILE"
+pffexport -f text -m items -l "$LOGFILE" -q "$PST"
 popd
+
+END "$0" "$LOGFILE"
 
 # pffexport 20170115
 # 

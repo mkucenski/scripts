@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # $1 = Directory to prune (e.g. /usr/local/var/log/daemonlogger)
 # $2 = Mount point for prune directory (e.g. /usr)

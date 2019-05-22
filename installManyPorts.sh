@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 port=`echo "$1" | gsed -r 's/^([^ ]+) .*/\1/'`
 

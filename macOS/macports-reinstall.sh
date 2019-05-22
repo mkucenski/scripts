@@ -1,24 +1,23 @@
 #!/bin/bash
-. ${BASH_SOURCE%/*}/../common-include.sh || exit 0
+. "${BASH_SOURCE%/*}/../common-include.sh" || exit 1
 
 if [ $(CHECK_ROOT) != true ]; then
-	ERROR "MacPorts *MUST* be run as 'root'!" && exit 0
+	ERROR "MacPorts *MUST* be run as 'root'!" && exit 1
 fi
 
-LOGFILE="`echo ~`/Logs/macports-reinstall.log"
+LOGFILE="$(echo ~)/Logs/macports-reinstall-$(HOSTNAME).log"
 
-ERR=-1
-START "$0" "$LOGFILE"
-
-LOG "Args: $@" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 
 # Save the list of installed ports:
-INSTALLED=$(mktemp -t $(basename "$0")-installed)
-${BASH_SOURCE%/*}/macports-wrapper.sh -qv installed > "$INSTALLED"
+LOG "Currently Installed:" "$LOGFILE"
+INSTALLED=$(MKTEMP "$0-installed" || exit 1)
+${BASH_SOURCE%/*}/macports-wrapper.sh -qv installed | tee "$INSTALLED" >> "$LOGFILE"
 
 # (optional) Save the list of requested ports:
-REQUESTED=$(mktemp -t $(basename "$0")-requested)
-${BASH_SOURCE%/*}/macports-wrapper.sh echo requested | cut -d ' ' -f 1 > "$REQUESTED"
+LOG "Requested:" "$LOGFILE"
+REQUESTED=$(MKTEMP "$0-requested" || exit 1)
+${BASH_SOURCE%/*}/macports-wrapper.sh echo requested | cut -d ' ' -f 1 | tee "$REQUESTED" >> "$LOGFILE"
 
 # Uninstall all installed ports:
 ${BASH_SOURCE%/*}/macports-wrapper.sh -f uninstall installed
@@ -27,10 +26,10 @@ ${BASH_SOURCE%/*}/macports-wrapper.sh -f uninstall installed
 rm -rf /opt/local/var/macports/build/*
 
 # Download and execute the restore_ports script:
-TEMP=$(dirname $(mktemp))
-SCRIPT="$TEMP/restore_ports.tcl"
+_TMPDIR=$(MKTEMPDIR "$0")
+SCRIPT="$_TMPDIR/restore_ports.tcl"
 
-pushd "$TEMP" && curl -O https://svn.macports.org/repository/macports/contrib/restore_ports/restore_ports.tcl
+pushd "$_TMPDIR" && curl -O https://svn.macports.org/repository/macports/contrib/restore_ports/restore_ports.tcl
 chmod +x "$SCRIPT"
 popd
 "$SCRIPT" "$INSTALLED"
@@ -39,12 +38,11 @@ popd
 port unsetrequested installed
 xargs port setrequested < "$REQUESTED"
 
-POST=$(mktemp -t $(basename "$0")-post)
+POST=$(MKTEMP "$0-post" || exit 1)
 ${BASH_SOURCE%/*}/macports-wrapper.sh -qv installed > "$POST"
 INFO $(diff --side-by-side --suppress-common-lines "$INSTALLED" "$POST") "$LOGFILE"
 
 rm "$INSTALLED" "$REQUESTED" "$SCRIPT" "$POST"
 
 END "$0" "$LOGFILE"
-exit $ERR
 

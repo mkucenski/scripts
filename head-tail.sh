@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-head "$1"
+head -n $2 "$1"
 echo ".........."
-tail "$1"
+tail -n $2 "$1"
 

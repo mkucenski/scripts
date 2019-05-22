@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 PREFIX=`echo ~`/Development/opt
 

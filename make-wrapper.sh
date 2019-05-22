@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 LOG="`echo ~`/Logs/make-wrapper.log"
 

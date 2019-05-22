@@ -1,14 +1,25 @@
-#!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
+#!/usr/bin/env bash
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 IMAGE="$1"
-OFFSET="$2"
-COUNT="$3"
+SECTOR_SIZE="$2"
+OFFSET="$3"
+COUNT="$4"
+DEST_DIR="$5"
+DEST_NAME="$6"
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "OFFSET" "COUNT (512-byte sectors)" && exit $COMMON_ERROR
+	USAGE "IMAGE" "SECTOR_SIZE" "OFFSET" "COUNT" "DEST_DIR" "DEST_NAME (no extension)" && exit 1
 fi
 
-ewfexport -q -u -t - -o "$OFFSET" "$IMAGE" | dd bs=512 count="$COUNT"
+LOGFILE="$DEST_DIR/$DEST_NAME.log"
+START "$0" "$LOGFILE" "$*"
+
+SEGMENT_SIZE=$(((10**9*4)-2))
+CMD="ewfexport -q -u -f raw -S $SEGMENT_SIZE -t \"$DEST_DIR/$DEST_NAME\" -l \"$LOGFILE\" -o $(($SECTOR_SIZE * $OFFSET)) -B $(($SECTOR_SIZE * $COUNT)) \"$IMAGE\""
+LOG_VERSION "ewfexport" "$(ewfexport -V | head -n 1)" "$LOGFILE"
+EXEC_CMD "$CMD" "$LOGFILE"
+
+END "$0" "$LOGFILE"
 
 # ewfexport 20140608
 # 

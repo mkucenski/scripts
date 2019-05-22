@@ -1,0 +1,41 @@
+# Unison preferences file
+
+# automatically accept default (nonconflicting) actions
+auto = true
+batch = true
+
+# Avoid syncing extraneous Mac OS X stuff
+rsrc = false 
+ignore = Name .FBCIndex
+ignore = Name .FBCLockFolder
+ignore = Name {Cache*,.Trash*,.VolumeIcon.icns,.HSicon,Temporary*,.Temporary*,TheFindByContentFolder}
+ignore = Name {TheVolumeSettingsFolder,.Metadata,.filler,.idsff,.Spotlight,.DS_Store,.CFUserTextEncoding} 
+ignore = Name ._.DS_Store
+ignore = Name .DS_Store
+
+# Avoid syncing extraneous Windows stuff
+ignore = Name desktop.ini
+
+# Avoid syncing git files
+ignore = Name .git
+
+# Skip old backup directories -- no longer used by custom scripts
+ignore = Name .unison-backup
+
+addprefsto = sync/extra
+fat = true
+mountpoint = ./
+confirmbigdel = true
+fastcheck = true
+contactquietly = true
+# silent = true
+
+# allow the synchronization of symbolic links (true/false/default)
+links = true
+
+# backups
+backuploc = local
+backup = Name *
+
+# propogate file modification times (but not directory modtimes)
+times = true

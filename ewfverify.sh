@@ -1,5 +1,5 @@
-#!/bin/bash
-. ${BASH_SOURCE%/*}/common-include.sh
+#!/usr/bin/env bash
+. "${BASH_SOURCE%/*}/common-include.sh" || exit 1
 
 # NOTE: If you receive errors regarding too many files open, use 'ulimit -n XXXX' to increase the max open file limit.
 
@@ -9,37 +9,30 @@ if [ -z "$LOGFILE" ]; then
 	LOGFILE="$(STRIP_EXTENSION "$IMAGE")-ewfverify.log"
 fi
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "LOGFILE (optional - defaults to \$IMAGE-ewfverify.log)" && exit $COMMON_ERROR
+	USAGE "IMAGE" "LOGFILE (optional - defaults to \$IMAGE-ewfverify.log)" && exit 1
 fi
 
-ulimit -n 10240
-if [ $? -ne 0 ]; then 
-	ERROR "Unable to set increased ulimit value! Try execution as 'root'." "$0" "$LOGFILE" && exit $COMMON_ERROR
-fi
-
-RV=$COMMON_SUCCESS
-START "$0" "$LOGFILE"
+START "$0" "$LOGFILE" "$*"
 
 FULL_IMAGE_PATH="$(cd "$(dirname "$IMAGE")"; pwd)/$(basename "$IMAGE")"
+LOG_VERSION "ewfinfo" "$(ewfinfo -V | head -n 1)" "$LOGFILE"
 INFO "Executing ewfinfo ($IMAGE)..."
 INFO "Image: $FULL_IMAGE_PATH" "$LOGFILE"
-INFO "$(~/Development/opt/bin/ewfinfo "$IMAGE" 2>&1)" "$LOGFILE"
+INFO "$(ewfinfo "$IMAGE" 2>&1)" "$LOGFILE"
 
 INFO "Executing ewfverify ($IMAGE)..."
-RESULT=$(~/Development/opt/bin/ewfverify -l "$LOGFILE" -q "$IMAGE" 2>&1)
+LOG_VERSION "ewfverify" "$(ewfverify -V | head -n 1)" "$LOGFILE"
+RESULT=$(ewfverify -l "$LOGFILE" -q "$IMAGE" 2>&1)
 VERIFY=$(echo "$RESULT" | egrep "ewfverify: (SUCCESS|FAILURE)" | $SEDCMD -r 's/ewfverify: (.+)/\1/')
 if [ "$VERIFY" == "SUCCESS" ]; then
 	INFO "Successfully Verified!" "$LOGFILE"
 elif [ "$VERIFY" == "FAILURE" ]; then
-	ERROR "Failure Verifying Image!" "$0" "$LOGFILE"
-	RV=$COMMON_ERROR
+	ERROR "Failure Verifying Image!" "$0" "$LOGFILE" && exit 1
 else
-	ERROR "Unknown Error!" "$0" "$LOGFILE"
-	RV=$COMMON_UNKNOWN
+	ERROR "Unknown Error!" "$0" "$LOGFILE" && exit 1
 fi
 
 END "$0" "$LOGFILE"
-exit $RV
 
 # ewfverify 20140608
 # 

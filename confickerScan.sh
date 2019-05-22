@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #http://insecure.org/#conficker
 #http://seclists.org/nmap-dev/2009/q1/0869.html

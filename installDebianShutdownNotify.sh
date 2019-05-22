@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 cp debianShutdownNotify.sh /etc/init.d/
 

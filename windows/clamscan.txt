@@ -1,9 +1,11 @@
 
-                       Clam AntiVirus Scanner 0.99.1
-           By The ClamAV Team: http://www.clamav.net/about.html#credits
-           (C) 2007-2015 Cisco Systems, Inc.
+                       Clam AntiVirus: Scanner 0.100.1
+           By The ClamAV Team: https://www.clamav.net/about.html#credits
+           (C) 2007-2018 Cisco Systems, Inc.
 
-    --help                -h             Print this help screen
+    clamscan [options] [file/directory/-]
+
+    --help                -h             Show this help
     --version             -V             Print version number
     --verbose             -v             Be verbose
     --archive-verbose     -a             Show filenames inside scanned archives
@@ -17,8 +19,9 @@
 
     --tempdir=DIRECTORY                  Create temporary files in DIRECTORY
     --leave-temps[=yes/no(*)]            Do not remove temporary files
-    --database=FILE/DIR   -d FILE/DIR    Load virus database from FILE or load
-                                         all supported db files from DIR
+    --gen-json[=yes/no(*)]               Generate JSON description of scanned file(s). JSON will be printed and also-
+                                         dropped to the temp directory if --leave-temps is enabled.
+    --database=FILE/DIR   -d FILE/DIR    Load virus database from FILE or load all supported db files from DIR
     --official-db-only[=yes/no(*)]       Only load official signatures
     --log=FILE            -l FILE        Save scan report to FILE
     --recursive[=yes/no(*)]  -r          Scan subdirectories recursively
@@ -50,10 +53,11 @@
     --phishing-sigs[=yes(*)/no]          Signature-based phishing detection
     --phishing-scan-urls[=yes(*)/no]     URL-based phishing detection
     --heuristic-scan-precedence[=yes/no(*)] Stop scanning as soon as a heuristic match is found
-    --phishing-ssl[=yes/no(*)]           Always block SSL mismatches in URLs (phishing module)
-    --phishing-cloak[=yes/no(*)]         Always block cloaked URLs (phishing module)
-    --partition-intersection[=yes/no(*)] Detect partition intersections in raw disk images using heuristics.
+    --phishing-ssl[=yes/no(*)]           Always block (flag) SSL mismatches in URLs (phishing module)
+    --phishing-cloak[=yes/no(*)]         Always block (flag) cloaked URLs (phishing module)
+    --partition-intersection[=yes/no(*)] Detect partition intersections in raw disk images using heuristics
     --algorithmic-detection[=yes(*)/no]  Algorithmic detection
+    --normalize[=yes(*)/no]              Normalize html, script, and text files. Use normalize=no for yara compatibility
     --scan-pe[=yes(*)/no]                Scan PE files
     --scan-elf[=yes(*)/no]               Scan ELF files
     --scan-ole2[=yes(*)/no]              Scan OLE2 containers
@@ -64,7 +68,9 @@
     --scan-hwp3[=yes(*)/no]              Scan HWP3 files
     --scan-archive[=yes(*)/no]           Scan archive files (supported by libclamav)
     --detect-broken[=yes/no(*)]          Try to detect broken executable files
-    --block-encrypted[=yes/no(*)]        Block encrypted archives
+    --block-encrypted[=yes/no(*)]        Block (flag) encrypted archives
+    --block-macros[=yes/no(*)]           Block (flag) OLE2 files with VBA macros
+    --block-max[=yes/no(*)]              Block (flag) files that exceed max file size, max scan size, or max recursion limit
     --nocerts                            Disable authenticode certificate chain verification in PE files
     --dumpcerts                          Dump authenticode certificate chain in PE files
 
@@ -84,11 +90,9 @@
     --pcre-match-limit=#n                Maximum calls to the PCRE match function.
     --pcre-recmatch-limit=#n             Maximum recursive calls to the PCRE match function.
     --pcre-max-filesize=#n               Maximum size file to perform PCRE subsig matching.
-    --enable-stats                       Enable statistical reporting of malware
-    --disable-pe-stats                   Disable submission of individual PE sections in stats submissions
-    --stats-timeout=#n                   Number of seconds to wait for waiting a response back from the stats server
-    --stats-host-id=UUID                 Set the Host ID used when submitting statistical info.
     --disable-cache                      Disable caching and cache checks for hash sums of scanned files.
+
+Pass in - as the filename for stdin.
 
 (*) Default scan settings
 (**) Certain files (e.g. documents, archives, etc.) may in turn contain other
