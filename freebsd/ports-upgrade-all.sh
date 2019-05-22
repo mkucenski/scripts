@@ -1,5 +1,4 @@
 #!/bin/sh
 
-portupgrade -aFR
-portupgrade -aR
+portmaster -a
 
