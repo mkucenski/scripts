@@ -6,11 +6,12 @@ IMAGE="$1"
 OFFSET="$2"
 DEST="$3"
 MCT_FILE="$4"
-LOGFILE="$5"
 if [ $# -eq 0 ]; then
-	USAGE "IMAGE" "OFFSET" "DEST" "MCT" "LOGFILE" && exit 1
+	USAGE "IMAGE" "OFFSET" "DEST" "MCT" && exit 1
 fi
 
+mkdir -p "$DEST"
+LOGFILE="$DEST/$(STRIP_EXTENSION "$(basename "$0")").log"
 START "$0" "$LOGFILE" "$*"
 
 INFO "Finding unique inodes for extraction..." "$LOGFILE"
@@ -26,30 +27,37 @@ while read INODE; do
 	EXEC_CMD "$CMD" "$LOGFILE"
 done < "$INODES"
 
-mkdir -p "$DEST/_links"
+mkdir -p "$DEST/_files"
 MCT_ENTRIES="$(MKTEMP)"
 while read INODE; do
+	ORIGINAL="$DEST/_inodes/$INODE"
+
 	INFO "Finding MCT entries associated with inode ($INODE)..." "$LOGFILE"
 	REGEX="^[^|]*\|[^|]+\|$INODE\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|[^|]*$"
-	egrep "$REGEX" "$MCT_FILE" > "$MCT_ENTRIES"
+	egrep "$REGEX" "$MCT_FILE" | tee "$MCT_ENTRIES" | tee -a "$LOGFILE"
 
-	INFO "Linking inode ($INODE) to various MCT filenames and paths..." "$LOGFILE"
-	while read MCT_ENTRY; do
-		FILEPATH="$(_tsk_mct_file "$MCT_ENTRY")"
-		LINK="$DEST/_links/$FILEPATH"
+	if [ -s "$MCT_ENTRIES" ]; then
+		INFO "Linking inode ($INODE) to various MCT filenames and paths..." "$LOGFILE"
+		while read MCT_ENTRY; do
+			FILEPATH="$(_tsk_mct_file "$MCT_ENTRY")"
+			FILE="$DEST/_files/$FILEPATH"
+	
+			DIR="$(dirname "$FILEPATH")"
+			mkdir -p "$DEST/_files/$DIR"
 
-		DIR="$(dirname "$FILEPATH")"
-		mkdir -p "$DEST/_links/$DIR"
-
-		#TODO Should this be a symbolic or hard link; you can't do hard links on an SMB share, but once tar'd/zip'd which way makes it most functional on import into a forensic analysis tool?
-		# CMD="ln -s \"$ORIGINAL\" \"$LINK\""
-		CMD="ln \"$ORIGINAL\" \"$LINK\""
-		EXEC_CMD "$CMD" "$LOGFILE"
-	done < "$MCT_ENTRIES"
+			CMD="cp \"$ORIGINAL\" \"$FILE\""
+			EXEC_CMD "$CMD" "$LOGFILE"
+		done < "$MCT_ENTRIES"
+		rm "$MCT_ENTRIES"
+		rm "$ORIGINAL"
+	else
+		ERROR "No MCT entries found for inode ($INODE)!" "$LOGFILE"
+	fi
 done < "$INODES"
-rm "$MCT_ENTRIES"
-
 rm "$INODES"
+rm -R "$DEST/_inodes"
+
+NOTIFY "Finished recovery of $MCT_FILE ($IMAGE)!" "$0"
 END "$0" "$LOGFILE"
 exit 0
 
