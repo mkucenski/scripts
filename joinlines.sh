@@ -6,5 +6,5 @@ if [ $# -eq 0 ]; then
 	USAGE "DELIM" && exit 1
 fi
 
-cat /dev/stdin | gsed -r ":a;/$DELIM$/{N;s/\n//;ba}"
-
+# cat /dev/stdin | gsed -r ':a;/^[[:space:]]+/{N;s/\n//;ba}'
+cat /dev/stdin | gsed -r '/^[[:space:]]+.+$/{x;G;s/\n//};h'

@@ -12,6 +12,7 @@ G="to include in what will be committed"
 H="to discard changes in working directory"
 I="nothing added to commit but untracked files present"
 
+clear
 find "$BASEDIR" -type d -depth 1 -print0 |
 while IFS= read -r -d $'\0' DIR; do
 	echo "$DIR:"
