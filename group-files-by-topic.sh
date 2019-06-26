@@ -10,34 +10,59 @@ if [ $# -eq 0 ]; then
 	USAGE "SRC" "DEST" && exit 1
 fi
 
+# TODO	This is *not* fast, but it's far more complete than the original version--this repetitively strips leading/trailing
+#			stuff until everything specificed below is gone.
+#			It would probably be faster to repetitively process the entire file, vs. line-by-line, and then compare the files
+#			until no changes were made.
+function STRIP() {
+	_STRIP_LINE="$1"
+	_STRIP_NEW_LINE="$_STRIP_LINE"
+	while [ 1 ]; do
+		# Remove leading stuff
+		_STRIP_NEW_LINE="$(echo "$_STRIP_LINE" | \
+		 	$SEDCMD -r 's/^[-_.,!"()%#\&[:digit:][:space:]]*//' | \
+		 	$SEDCMD -r 's/^\[(EXTERNAL|everyone|No Subject|Non-DoD Source)\][[:space:]]*//' | \
+		 	$SEDCMD -r 's/^([rR][eE]|F[wW]d?|Automatic reply|Undeliverable|Recall)[_:]+[[:space:]]*//' | \
+			$SEDCMD -r 's/^Missed conversation with/Conversation with/' | \
+			$SEDCMD -r 's/^IPM\..*//' | \
+		 	$SEDCMD -r 's/^(IMPORTANT|Important|ANNOUNCEMENT|Announcement|DRAFT|Draft|EMAILING|Emailing|FINAL|Final|INFORMATION|Information|CONFIDENTIAL|Confidential|CORRECTION|Correction|COPY OF|Copy of|REMINDER|Reminder|FYI|Fyi|ATTENTION|Attention|URGENT|Urgent)[_:]+[[:space:]]*//' | \
+		 	$SEDCMD -r 's/^((INTERIM )?(UPDATE|Update)|(CONTAINS )?OUO|(URGENT |Urgent )?(Action|ACTION|Approval|APPROVAL)( Required|REQUIRED)?)[_:]+[[:space:]]*//')"
+
+		# Remove trailing stuff
+		_STRIP_NEW_LINE="$(echo "$_STRIP_NEW_LINE" | \
+			$SEDCMD -r 's/( [Ff]or| [Aa]s [Oo]f|APPROVED|DONE|UPDATE|NEW|(REV|Rev|rev)|_+[PS]O)$//' | \
+			$SEDCMD -r 's/ ?- ?(January|February|March|April|May|June|July|August|September|October|November|December)$//' | \
+			$SEDCMD -r 's/ ?- ?(Sun|Mon|Tue|Wed|Thurs|Fri|Satur)day$//' | \
+			$SEDCMD -r 's/\.[^.]{1,4}$//' | \
+			$SEDCMD -r 's/[-_.,!"()%#\&[:digit:][:space:]]*$//')"	
+
+		# If any changes were made, reiterate; if not, break and return
+		if [ "$_STRIP_NEW_LINE" != "$_STRIP_LINE" ]; then
+			_STRIP_LINE="$_STRIP_NEW_LINE"
+		else
+			break;
+		fi
+	done
+	# INFO_ERR "$_STRIP_NEW_LINE"
+	echo "$_STRIP_NEW_LINE"
+}
+
 INFO "Building lists of topics..."
 TOPICS_FILE="$(MKTEMP "$0" || exit 1)"
 TOPICS_FILE_TMP="$(MKTEMP "$0" || exit 1)"
 pushd "$SRC"
-# Attempt to remove leading email-type strings (reply, forward, etc.) as well as removing \. file extensions and
-# any "stuff" after them (the meat of the name/topic is likely prior to any file extensions).
-# Attempt to remove other random email subject nonsense.
-# Attempt to removing any leading/trailing numbers, dashes, periods, commas, etc.
-# Escape any \[ or \] since they cause 'find' to incorrectly match filenames
-ls | $SEDCMD -r 's/(\[EXTERNAL\]|(Automatic reply|[rR][eE]|F[wW]d?|Undeliverable|Recall)[_:]) *//g; s/\.(pdf|xlsx?|XLSX?|docx?|DOCX?).*//g' | \
-	$SEDCMD -r 's/(IMPORTANT|(INTERIM )? (UPDATE|Update)|Announcement|DRAFT|Emailing|FINAL|Information|CONFIDENTIAL|CORRECTION|Copy of|(CONTAINS )?OUO|Reminder|REMINDER|FYI|(Action|Approval) Required|ATTENTION|(URGENT )?ACTION( REQUIRED)?|URGENT)[_:]+ *//g' | \
-	$SEDCMD -r 's/^Missed conversation with/Conversation with/' | \
-	$SEDCMD -r 's/\[(everyone|No Subject|Non-DoD Source)\]//g' | \
-	$SEDCMD -r 's/^IPM\..*//' | \
-	$SEDCMD -r 's/^[-_.,!"()%#[:digit:][:space:]]*//g; s/[-_.,!"()%#[:digit:][:space:]]*$//g' | \
-	$SEDCMD -r 's/_DONE$//' | \
-	$SEDCMD -r 's/\[/\\[/g; s/\]/\\]/g' | \
-	egrep -v "^$" | \
-	sort -bfiu > "$TOPICS_FILE_TMP"
-
-	# Give the user a chance to edit/further trim the topics list
-	vi "$TOPICS_FILE_TMP"
+	ls > "$TOPICS_FILE"
+	echo "$TOPICS_FILE_TMP"
+	while read LINE; do
+		STRIP "$LINE" >> $TOPICS_FILE_TMP
+	done < "$TOPICS_FILE"
+	sort -bfiu "$TOPICS_FILE_TMP" | egrep -v "^$" > "$TOPICS_FILE"
+	vi "$TOPICS_FILE"
 popd
 
 # Further sort the topics list based on the length of the topic string. This ensures that files are matched and moved
 # to the most specific topic first before some very short (say a 1 or 2 letter) topic matches everything.
-cat "$TOPICS_FILE_TMP" | sort -bfiu | $AWKCMD '{ print length, $0 }' | sort -nr | cut -d " " -f2- > "$TOPICS_FILE"
-rm "$TOPICS_FILE_TMP"
+cat "$TOPICS_FILE" | sort -bfiu | $AWKCMD '{ print length, $0 }' | sort -nr | cut -d " " -f2- > "$TOPICS_FILE_TMP"; mv "$TOPICS_FILE_TMP" "$TOPICS_FILE"
 
 INFO "Making a copy of the src directory so that each file can be moved into place as appropriate..."
 # Copying the source directory because we as we sort, we need to remove the file from the source directory so that it 
@@ -49,7 +74,7 @@ cp -R "$SRC/" "$SRC_COPIES"
 INFO "Reading topics file and moving files into appropriate sub-folders..."
 # Read each topic and then find any file that matches; move the files into that sub-folder.
 while read -r LINE; do
-	INFO "$LINE"
+	# INFO_ERR "$LINE"
 	mkdir -p "$DEST/$LINE"
 	find "$SRC_COPIES" -type f -depth 1 -iname "*$LINE*" -exec mv {} "$DEST/$LINE/" \;
 done < "$TOPICS_FILE"
@@ -63,15 +88,16 @@ find "$DEST" -type d -empty -exec rmdir {} \; 2>/dev/null
 # topics. They have to be copied somewhere so that they are available for review; copy them to an unknown folder.
 if [ -n "$(ls -A "$SRC_COPIES/")" ]; then 
 	# OTHER_DIR="$DEST/[$(basename "$0") - Other]"
-	OTHER_DIR="$DEST/[Unknown Topic]"
+	OTHER_DIR="$DEST/[Other-Unknown Topics]"
 	INFO "Copying missed files into <$OTHER_DIR>..."
 	mkdir -p "$OTHER_DIR"
 	cp -R "$SRC_COPIES/" "$OTHER_DIR/"
 fi
 
 INFO "Cleaning up temp files/folders..."
-rm "$TOPICS_FILE"
-rm -R "$SRC_COPIES"
+rm -f "$TOPICS_FILE"
+rm -f "$TOPICS_FILE_TMP"
+rm -Rf "$SRC_COPIES"
 
 exit 0
 
