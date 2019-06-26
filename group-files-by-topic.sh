@@ -16,26 +16,28 @@ TOPICS_FILE_TMP="$(MKTEMP "$0" || exit 1)"
 pushd "$SRC"
 # Attempt to remove leading email-type strings (reply, forward, etc.) as well as removing \. file extensions and
 # any "stuff" after them (the meat of the name/topic is likely prior to any file extensions).
-#
 # Attempt to remove other random email subject nonsense.
-# 
 # Attempt to removing any leading/trailing numbers, dashes, periods, commas, etc.
-# 
-# Escap any \[ or \] since they cause 'find' to incorrectly match filenames
-ls | $SEDCMD -r 's/(\[EXTERNAL\]|(Automatic reply|[rR][eE]|F[wW]d?)[_:]) *//g; s/\.(pdf|xlsx?|XLSX?|docx?|DOCX?).*//g' | \
-	$SEDCMD -r 's/(FYI|Approval Required|ATTENTION|(URGENT )?ACTION( REQUIRED)?)[_:] *//g' | \
-	$SEDCMD -r 's/^[-_.,!"()[:digit:][:space:]]*//g; s/[-_.,!"()[:digit:][:space:]]*$//g' | \
+# Escape any \[ or \] since they cause 'find' to incorrectly match filenames
+ls | $SEDCMD -r 's/(\[EXTERNAL\]|(Automatic reply|[rR][eE]|F[wW]d?|Undeliverable|Recall)[_:]) *//g; s/\.(pdf|xlsx?|XLSX?|docx?|DOCX?).*//g' | \
+	$SEDCMD -r 's/(IMPORTANT|(INTERIM )? (UPDATE|Update)|Announcement|DRAFT|Emailing|FINAL|Information|CONFIDENTIAL|CORRECTION|Copy of|(CONTAINS )?OUO|Reminder|REMINDER|FYI|(Action|Approval) Required|ATTENTION|(URGENT )?ACTION( REQUIRED)?|URGENT)[_:]+ *//g' | \
+	$SEDCMD -r 's/^Missed conversation with/Conversation with/' | \
+	$SEDCMD -r 's/\[(everyone|No Subject|Non-DoD Source)\]//g' | \
+	$SEDCMD -r 's/^IPM\..*//' | \
+	$SEDCMD -r 's/^[-_.,!"()%#[:digit:][:space:]]*//g; s/[-_.,!"()%#[:digit:][:space:]]*$//g' | \
+	$SEDCMD -r 's/_DONE$//' | \
 	$SEDCMD -r 's/\[/\\[/g; s/\]/\\]/g' | \
 	egrep -v "^$" | \
-	sort -ui > "$TOPICS_FILE_TMP"
+	sort -bfiu > "$TOPICS_FILE_TMP"
 
 	# Give the user a chance to edit/further trim the topics list
 	vi "$TOPICS_FILE_TMP"
 popd
+exit 0
 
 # Further sort the topics list based on the length of the topic string. This ensures that files are matched and moved
 # to the most specific topic first before some very short (say a 1 or 2 letter) topic matches everything.
-cat "$TOPICS_FILE_TMP" | sort -ui | $AWKCMD '{ print length, $0 }' | sort -nr | cut -d " " -f2- > "$TOPICS_FILE"
+cat "$TOPICS_FILE_TMP" | sort -bfiu | $AWKCMD '{ print length, $0 }' | sort -nr | cut -d " " -f2- > "$TOPICS_FILE"
 rm "$TOPICS_FILE_TMP"
 
 INFO "Making a copy of the src directory so that each file can be moved into place as appropriate..."
@@ -62,7 +64,7 @@ find "$DEST" -type d -empty -exec rmdir {} \; 2>/dev/null
 # topics. They have to be copied somewhere so that they are available for review; copy them to an unknown folder.
 if [ -n "$(ls -A "$SRC_COPIES/")" ]; then 
 	# OTHER_DIR="$DEST/[$(basename "$0") - Other]"
-	OTHER_DIR="$DEST/\[Unknown Topic\]"
+	OTHER_DIR="$DEST/[Unknown Topic]"
 	INFO "Copying missed files into <$OTHER_DIR>..."
 	mkdir -p "$OTHER_DIR"
 	cp -R "$SRC_COPIES/" "$OTHER_DIR/"
