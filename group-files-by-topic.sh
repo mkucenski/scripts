@@ -26,7 +26,7 @@ function STRIP() {
 			$SEDCMD -r 's/^Missed conversation with/Conversation with/' | \
 			$SEDCMD -r 's/^IPM\..*//' | \
 		 	$SEDCMD -r 's/^(IMPORTANT|Important|ANNOUNCEMENT|Announcement|DRAFT|Draft|EMAILING|Emailing|FINAL|Final|INFORMATION|Information|CONFIDENTIAL|Confidential|CORRECTION|Correction|COPY OF|Copy of|REMINDER|Reminder|FYI|Fyi|ATTENTION|Attention|URGENT|Urgent)[_:]+[[:space:]]*//' | \
-		 	$SEDCMD -r 's/^((INTERIM )?(UPDATE|Update)|(CONTAINS )?OUO|(URGENT |Urgent )?(Action|ACTION|Approval|APPROVAL)( Required|REQUIRED)?)[_:]+[[:space:]]*//')"
+		 	$SEDCMD -r 's/^((INTERIM )?(UPDATE|Update)|(CONTAINS )?OUO|(URGENT |Urgent )?(Action|ACTION|Approval|APPROVAL)( Required| REQUIRED)?)[_:]+[[:space:]]*//')"
 
 		# Remove trailing stuff
 		_STRIP_NEW_LINE="$(echo "$_STRIP_NEW_LINE" | \
