@@ -33,7 +33,6 @@ ls | $SEDCMD -r 's/(\[EXTERNAL\]|(Automatic reply|[rR][eE]|F[wW]d?|Undeliverable
 	# Give the user a chance to edit/further trim the topics list
 	vi "$TOPICS_FILE_TMP"
 popd
-exit 0
 
 # Further sort the topics list based on the length of the topic string. This ensures that files are matched and moved
 # to the most specific topic first before some very short (say a 1 or 2 letter) topic matches everything.
