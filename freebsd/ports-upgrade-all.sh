@@ -5,6 +5,5 @@ if [ $(CHECK_ROOT) != true ]; then
 	ERROR "This script *MUST* be run as 'root'!" && exit 1
 fi
 
-portupgrade -aFR
-portupgrade -aR
+portmaster -a
 
