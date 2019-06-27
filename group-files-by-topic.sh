@@ -20,21 +20,21 @@ function STRIP() {
 	while [ 1 ]; do
 		# Remove leading stuff
 		_STRIP_NEW_LINE="$(echo "$_STRIP_LINE" | \
-		 	$SEDCMD -r 's/^[-_.,!"()%#\&[:digit:][:space:]]*//' | \
-		 	$SEDCMD -r 's/^\[(EXTERNAL|everyone|No Subject|Non-DoD Source)\][[:space:]]*//' | \
-		 	$SEDCMD -r 's/^([rR][eE]|F[wW]d?|Automatic reply|Undeliverable|Recall)[_:]+[[:space:]]*//' | \
-			$SEDCMD -r 's/^Missed conversation with/Conversation with/' | \
-			$SEDCMD -r 's/^IPM\..*//' | \
-		 	$SEDCMD -r 's/^(IMPORTANT|Important|ANNOUNCEMENT|Announcement|DRAFT|Draft|EMAILING|Emailing|FINAL|Final|INFORMATION|Information|CONFIDENTIAL|Confidential|CORRECTION|Correction|COPY OF|Copy of|REMINDER|Reminder|FYI|Fyi|ATTENTION|Attention|URGENT|Urgent)[_:]+[[:space:]]*//' | \
-		 	$SEDCMD -r 's/^((INTERIM )?(UPDATE|Update)|(CONTAINS )?OUO|(URGENT |Urgent )?(Action|ACTION|Approval|APPROVAL)( Required| REQUIRED)?)[_:]+[[:space:]]*//')"
+		 	$SEDCMD -r 's/^[-_.,!"()%#\&[:digit:][:space:]]*//;
+		 					s/^\[(EXTERNAL|everyone|No Subject|Non-DoD Source)\][[:space:]]*//;
+							s/^([rR][eE]|F[wW]d?|Automatic reply|Undeliverable|Recall)([_:]+| - )[[:space:]]*//;
+							s/^Missed conversation with/Conversation with/;
+							s/^IPM\..*//;
+							s/^(NOT FOR DISTRIBUTION|IMPORTANT|Important|ANNOUNCEMENT|Announcement|DRAFT|Draft|EMAILING|Emailing|FINAL|Final|INFORMATION|Information|CONFIDENTIAL|Confidential|CORRECTION|Correction|COPY OF|Copy of|REMINDER|Reminder|FYI|Fyi|ATTENTION|Attention|URGENT|Urgent)([_:]+| - )[[:space:]]*//;
+							s/^(NOTICE|Notice|PII|(INTERIM )?(UPDATE|Update)|(CONTAINS )?OUO|(URGENT |Urgent )?(Action|ACTION|Approval|APPROVAL)( Required| REQUIRED)?)([_:]+| - )[[:space:]]*//')"
 
 		# Remove trailing stuff
 		_STRIP_NEW_LINE="$(echo "$_STRIP_NEW_LINE" | \
-			$SEDCMD -r 's/( [Ff]or| [Aa]s [Oo]f|APPROVED|DONE|UPDATE|NEW|(REV|Rev|rev)|_+[PS]O)$//' | \
-			$SEDCMD -r 's/ ?- ?(January|February|March|April|May|June|July|August|September|October|November|December)$//' | \
-			$SEDCMD -r 's/ ?- ?(Sun|Mon|Tue|Wed|Thurs|Fri|Satur)day$//' | \
-			$SEDCMD -r 's/\.[^.]{1,4}$//' | \
-			$SEDCMD -r 's/[-_.,!"()%#\&[:digit:][:space:]]*$//')"	
+			$SEDCMD -r 's/( [Ff]or| [Aa]s [Oo]f|APPROVED|DONE|UPDATE|NEW|(REV|Rev|rev)|_+[PS]O)$//;
+							s/( ?- ?| )(January|February|March|April|May|June|July|August|September|October|November|December)$//;
+							s/ ?- ?(Sun|Mon|Tue|Wed|Thurs|Fri|Satur)day$//;
+							s/\.[^.]{1,4}$//;
+							s/[-_.,!"()%#\&[:digit:][:space:]]*$//')"	
 
 		# If any changes were made, reiterate; if not, break and return
 		if [ "$_STRIP_NEW_LINE" != "$_STRIP_LINE" ]; then
@@ -48,11 +48,10 @@ function STRIP() {
 }
 
 INFO "Building lists of topics..."
-TOPICS_FILE="$(MKTEMP "$0" || exit 1)"
-TOPICS_FILE_TMP="$(MKTEMP "$0" || exit 1)"
+TOPICS_FILE="$(MKTEMP "$0" || exit 1)"; INFO_ERR "$TOPICS_FILE"
+TOPICS_FILE_TMP="$(MKTEMP "$0" || exit 1)"; INFO_ERR "$TOPICS_FILE"
 pushd "$SRC"
 	ls > "$TOPICS_FILE"
-	echo "$TOPICS_FILE_TMP"
 	while read LINE; do
 		STRIP "$LINE" >> $TOPICS_FILE_TMP
 	done < "$TOPICS_FILE"
