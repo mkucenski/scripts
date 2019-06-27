@@ -11,3 +11,5 @@
 \.ova\W
 \.vbox\W
 \.vbox-prev\W
+\.pvm\W
+\.vmwarevm\W

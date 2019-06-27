@@ -33,4 +33,9 @@ contactquietly = true
 # allow the synchronization of symbolic links (true/false/default)
 links = true
 
-ui = text
+# backups
+backuploc = local
+backup = Name *
+
+# propogate file modification times (but not directory modtimes)
+times = true
