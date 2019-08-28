@@ -9,7 +9,7 @@ if [ $# -eq 0 ]; then
 	USAGE "DEVICE" "BASE DEST. NAME" "CASE #" "EXAMINER" && exit 1
 fi
 
-ewfacquire -u -c deflate:best -C "$CASE" -e "$EXAMINER" -f encase6 -l "$DEST-ewfacquire.log" -t "$DEST" "$DEVICE"
+~/Development/opt/bin/ewfacquire -u -c deflate:best -C "$CASE" -e "$EXAMINER" -f encase6 -l "$DEST-ewfacquire.log" -t "$DEST" "$DEVICE"
 
 # ewfacquire 20140608
 # 
