@@ -26,8 +26,7 @@ pushd "$DEST"
 
 INFO "Starting photorec ($IMAGE)..." "$LOGFILE"
 LOG_VERSION "photorec" "$(photorec /version)" "$LOGFILE"
-CMD="photorec /log /d \"$DEST/\" \"$IMAGE\""
-EXEC_CMD "$CMD" "$LOGFILE"
+photorec /log /d "$DEST/" "$IMAGE"
 mkdir ./recup_dirs
 mv recup_dir.* recup_dirs/
 

@@ -11,7 +11,7 @@ for ARG1 in "$@"; do
 			RESULT=$(diff -q "$ARG1" "$ARG2" | grep "differ")
 			if [ -n "$RESULT" ]; then
 				echo "$ARG1 <-> $ARG2"
-				diff -ywi -W 260 "$ARG1" "$ARG2"
+				diff -ywi -W 260 --suppress-common-lines "$ARG1" "$ARG2"
 				# diff -wi "$ARG1" "$ARG2"
 				echo; echo
 			fi
