@@ -23,7 +23,8 @@ if [ ! -e "$DESTDIR/$SITE_STRIPPED" ]; then
 	# 		W/o span-hosts, you can skip level, but you run the risk of not downloading hosted images/content that are integral to the site...
 	# 		The two options have to be balanced appropriately for the given site and your download needs.
 
-	CMD="wget --recursive --level=1 --span-hosts --append-output \"$LOGFILE\" --show-progress -t 3 --user-agent=\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17\" --adjust-extension --page-requisites --server-response --convert-links --backup-converted \"$SITE\""
+	#CMD="wget --recursive --level=1 --span-hosts --append-output \"$LOGFILE\" --show-progress -t 3 --user-agent=\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17\" --adjust-extension --page-requisites --server-response --convert-links --backup-converted \"$SITE\""
+	CMD="wget --recursive --append-output \"$LOGFILE\" --show-progress -t 3 --user-agent=\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/601.5.17 (KHTML, like Gecko) Version/9.1 Safari/601.5.17\" --adjust-extension --page-requisites --server-response --convert-links --backup-converted \"$SITE\""
 	EXEC_CMD "$CMD" "$LOGFILE"
 
 	# Hash results for retention
