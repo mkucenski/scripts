@@ -22,7 +22,8 @@ find "$RECUP_DIR" -type f | while read FILE; do
 			echo "$EXTENSION_DIR"
 			mkdir -p "$EXTENSION_DIR";
  		fi
-		cp -vn "$FILE" "$EXTENSION_DIR/" | tee -a "$LOGFILE"
+		# cp -vn "$FILE" "$EXTENSION_DIR/" | tee -a "$LOGFILE"
+		mv -vn "$FILE" "$EXTENSION_DIR/" | tee -a "$LOGFILE"
 	fi
 done 
 
