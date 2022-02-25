@@ -7,8 +7,13 @@ if [ $# -eq 0 ]; then
 fi
 
 if [ -d "$DESTDIR" ]; then
-	DEST="$DESTDIR/$(hostname -s) $(DATETIME).bz2"
-	dump -L0af - / | bzip2 -c > "$DEST"
+	HOSTNAME=$(hostname -s)
+	TIMESTAMP=$(DATETIME)
+	DESTPREFIX="$DESTDIR/$HOSTNAME $TIMESTAMP"
+
+	dump -L0af - / | bzip2 -c > "$DESTPREFIX dump.bz2"
+	pkg prime-list > "$DESTPREFIX pkgs.txt""
+	tar cjvf "$DESTPREFIX.tar.bz2" "/boot/loader.conf" /boot/loader.conf.local" "/etc" "/usr/local/etc"
 else
 	ERROR "Invalid Destination Directory!" "$0" && exit 1
 fi
