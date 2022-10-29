@@ -108,14 +108,14 @@ function BASE64_GZ_FILE() {
 }
 
 function MKTEMP() {
-	mktemp -t "$(basename "$1")"
+	mktemp "${TMPDIR:-/tmp/}$(basename "$1").XXXXXX"
 }
 
 function MKTEMPDIR() {
-	mktemp -d -t "$(basename "$1")"
+	mktemp -d "${TMPDIR:-/tmp/}$(basename "$1").XXXXXX"
 }
 
-function MKTEMPUNIQ() {
+function MKTEMPLOCAL() {
 	mktemp "$1.XXXXXX"
 }	
 
