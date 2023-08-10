@@ -10,7 +10,7 @@ KEY="1.75"
 TMP=$(MKTEMP "$0" || exit 1)
 
 if [ -e "$FILE" ]; then
-	BACKUP=$(MKTEMPUNIQ "$FILE" || exit 1)
+	BACKUP=$(MKTEMPLOCAL "$FILE" || exit 1)
 	INFO "Making backup copy of original file... ($BACKUP)"
 	cp "$FILE" "$BACKUP"
 
