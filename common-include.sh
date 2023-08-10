@@ -121,12 +121,12 @@ function MKTEMPUNIQ() {
 
 function STRIP_EXTENSION() {
 	_COMMON_FILENAME="$1"
-	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/\...?.?.?$//'
+	echo "${_COMMON_FILENAME%.*}"
 }
 
 function GET_EXTENSION() {
 	_COMMON_FILENAME="$1"
-	echo "$_COMMON_FILENAME" | $SEDCMD -r 's/.*\.(..?.?.?)$/\1/'
+	echo "${_COMMON_FILENAME##*.}"
 }
 
 function CHECK_ROOT() {
